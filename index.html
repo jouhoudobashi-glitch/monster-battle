@@ -366,7 +366,32 @@ function battleMoves(id,side){
  return [...mons[id].skills.slice(0,3),counterMove(id,enemyId),supportChoice[side]];
 }
 function mk(id,side){let m={...mons[id],skills:battleMoves(id,side)};return {id,m,side,x:side===0?460:1080,y:side===0?360:370,hp:m.hp,cd:[0,0,0,0,0],buff:null,dashTrail:null,state:'idle',stateTime:0,dir:side===0?1:-1,cast:null,think:0,moveGoal:null,stats:{damage:0,hits:0,misses:0,moved:0,skills:[0,0,0,0,0]},lastMove:0,moveMode:"flank",modeTimer:0,turn:side===0?1:-1,decision:0,actionLock:0,attackMemory:[],supportLock:0,tactic:"assess",tacticUntil:0,emergencyUntil:0,meleeBanUntil:0,hitEvents:[],damageEvents:[],attackEvents:[],tacticHistory:[],lastTacticReview:-10,stuck:0,previousX:0,previousY:0,vx:0,vy:0,dodgeCount:0,zoneVisited:new Set(),lastDodge:-20,modeHistory:[]}}
-function reset(){seed=12345;game={fighters:[mk(+$('selectA').value,0),mk(+$('selectB').value,1)],elapsed:0,active:false,paused:false,ended:false};particles=[];floating=[];effects=[];$('log').innerHTML='';$('result').textContent='';$('start').disabled=false;$('pause').disabled=true;$('pause').textContent='一時停止';$('status').textContent='全15タイプから対戦可能。タイプ一致1.2倍＋相手への有利技を自動装備。';updateHP();draw()}
+// Ver.6.8: place both fighters on navigable ground, never inside obstacle collision radii.
+function safeSpawn(side){
+ const preferred=side===0?{x:465,y:260}:{x:1050,y:285};
+ const xMin=255,xMax=FIELD.w-110,yMin=205,yMax=FIELD.h-95;
+ const clearance=46;
+ const candidates=[preferred];
+ // Favor the upper edge of the playable ground, just right of the skill panel.
+ for(const y of [250,290,335,385,450,215]){
+  for(const dx of [0,60,-60,120,-120,180,-180,240,-240]){
+   candidates.push({x:preferred.x+(side===0?dx:-dx),y});
+  }
+ }
+ function valid(p){
+  if(p.x<xMin+clearance||p.x>xMax-clearance||p.y<yMin+clearance||p.y>yMax-clearance)return false;
+  if(rocks.some(r=>Math.hypot(p.x-r.x,p.y-r.y)<r.r+clearance+16))return false;
+  // Ensure there is open ground around the spawn to avoid being wedged in.
+  const neighbors=[[48,0],[-48,0],[0,48],[0,-48]];
+  return neighbors.filter(([dx,dy])=>free(p.x+dx,p.y+dy)).length>=3;
+ }
+ return candidates.find(valid)||candidates.find(p=>free(p.x,p.y))||preferred;
+}
+function placeFightersSafely(){
+ if(!game||!game.fighters)return;
+ game.fighters.forEach((f,side)=>{const p=safeSpawn(side);f.x=p.x;f.y=p.y;f.previousX=p.x;f.previousY=p.y;f.moveGoal=null;});
+}
+function reset(){seed=12345;game={fighters:[mk(+$('selectA').value,0),mk(+$('selectB').value,1)],elapsed:0,active:false,paused:false,ended:false};placeFightersSafely();particles=[];floating=[];effects=[];$('log').innerHTML='';$('result').textContent='';$('start').disabled=false;$('pause').disabled=true;$('pause').textContent='一時停止';$('status').textContent='全15タイプから対戦可能。タイプ一致1.2倍＋相手への有利技を自動装備。';updateHP();draw()}
 function start(){try{if(!game||game.ended)reset();game.active=true;game.paused=false;$('start').disabled=true;$('pause').disabled=false;$('status').textContent='戦闘中：'+ARENA_DATA[arenaIndex].name+'｜広域移動・予測回避・障害物迂回・反撃を自動判断しています。';log('バトル開始！');audioInit();sound('start');frameLast=performance.now();requestAnimationFrame(loop)}catch(e){fail(e)}}
 function fail(e){$('fatal').style.display='block';$('fatal').textContent='ゲームエラー: '+(e&&e.message||e);$('status').textContent='エラーが発生しました。';console.error(e)}
 function togglePause(){if(!game||!game.active||game.ended)return;game.paused=!game.paused;$('pause').textContent=game.paused?'再開':'一時停止';$('status').textContent=game.paused?'一時停止中':'戦闘中';if(!game.paused){frameLast=performance.now();requestAnimationFrame(loop)}}
@@ -1295,7 +1320,7 @@ requestAnimationFrame(sync);
 <canvas id="home57Canvas" aria-hidden="true"></canvas>
 <div id="home57Top"><h1>モンスターアリーナ</h1><p>15体のモンスターが集う、夢のバトルフィールド</p></div>
 <div id="home57Scene">花咲く草原</div>
-<div id="home57Bottom"><button id="home57Start" type="button">▶ スタート</button><div id="home57Version">MONSTER ARENA · Ver.6.7</div></div>
+<div id="home57Bottom"><button id="home57Start" type="button">▶ スタート</button><div id="home57Version">MONSTER ARENA · Ver.6.8</div></div>
 </div>
 <script id="home57-script">(()=>{
 'use strict';
@@ -1448,7 +1473,7 @@ updateToggle();setPhase('home');checkHp();
 @keyframes splash62pulse{50%{box-shadow:0 0 35px #f4c66aa0;filter:brightness(1.07)}}
 @media(prefers-reduced-motion:reduce){#splash62 button{animation:none}}
 </style>
-<div id="splash62" role="dialog" aria-modal="true" aria-label="ゲーム起動と音楽の開始"><div class="panel"><h1>モンスターアリーナ</h1><p>音楽とともに、モンスターたちの世界へ。</p><button id="splash62Go" type="button">♪ タップしてはじめる</button><small>MONSTER ARENA · Ver.6.7</small></div></div>
+<div id="splash62" role="dialog" aria-modal="true" aria-label="ゲーム起動と音楽の開始"><div class="panel"><h1>モンスターアリーナ</h1><p>音楽とともに、モンスターたちの世界へ。</p><button id="splash62Go" type="button">♪ タップしてはじめる</button><small>MONSTER ARENA · Ver.6.8</small></div></div>
 <script id="splash62-js">(()=>{const splash=document.getElementById('splash62');const button=document.getElementById('splash62Go');button.addEventListener('click',()=>{const music=document.getElementById('music61Hint');if(music)music.click();splash.hidden=true;const home=document.getElementById('home57');if(home)home.removeAttribute('aria-hidden');window.dispatchEvent(new Event('resize'));},{once:true});})();</script><style id="patch65-css">
 #fullscreenToggle,#manualFull,#hudExit{display:none!important}
 #tourneyOverlay.tourney-fixed{z-index:2147482000!important}
