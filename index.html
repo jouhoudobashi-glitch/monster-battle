@@ -1295,7 +1295,7 @@ requestAnimationFrame(sync);
 <canvas id="home57Canvas" aria-hidden="true"></canvas>
 <div id="home57Top"><h1>モンスターアリーナ</h1><p>15体のモンスターが集う、夢のバトルフィールド</p></div>
 <div id="home57Scene">花咲く草原</div>
-<div id="home57Bottom"><button id="home57Start" type="button">▶ スタート</button><div id="home57Version">MONSTER ARENA · Ver.6.6</div></div>
+<div id="home57Bottom"><button id="home57Start" type="button">▶ スタート</button><div id="home57Version">MONSTER ARENA · Ver.6.7</div></div>
 </div>
 <script id="home57-script">(()=>{
 'use strict';
@@ -1360,107 +1360,55 @@ body.battle-layout-active #music61Hint{display:none}
 </style><button id="music61Hint" type="button">♪ タップで音楽を再生</button>
 <script id="music60-js">(()=>{
 'use strict';
-// Original, procedural game score. All melodies and patterns were authored for this game.
-const titleNames={home:'タイトル',select:'モンスター選択',opening:'トーナメント開幕',round:'バトル',danger:'ピンチ！',ko:'決着',advance:'勝ち抜き',finalBracket:'決勝進出',final:'決勝戦',finalDanger:'決勝・ピンチ！',finalKo:'決勝・決着',victory:'WIN・勝利',finalVictory:'WIN・決勝勝利',champion:'優勝',lost:'再挑戦'};
-let phase='home',context=null,bus=null,enabled=true,transport=null,nextBeat=0,step=0,track='',lastStage='',endHold=0;
+// MONSTER ARENA 6.7: original 64-bar, sectionally composed adaptive score.
+const titleNames={home:'タイトル',select:'モンスター選択',opening:'トーナメント開幕',round:'通常バトル',danger:'通常バトル・ピンチ',ko:'決着',advance:'1回戦突破',finalBracket:'決勝進出',final:'決勝戦',finalDanger:'決勝・ピンチ',finalKo:'決勝決着',victory:'WIN',finalVictory:'決勝WIN',champion:'優勝',lost:'LOSE'};
+let phase='home',context=null,bus=null,enabled=true,transport=null,nextBeat=0,step=0,track='',endHold=0,intensity=0;
 const ui=document.createElement('div');ui.id='bgm60';ui.innerHTML='<span id="bgm60Label"></span><button id="bgm60Toggle" type="button" aria-label="BGMを切り替える">♫ BGM ON</button>';document.body.appendChild(ui);
-const toggle=document.getElementById('bgm60Toggle');const ko=document.createElement('div');ko.id='ko60';ko.innerHTML='<span>決着！</span>';document.body.appendChild(ko);
-const NOTES={C3:130.81,D3:146.83,E3:164.81,F3:174.61,G3:196,A3:220,B3:246.94,C4:261.63,D4:293.66,E4:329.63,F4:349.23,G4:392,A4:440,B4:493.88,C5:523.25,D5:587.33,E5:659.25,F5:698.46,G5:783.99,A5:880,B5:987.77,C6:1046.5};
-// 16-step original motifs, using independent voices for melody, bass and harmony.
-const scores={
- home:{bpm:93,root:['C3','G3','A3','F3'],mel:['E5',null,'G5',null,'A5','G5',null,'E5','D5',null,'E5','G5',null,'A5','G5',null],lead:'sine',brightness:.56},
- select:{bpm:106,root:['C3','F3','A3','G3'],mel:['C5',null,'E5','G5',null,'E5','D5',null,'A4',null,'C5','E5',null,'G5','E5',null],lead:'triangle',brightness:.65},
- opening:{bpm:118,root:['C3','G3','F3','G3'],mel:['C5','E5','G5',null,'G5','A5','G5',null,'E5','G5','C6',null,'B5','G5','E5',null],lead:'triangle',brightness:.9},
- round:{bpm:136,root:['A3','F3','G3','E3'],mel:['A4',null,'C5','E5','G5',null,'E5','C5','D5',null,'E5','G5','E5',null,'D5',null],lead:'triangle',brightness:.75},
- danger:{bpm:158,root:['A3','G3','F3','E3'],mel:['A4','C5','E5','G5','A5','G5','E5','C5','B4','D5','F5','A5','G5','F5','E5','D5'],lead:'sawtooth',brightness:.74},
- ko:{bpm:76,root:['A3','F3','E3','E3'],mel:['E5',null,'C5',null,'A4',null,null,null,'G4',null,'E4',null,null,null,null,null],lead:'triangle',brightness:.5},
- advance:{bpm:112,root:['C3','F3','G3','C3'],mel:['G4','C5','E5','G5',null,'E5','G5','A5','G5',null,'E5','C5','D5','E5','G5',null],lead:'triangle',brightness:.8},
- finalBracket:{bpm:100,root:['A3','F3','G3','E3'],mel:['A4',null,'C5',null,'E5',null,'A5',null,'G5','E5',null,'D5','E5',null,'G5',null],lead:'triangle',brightness:.82},
- final:{bpm:151,root:['A3','F3','C3','G3'],mel:['A4','C5','E5',null,'A5','G5','E5','C5','G5','A5','C6',null,'B5','A5','G5','E5'],lead:'sawtooth',brightness:.82},
- finalDanger:{bpm:174,root:['A3','G3','F3','E3'],mel:['A4','E5','A5','C6','B5','A5','G5','E5','F5','A5','C6','A5','G5','F5','E5','D5'],lead:'sawtooth',brightness:.8},
- finalKo:{bpm:78,root:['A3','F3','G3','C3'],mel:['A5',null,'G5',null,'E5',null,'C5',null,'D5',null,'E5',null,'C5',null,null,null],lead:'triangle',brightness:.58},
- victory:{bpm:124,root:['C3','F3','G3','C3'],mel:['G5','C6','G5','E5','A5','G5','E5','C5','D5','E5','G5','C6','G5',null,'E5',null],lead:'triangle',brightness:.94},
- finalVictory:{bpm:114,root:['C3','G3','F3','C3'],mel:['C5','E5','G5','C6','B5','G5','E5','G5','A5','C6','G5','E5','G5','C6',null,null],lead:'triangle',brightness:1},
- champion:{bpm:108,root:['C3','F3','G3','C3'],mel:['C5','E5','G5','C6',null,'B5','G5','E5','A5','G5','E5','G5','C6',null,'G5',null],lead:'triangle',brightness:.85},
- lost:{bpm:85,root:['A3','F3','C3','G3'],mel:['E5',null,'C5',null,'A4',null,'C5',null,'D5',null,'C5',null,'A4',null,null,null],lead:'sine',brightness:.55}
+const toggle=document.getElementById('bgm60Toggle'),ko=document.createElement('div');ko.id='ko60';ko.innerHTML='<span>決着！</span>';document.body.appendChild(ko);
+const midi=n=>440*Math.pow(2,(n-69)/12);
+// 64-bar harmonic arcs; each eight-bar block has a different harmonic direction.
+const progressions={
+ calm:[48,55,57,53,48,53,50,55,57,53,48,55,50,53,55,48,48,57,53,55,50,53,57,55,48,55,53,50,57,53,55,48],
+ battle:[45,53,48,55,45,50,53,52,48,55,45,53,50,53,55,52,45,48,53,55,50,53,48,52,45,55,53,48,50,53,52,45],
+ final:[45,41,48,43,45,50,41,43,48,41,45,43,50,41,43,45,45,48,41,43,50,48,41,43,45,41,48,50,43,41,48,45]
 };
-function audio(){if(context)return true;try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return false;context=new AC();bus=context.createGain();bus.gain.value=.46;const comp=context.createDynamicsCompressor();comp.threshold.value=-18;comp.ratio.value=5;bus.connect(comp);comp.connect(context.destination);return true}catch(e){return false}}
-function unlock(){
- if(!enabled||!audio())return;
- try{const o=context.createOscillator(),g=context.createGain();g.gain.value=0;o.connect(g);g.connect(context.destination);o.start();o.stop(context.currentTime+.015)}catch(e){}
- const r=context.resume();if(r&&r.then)r.then(()=>{updateToggle();schedule()}).catch(()=>updateToggle());
- if(!transport){nextBeat=context.currentTime+.05;transport=setInterval(schedule,80)}
- updateToggle();
+// Distinct 8-bar themes (two 4-bar answers), expanded by register, rhythmic phrasing, inversion and countermelody.
+const themes={
+ calm:[[0,2,4,7,9,7,4,2],[4,7,9,11,12,11,9,7],[7,9,12,14,12,9,7,4],[2,4,7,9,7,4,2,0]],
+ battle:[[0,3,7,10,7,3,5,7],[7,10,12,10,7,5,3,0],[3,5,7,12,10,7,5,3],[5,7,10,12,14,12,10,7]],
+ final:[[0,3,7,12,10,7,3,5],[7,10,12,15,12,10,7,3],[3,7,10,14,12,10,7,5],[5,8,12,15,14,12,10,7]]
+};
+const scores={home:{bpm:90,family:'calm',bars:32},select:{bpm:105,family:'calm',bars:48},opening:{bpm:112,family:'calm',bars:24},round:{bpm:132,family:'battle',bars:64},danger:{bpm:132,family:'battle',bars:64},ko:{bpm:80,family:'calm',bars:2},advance:{bpm:110,family:'calm',bars:32},finalBracket:{bpm:108,family:'final',bars:32},final:{bpm:145,family:'final',bars:64},finalDanger:{bpm:145,family:'final',bars:64},finalKo:{bpm:80,family:'final',bars:2},victory:{bpm:120,family:'calm',bars:3},finalVictory:{bpm:120,family:'final',bars:3},champion:{bpm:110,family:'calm',bars:32},lost:{bpm:80,family:'calm',bars:3}};
+let noise=null,rev=null,send=null,fxBus=null;
+function audio(){if(context)return true;try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return false;context=new AC();bus=context.createGain();bus.gain.value=.28;fxBus=context.createGain();fxBus.gain.value=.45;const limiter=context.createDynamicsCompressor();limiter.threshold.value=-17;limiter.knee.value=14;limiter.ratio.value=5;bus.connect(limiter);fxBus.connect(limiter);limiter.connect(context.destination);return true}catch(e){return false}}
+function prepare(){if(noise||!context)return;const sr=context.sampleRate;noise=context.createBuffer(1,Math.floor(sr*.42),sr);let data=noise.getChannelData(0);for(let i=0;i<data.length;i++)data[i]=Math.random()*2-1;const impulse=context.createBuffer(2,Math.floor(sr*.8),sr);for(let c=0;c<2;c++){let a=impulse.getChannelData(c);for(let i=0;i<a.length;i++)a[i]=(Math.random()*2-1)*Math.pow(1-i/a.length,2.7)*.22}rev=context.createConvolver();rev.buffer=impulse;send=context.createGain();send.gain.value=.14;rev.connect(send);send.connect(bus)}
+function voice(note,t,d,type,vol){if(!context||context.state!=='running')return;prepare();const f=midi(note);let g=context.createGain(),filter=context.createBiquadFilter();filter.type='lowpass';let attack=.012,release=.16;
+if(type==='strings'){attack=.10;release=.28;filter.frequency.value=1650}else if(type==='brass'){attack=.04;release=.18;filter.frequency.value=1100}else if(type==='piano'){attack=.005;release=.20;filter.frequency.value=3200}else if(type==='pad'){attack=.28;release=.55;filter.frequency.value=900}else if(type==='bass'){attack=.014;release=.13;filter.frequency.value=480}else if(type==='bell'){attack=.005;release=.48;filter.frequency.value=4000}
+g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(Math.max(.0001,vol),t+attack);g.gain.setTargetAtTime(Math.max(.0001,vol*.64),t+attack,Math.max(.03,d*.48));g.gain.setTargetAtTime(.0001,t+d,release/3);filter.connect(g);g.connect(bus);if(rev&&type!=='bass')g.connect(rev);
+const partials=type==='strings'?[[1,.65,-4],[1,.35,4],[2,.12,0]]:type==='brass'?[[1,.7,0],[2,.16,0]]:type==='bell'?[[1,.7,0],[2.01,.2,0],[3.97,.06,0]]:[[1,.85,0],[2,.12,0]];
+for(const [mul,amp,det] of partials){const o=context.createOscillator(),og=context.createGain();o.type=type==='strings'||type==='brass'?'sawtooth':type==='pad'?'triangle':'sine';o.frequency.value=f*mul;o.detune.value=det;og.gain.value=amp;o.connect(og);og.connect(filter);o.start(t);o.stop(t+d+release*5+.2)} }
+function drum(t,kind,vol){if(!context||context.state!=='running')return;prepare();if(kind==='kick'){const o=context.createOscillator(),g=context.createGain();o.frequency.setValueAtTime(135,t);o.frequency.exponentialRampToValueAtTime(48,t+.14);g.gain.setValueAtTime(.0001,t);g.gain.linearRampToValueAtTime(.18*vol,t+.008);g.gain.exponentialRampToValueAtTime(.0001,t+.18);o.connect(g);g.connect(bus);o.start(t);o.stop(t+.2);return}const s=context.createBufferSource(),f=context.createBiquadFilter(),g=context.createGain();s.buffer=noise;f.type=kind==='hat'?'highpass':'bandpass';f.frequency.value=kind==='hat'?6300:1700;g.gain.setValueAtTime(Math.max(.0001,(kind==='hat'?.025:.075)*vol),t);g.gain.exponentialRampToValueAtTime(.0001,t+(kind==='hat'?.055:.13));s.connect(f);f.connect(g);g.connect(bus);s.start(t);s.stop(t+.18)}
+function unlock(){if(!enabled||!audio())return;try{const o=context.createOscillator(),g=context.createGain();g.gain.value=0;o.connect(g);g.connect(context.destination);o.start();o.stop(context.currentTime+.02)}catch(e){}const r=context.resume();if(r&&r.then)r.then(()=>{updateToggle();schedule()}).catch(()=>updateToggle());if(!transport){nextBeat=context.currentTime+.08;transport=setInterval(schedule,75)}updateToggle()}
+function schedule(){if(!enabled||!context||context.state!=='running')return;const s=scores[phase]||scores.home;const family=s.family;const isBattle=family==='battle'||(family==='final'&&['final','finalDanger'].includes(phase));const isJingle=['victory','finalVictory','lost','ko','finalKo'].includes(phase);const unit=60/s.bpm/2;
+if(track!==phase){const old=scores[track];const sameCombat=old&&old.family===s.family&&isBattle;if(!sameCombat){step=0;nextBeat=context.currentTime+.32}track=phase}
+let count=0;while(nextBeat<context.currentTime+.24&&count++<8){const bar=Math.floor(step/8)%s.bars,eighth=step%8,section=Math.floor(bar/8)%4,block=Math.floor(bar/4),root=(progressions[family][bar%32]||48),t=nextBeat,theme=themes[family][(bar+Math.floor(bar/8))%4];let note=root+12+theme[eighth];
+// Sections: introduction, main theme, development, respite, reprise, countermelody, climax, release.
+const shape=Math.floor(bar/8)%8;const active=shape===0?.55:shape===1?.85:shape===2?.72:shape===3?.40:shape===4?.82:shape===5?.65:shape===6?1:.68;
+const phraseBreak=(bar%8===7&&eighth>=6)||(shape===3&&eighth%4===3);
+if(!phraseBreak&&(!isJingle||bar<2)){
+ if(eighth%2===0||shape===6){voice(note+(shape===6?12:0),t,unit*(shape===3?1.45:1.8),isBattle?'strings':shape===3?'piano':'strings',.038*active);}
+ if(eighth===0||eighth===4){voice(root-12,t,unit*3.8,'bass',.082*active);voice(root+12,t,unit*3.7,'pad',.025*active);voice(root+19,t,unit*3.7,'pad',.017*active)}
+ if(shape===2||shape===5||shape===6){if(eighth===2||eighth===6)voice(root+19+(bar%2?3:0),t,unit*1.9,'brass',.022*active)}
+ if(shape===4||shape===6){if(eighth===1||eighth===5)voice(root+24+theme[(eighth+3)%8],t,unit*.9,'piano',.013*active)}
+ if(isBattle){const pressure=intensity?1:.0;const energy=(shape===3?.38:1)*(1+pressure*.28);if(eighth===0||eighth===4)drum(t,'kick',energy*.8);if(eighth===4)drum(t,'snare',energy*.65);if((eighth%2===0&&shape!==3)||(pressure&&eighth%2===1))drum(t,'hat',energy*(pressure?.75:.40));if(pressure&&(eighth===3||eighth===7))voice(root+7,t,unit*.65,'brass',.018)}
+ else if((phase==='opening'||phase==='advance'||phase==='finalBracket'||phase==='champion')&&eighth===0){drum(t,'kick',.25);if(shape===6)drum(t,'snare',.32)}
 }
-// Ver 6.4: layered original orchestral score. No external audio assets.
-let hall=null,hallSend=null,noiseBuffer=null;
-function prepareOrchestra(){
- if(!context||hall)return;
- const sr=context.sampleRate,imp=context.createBuffer(2,Math.floor(sr*1.65),sr);
- for(let c=0;c<2;c++){let a=imp.getChannelData(c);for(let i=0;i<a.length;i++){const x=i/a.length;a[i]=(Math.random()*2-1)*Math.pow(1-x,2.3)*.31}}
- hall=context.createConvolver();hall.buffer=imp;hallSend=context.createGain();hallSend.gain.value=.23;hall.connect(hallSend);hallSend.connect(bus);
- noiseBuffer=context.createBuffer(1,Math.floor(sr*.32),sr);const n=noiseBuffer.getChannelData(0);for(let i=0;i<n.length;i++)n[i]=Math.random()*2-1;
+step++;nextBeat+=unit;
+if(isJingle&&step>=s.bars*8){step=s.bars*8;nextBeat=context.currentTime+60} // one-shot: no repeated jingles
 }
-function voice(freq,t,len,instrument,volume){
- if(!context||context.state!=='running'||!freq)return;
- prepareOrchestra();let output=context.createGain(),filter=context.createBiquadFilter();filter.type='lowpass';
- let a=.018,d=Math.max(.08,len),rel=.18;
- if(instrument==='strings'){a=.13;rel=.38;filter.frequency.value=1900;filter.Q.value=.55}
- else if(instrument==='brass'){a=.035;rel=.26;filter.frequency.value=1250;filter.Q.value=.8}
- else if(instrument==='piano'){a=.007;rel=.22;filter.frequency.value=3100}
- else if(instrument==='bass'){a=.012;rel=.12;filter.frequency.value=450}
- else if(instrument==='bell'){a=.005;rel=.55;filter.frequency.value=4200}
- else{filter.frequency.value=2400}
- output.gain.setValueAtTime(.0001,t);
- output.gain.linearRampToValueAtTime(Math.max(.0002,volume),t+a);
- output.gain.setTargetAtTime(Math.max(.0001,volume*(instrument==='piano'?.38:.74)),t+a,Math.max(.04,d*.45));
- output.gain.setTargetAtTime(.0001,t+d,rel/3);
- filter.connect(output);output.connect(bus);if(hall)output.connect(hall);
- const oscs=[];
- const partials=instrument==='strings'?[[1,.50,-5],[1,.42,5],[2,.13,1]]:instrument==='brass'?[[1,.72,0],[2,.19,3]]:instrument==='piano'?[[1,.75,0],[2,.19,0],[3,.075,0]]:instrument==='bell'?[[1,.7,0],[2.01,.22,0],[3.97,.1,0]]:[[1,.9,0],[2,.11,0]];
- for(const [mult,amp,cents] of partials){let osc=context.createOscillator(),g=context.createGain();osc.type=(instrument==='strings'||instrument==='brass')?'sawtooth':'sine';osc.frequency.setValueAtTime(freq*mult,t);osc.detune.value=cents;g.gain.value=amp;osc.connect(g);g.connect(filter);osc.start(t);osc.stop(t+d+rel*4+.12);oscs.push(osc)}
- if(instrument==='strings'){let lfo=context.createOscillator(),depth=context.createGain();lfo.frequency.value=5.3;depth.gain.value=2.8;lfo.connect(depth);for(const o of oscs)depth.connect(o.detune);lfo.start(t);lfo.stop(t+d+rel*4+.1)}
-}
-function percussion(t,type,vol=1){if(!context||context.state!=='running')return;prepareOrchestra();
- if(type==='kick'||type==='tom'){const o=context.createOscillator(),g=context.createGain();o.type='sine';o.frequency.setValueAtTime(type==='kick'?145:215,t);o.frequency.exponentialRampToValueAtTime(type==='kick'?48:82,t+.14);g.gain.setValueAtTime(.18*vol,t);g.gain.exponentialRampToValueAtTime(.0001,t+.19);o.connect(g);g.connect(bus);o.start(t);o.stop(t+.21);return}
- let src=context.createBufferSource(),g=context.createGain(),f=context.createBiquadFilter();src.buffer=noiseBuffer;f.type=type==='cymbal'?'highpass':'bandpass';f.frequency.value=type==='cymbal'?6000:1800;f.Q.value=.8;g.gain.setValueAtTime((type==='cymbal'?.07:.10)*vol,t);g.gain.exponentialRampToValueAtTime(.0001,t+(type==='cymbal'?.24:.12));src.connect(f);f.connect(g);g.connect(bus);src.start(t);src.stop(t+(type==='cymbal'?.26:.14));
-}
-function schedule(){if(!enabled||!context||context.state!=='running')return;
- const s=scores[phase]||scores.home;
- if(track!==phase){track=phase;step=0;nextBeat=context.currentTime+.045}
- const beat=60/s.bpm,unit=beat/4;
- const combat=['round','danger','final','finalDanger'].includes(phase),tense=['danger','finalDanger'].includes(phase);
- const ceremonial=['opening','advance','finalBracket','champion'].includes(phase);
- let count=0;
- while(nextBeat<context.currentTime+.21&&count++<12){
-  const i=step%16,bar=Math.floor(step/16),root=s.root[Math.floor(i/4)],t=nextBeat;
-  const f=NOTES[s.mel[i]],r=NOTES[root];
-  if(f){
-    const lead=tense?'brass':combat?'strings':ceremonial?'brass':phase==='ko'?'piano':'strings';
-    voice(f,t,unit*(combat?2.4:3.3),lead,(combat?.092:.073)*s.brightness);
-    if((i%4===0||i%4===2)&&!tense)voice(f/2,t+.013,unit*3.5,'strings',.025*s.brightness);
-    if(ceremonial&&i%4===0)voice(f*2,t+.012,unit*2,'bell',.019);
-  }
-  if(i%4===0&&r){
-    voice(r/2,t,beat*.95,'bass',combat?.16:.11);
-    voice(r,t,beat*.92,'strings',combat?.045:.064);
-    const chord=[1,1.2,1.5];
-    for(let k=0;k<3;k++)voice(r*chord[k]*2,t+.025+k*.007,beat*.83,ceremonial?'brass':'strings',ceremonial?.032:.026);
-    if(ceremonial)percussion(t,'tom',.6);
-  }
-  if(combat){
-    if(i%4===0)percussion(t,'kick',1);
-    if(i%4===2)percussion(t,'snare',.8);
-    if(i%2===0)percussion(t,'cymbal',tense?.55:.3);
-    if(tense&&i%4===3)percussion(t,'tom',.4);
-    if(i%2===0&&r)voice(r*2,t,unit*.7,'strings',.018);
-  }else if(ceremonial){if(i%4===0)percussion(t,'cymbal',.5);if(i%4===2)percussion(t,'tom',.25)}
-  else if(phase==='home'||phase==='select'){if(i%4===0&&r)voice(r*4,t,beat*.85,'piano',.03)}
-  step++;nextBeat+=unit;
- }
 }
 window.__arenaMusicDebug={get phase(){return phase},get audioState(){return context?.state||'uninitialized'},get enabled(){return enabled},setPhase};
-function setPhase(p){if(!scores[p])return;if(phase===p)return;phase=p;document.getElementById('bgm60Label').textContent=titleNames[p]||p;if(context&&bus){bus.gain.setTargetAtTime(0,context.currentTime,.035);setTimeout(()=>{if(bus&&context)bus.gain.setTargetAtTime(enabled?.46:0,context.currentTime,.1)},120)}track=''}
+function setPhase(p){if(!scores[p])return;const prior=phase;phase=p;const combat=(v)=>['round','danger','final','finalDanger'].includes(v);if(combat(prior)&&combat(p)&&((prior==='round'||prior==='danger')===(p==='round'||p==='danger'))){intensity=(p==='danger'||p==='finalDanger')?1:0;document.getElementById('bgm60Label').textContent=titleNames[p]||p;return;}intensity=(p==='danger'||p==='finalDanger')?1:0;document.getElementById('bgm60Label').textContent=titleNames[p]||p;track='';if(context&&bus){bus.gain.cancelScheduledValues(context.currentTime);bus.gain.setTargetAtTime(0,context.currentTime,.09);setTimeout(()=>{if(bus&&context)bus.gain.setTargetAtTime(enabled?.28:0,context.currentTime,.14)},300)}}
 function state(){return window.game||null}
 // game is a top-level lexical binding in the original script, so use a separate mirrored DOM observer instead.
 let roundIndex=0,ended=false,lastDanger=false;
@@ -1485,7 +1433,7 @@ window.addEventListener('arena-battle-end',e=>{ko.querySelector('span').textCont
 const start=document.getElementById('start');if(start)start.addEventListener('click',()=>{unlock();ended=false;setPhase(roundIndex===2?'final':'round')});
 function updateToggle(){const active=enabled&&context&&context.state==='running';toggle.textContent=!enabled?'♫ BGM OFF':active?'♫ BGM 再生中':'♫ 音楽を再生';toggle.setAttribute('aria-pressed',String(!!active));const tip=document.getElementById('music61Hint');if(tip){tip.textContent=!enabled?'BGMはオフです':active?'♪ BGM再生中':'♪ タップで音楽を再生';tip.classList.toggle('playing',!!active)}}
 document.getElementById('music61Hint')?.addEventListener('click',()=>{enabled=true;unlock();updateToggle()});
-toggle.addEventListener('click',()=>{enabled=!enabled;updateToggle();if(enabled){unlock();if(bus&&context)bus.gain.setTargetAtTime(.46,context.currentTime,.08)}else if(bus&&context)bus.gain.setTargetAtTime(0,context.currentTime,.04)});
+toggle.addEventListener('click',()=>{enabled=!enabled;updateToggle();if(enabled){unlock();if(bus&&context)bus.gain.setTargetAtTime(.28,context.currentTime,.08)}else if(bus&&context)bus.gain.setTargetAtTime(0,context.currentTime,.04)});
 // Start audio only after a deliberate tap (iOS Web Audio requirement).
 document.addEventListener('pointerdown',e=>{if(!context&&enabled&&e.target.closest('button,#home57,#launchScreen,#tourneyOverlay,#arenaViewport'))unlock()},{once:false,passive:true});
 updateToggle();setPhase('home');checkHp();
@@ -1500,7 +1448,7 @@ updateToggle();setPhase('home');checkHp();
 @keyframes splash62pulse{50%{box-shadow:0 0 35px #f4c66aa0;filter:brightness(1.07)}}
 @media(prefers-reduced-motion:reduce){#splash62 button{animation:none}}
 </style>
-<div id="splash62" role="dialog" aria-modal="true" aria-label="ゲーム起動と音楽の開始"><div class="panel"><h1>モンスターアリーナ</h1><p>音楽とともに、モンスターたちの世界へ。</p><button id="splash62Go" type="button">♪ タップしてはじめる</button><small>MONSTER ARENA · Ver.6.6</small></div></div>
+<div id="splash62" role="dialog" aria-modal="true" aria-label="ゲーム起動と音楽の開始"><div class="panel"><h1>モンスターアリーナ</h1><p>音楽とともに、モンスターたちの世界へ。</p><button id="splash62Go" type="button">♪ タップしてはじめる</button><small>MONSTER ARENA · Ver.6.7</small></div></div>
 <script id="splash62-js">(()=>{const splash=document.getElementById('splash62');const button=document.getElementById('splash62Go');button.addEventListener('click',()=>{const music=document.getElementById('music61Hint');if(music)music.click();splash.hidden=true;const home=document.getElementById('home57');if(home)home.removeAttribute('aria-hidden');window.dispatchEvent(new Event('resize'));},{once:true});})();</script><style id="patch65-css">
 #fullscreenToggle,#manualFull,#hudExit{display:none!important}
 #tourneyOverlay.tourney-fixed{z-index:2147482000!important}
