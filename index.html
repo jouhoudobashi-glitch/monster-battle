@@ -1298,7 +1298,7 @@ requestAnimationFrame(sync);
 <canvas id="home57Canvas" aria-hidden="true"></canvas>
 <div id="home57Top"><h1>モンスターアリーナ</h1><p>15体のモンスターが集う、夢のバトルフィールド</p></div>
 <div id="home57Scene">花咲く草原</div>
-<div id="home57Bottom"><button id="home57Start" type="button">▶ スタート</button><div id="home57Version">MONSTER ARENA · Ver.6.0</div></div>
+<div id="home57Bottom"><button id="home57Start" type="button">▶ スタート</button><div id="home57Version">MONSTER ARENA · Ver.6.2</div></div>
 </div>
 <script id="home57-script">(()=>{
 'use strict';
@@ -1355,7 +1355,13 @@ resize();resetActors();requestAnimationFrame(draw);
   }
   addEventListener('resize',fit);addEventListener('orientationchange',fit);fit();
 })();
-</script><script id="music60-js">(()=>{
+</script><style id="music61-style">
+#music61Hint{position:fixed;left:12px;top:calc(env(safe-area-inset-top,0px) + 46px);z-index:10004;background:#10233bea;color:#ffe4a4;border:1px solid #f3c8739c;border-radius:22px;padding:9px 18px;font:700 13px system-ui;white-space:nowrap;cursor:pointer;box-shadow:0 4px 18px #0007;touch-action:manipulation}
+#music61Hint.playing{color:#b4f6d3;border-color:#66d9a7a0}
+body.battle-layout-active #music61Hint{display:none}
+@media (orientation:landscape) and (max-height:500px){#music61Hint{top:36px;padding:5px 12px;font-size:11px}}
+</style><button id="music61Hint" type="button">♪ タップで音楽を再生</button>
+<script id="music60-js">(()=>{
 'use strict';
 // Original, procedural game score. All melodies and patterns were authored for this game.
 const titleNames={home:'タイトル',select:'モンスター選択',opening:'トーナメント開幕',round:'バトル',danger:'ピンチ！',ko:'決着',advance:'勝ち抜き',finalBracket:'決勝進出',final:'決勝戦',finalDanger:'決勝・ピンチ！',finalKo:'決勝・決着',champion:'優勝',lost:'再挑戦'};
@@ -1379,12 +1385,18 @@ const scores={
  champion:{bpm:108,root:['C3','F3','G3','C3'],mel:['C5','E5','G5','C6',null,'B5','G5','E5','A5','G5','E5','G5','C6',null,'G5',null],lead:'triangle',brightness:.85},
  lost:{bpm:85,root:['A3','F3','C3','G3'],mel:['E5',null,'C5',null,'A4',null,'C5',null,'D5',null,'C5',null,'A4',null,null,null],lead:'sine',brightness:.55}
 };
-function audio(){if(context)return true;try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return false;context=new AC();bus=context.createGain();bus.gain.value=.12;const comp=context.createDynamicsCompressor();comp.threshold.value=-18;comp.ratio.value=5;bus.connect(comp);comp.connect(context.destination);return true}catch(e){return false}}
-function unlock(){if(!enabled||!audio())return;context.resume().catch(()=>{});if(!transport){nextBeat=context.currentTime+.05;transport=setInterval(schedule,80)}}
+function audio(){if(context)return true;try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return false;context=new AC();bus=context.createGain();bus.gain.value=.46;const comp=context.createDynamicsCompressor();comp.threshold.value=-18;comp.ratio.value=5;bus.connect(comp);comp.connect(context.destination);return true}catch(e){return false}}
+function unlock(){
+ if(!enabled||!audio())return;
+ try{const o=context.createOscillator(),g=context.createGain();g.gain.value=0;o.connect(g);g.connect(context.destination);o.start();o.stop(context.currentTime+.015)}catch(e){}
+ const r=context.resume();if(r&&r.then)r.then(()=>{updateToggle();schedule()}).catch(()=>updateToggle());
+ if(!transport){nextBeat=context.currentTime+.05;transport=setInterval(schedule,80)}
+ updateToggle();
+}
 function note(name,at,duration,kind='triangle',level=.12){if(!name||!context||context.state!=='running')return;const f=NOTES[name];if(!f)return;const osc=context.createOscillator(),gain=context.createGain();osc.type=kind;osc.frequency.setValueAtTime(f,at);gain.gain.setValueAtTime(.0001,at);gain.gain.exponentialRampToValueAtTime(Math.max(.001,level),at+.015);gain.gain.exponentialRampToValueAtTime(.0001,at+duration);osc.connect(gain);gain.connect(bus);osc.start(at);osc.stop(at+duration+.025)}
 function drum(at,strong){if(!context||context.state!=='running')return;const o=context.createOscillator(),g=context.createGain();o.type='sine';o.frequency.setValueAtTime(strong?125:260,at);o.frequency.exponentialRampToValueAtTime(strong?53:125,at+.11);g.gain.setValueAtTime(strong?.13:.035,at);g.gain.exponentialRampToValueAtTime(.0001,at+.13);o.connect(g);g.connect(bus);o.start(at);o.stop(at+.14)}
-function schedule(){if(!enabled||!context||context.state!=='running')return;const s=scores[phase]||scores.home;if(track!==phase){track=phase;step=0;nextBeat=context.currentTime+.035}const dur=60/s.bpm/4;let count=0;while(nextBeat<context.currentTime+.2&&count++<12){const i=step%16,root=s.root[Math.floor(i/4)],t=nextBeat;if(s.mel[i])note(s.mel[i],t,dur*(phase.includes('Danger')||phase==='danger'?.8:1.65),s.lead,.09*s.brightness);if(i%4===0){note(root,t,dur*3.4,'sine',.12);const upper={C3:'G4',D3:'A4',E3:'B4',F3:'C5',G3:'D5',A3:'E5',B3:'F5'}[root];if(upper)note(upper,t+.02,dur*3.1,'triangle',.025*s.brightness)}if(['round','danger','final','finalDanger'].includes(phase)){if(i%4===0)drum(t,true);else if(i%4===2)drum(t,false)}step++;nextBeat+=dur}}
-function setPhase(p){if(!scores[p])return;if(phase===p)return;phase=p;document.getElementById('bgm60Label').textContent=titleNames[p]||p;if(context&&bus){bus.gain.setTargetAtTime(0,context.currentTime,.035);setTimeout(()=>{if(bus&&context)bus.gain.setTargetAtTime(enabled?.12:0,context.currentTime,.1)},120)}track=''}
+function schedule(){if(!enabled||!context||context.state!=='running')return;const s=scores[phase]||scores.home;if(track!==phase){track=phase;step=0;nextBeat=context.currentTime+.035}const dur=60/s.bpm/4;let count=0;while(nextBeat<context.currentTime+.2&&count++<12){const i=step%16,root=s.root[Math.floor(i/4)],t=nextBeat;if(s.mel[i])note(s.mel[i],t,dur*(phase.includes('Danger')||phase==='danger'?.8:1.65),s.lead,.24*s.brightness);if(i%4===0){note(root,t,dur*3.4,'sine',.19);const upper={C3:'G4',D3:'A4',E3:'B4',F3:'C5',G3:'D5',A3:'E5',B3:'F5'}[root];if(upper)note(upper,t+.02,dur*3.1,'triangle',.055*s.brightness)}if(['round','danger','final','finalDanger'].includes(phase)){if(i%4===0)drum(t,true);else if(i%4===2)drum(t,false)}step++;nextBeat+=dur}}
+function setPhase(p){if(!scores[p])return;if(phase===p)return;phase=p;document.getElementById('bgm60Label').textContent=titleNames[p]||p;if(context&&bus){bus.gain.setTargetAtTime(0,context.currentTime,.035);setTimeout(()=>{if(bus&&context)bus.gain.setTargetAtTime(enabled?.46:0,context.currentTime,.1)},120)}track=''}
 function state(){return window.game||null}
 // game is a top-level lexical binding in the original script, so use a separate mirrored DOM observer instead.
 let roundIndex=0,ended=false,lastDanger=false;
@@ -1406,9 +1418,22 @@ window.addEventListener('arena-battle-end',e=>{ended=true;setPhase(roundIndex===
 // Event callbacks above run before the original overlay handler; defer only the UI inspection.
 window.addEventListener('arena-battle-end',e=>{ko.querySelector('span').textContent=e.detail.playerWon?'勝利！':'負けてしまった…';ko.classList.add('visible');setTimeout(()=>{ko.classList.remove('visible');overlayState()},1550)});
 const start=document.getElementById('start');if(start)start.addEventListener('click',()=>{unlock();ended=false;setPhase(roundIndex===2?'final':'round')});
-function updateToggle(){toggle.textContent=enabled?'♫ BGM ON':'♫ BGM OFF';toggle.setAttribute('aria-pressed',String(enabled))}
-toggle.addEventListener('click',()=>{enabled=!enabled;updateToggle();if(enabled){unlock();if(bus&&context)bus.gain.setTargetAtTime(.12,context.currentTime,.08)}else if(bus&&context)bus.gain.setTargetAtTime(0,context.currentTime,.04)});
+function updateToggle(){const active=enabled&&context&&context.state==='running';toggle.textContent=!enabled?'♫ BGM OFF':active?'♫ BGM 再生中':'♫ 音楽を再生';toggle.setAttribute('aria-pressed',String(!!active));const tip=document.getElementById('music61Hint');if(tip){tip.textContent=!enabled?'BGMはオフです':active?'♪ BGM再生中':'♪ タップで音楽を再生';tip.classList.toggle('playing',!!active)}}
+document.getElementById('music61Hint')?.addEventListener('click',()=>{enabled=true;unlock();updateToggle()});
+toggle.addEventListener('click',()=>{enabled=!enabled;updateToggle();if(enabled){unlock();if(bus&&context)bus.gain.setTargetAtTime(.46,context.currentTime,.08)}else if(bus&&context)bus.gain.setTargetAtTime(0,context.currentTime,.04)});
 // Start audio only after a deliberate tap (iOS Web Audio requirement).
-document.addEventListener('pointerdown',e=>{if(!context&&enabled&&e.target.closest('#home57,#launchScreen,#tourneyOverlay,#arenaViewport'))unlock()},{once:false,passive:true});
+document.addEventListener('pointerdown',e=>{if(!context&&enabled&&e.target.closest('button,#home57,#launchScreen,#tourneyOverlay,#arenaViewport'))unlock()},{once:false,passive:true});
 updateToggle();setPhase('home');checkHp();
-})();</script></body></html>
+})();</script><style id="splash62-css">
+#splash62{position:fixed;inset:0;z-index:200000;display:flex;align-items:center;justify-content:center;background:radial-gradient(ellipse at 50% 42%,#25446b 0%,#0c1c32 62%,#060f1e 100%);color:#fff;font-family:system-ui,-apple-system,sans-serif;text-align:center;padding:20px;box-sizing:border-box;touch-action:manipulation}
+#splash62[hidden]{display:none!important}
+#splash62 .panel{max-width:min(90vw,640px);width:100%;display:grid;justify-items:center;gap:clamp(8px,2.5vh,20px)}
+#splash62 h1{margin:0;color:#f7ce7c;text-shadow:0 3px 18px #0008;font-size:clamp(25px,5vw,49px);letter-spacing:.06em}
+#splash62 p{margin:0;color:#d6e4f7;font-size:clamp(12px,2vw,17px)}
+#splash62 button{font:800 clamp(17px,2.7vw,24px) system-ui;min-width:min(76vw,350px);padding:clamp(12px,3vh,19px) 24px;border:2px solid #ffe0a0;border-radius:40px;color:#16253a;background:linear-gradient(#ffe9b0,#eab95d);box-shadow:0 0 22px #f4c66a55;animation:splash62pulse 2.5s ease-in-out infinite;touch-action:manipulation}
+#splash62 small{color:#aabbd1;font-size:11px}
+@keyframes splash62pulse{50%{box-shadow:0 0 35px #f4c66aa0;filter:brightness(1.07)}}
+@media(prefers-reduced-motion:reduce){#splash62 button{animation:none}}
+</style>
+<div id="splash62" role="dialog" aria-modal="true" aria-label="ゲーム起動と音楽の開始"><div class="panel"><h1>モンスターアリーナ</h1><p>音楽とともに、モンスターたちの世界へ。</p><button id="splash62Go" type="button">♪ タップしてはじめる</button><small>MONSTER ARENA · Ver.6.2</small></div></div>
+<script id="splash62-js">(()=>{const splash=document.getElementById('splash62');const button=document.getElementById('splash62Go');button.addEventListener('click',()=>{const music=document.getElementById('music61Hint');if(music)music.click();splash.hidden=true;const home=document.getElementById('home57');if(home)home.removeAttribute('aria-hidden');window.dispatchEvent(new Event('resize'));},{once:true});})();</script></body></html>
