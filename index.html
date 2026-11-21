@@ -1323,7 +1323,7 @@ requestAnimationFrame(sync);
 <canvas id="home57Canvas" aria-hidden="true"></canvas>
 <div id="home57Top"><h1>モンスターアリーナ</h1><p>15体のモンスターが集う、夢のバトルフィールド</p></div>
 <div id="home57Scene">花咲く草原</div>
-<div id="home57Bottom"><button id="home57Start" type="button">▶ スタート</button><div id="home57Version">MONSTER ARENA · Ver.6.9</div></div>
+<div id="home57Bottom"><button id="home57Start" type="button">▶ スタート</button><div id="home57Version">MONSTER ARENA · Ver.7.0</div><button type="button" id="vh70Open">更新履歴・現在の機能を確認</button></div>
 </div>
 <script id="home57-script">(()=>{
 'use strict';
@@ -1476,7 +1476,7 @@ updateToggle();setPhase('home');checkHp();
 @keyframes splash62pulse{50%{box-shadow:0 0 35px #f4c66aa0;filter:brightness(1.07)}}
 @media(prefers-reduced-motion:reduce){#splash62 button{animation:none}}
 </style>
-<div id="splash62" role="dialog" aria-modal="true" aria-label="ゲーム起動と音楽の開始"><div class="panel"><h1>モンスターアリーナ</h1><p>音楽とともに、モンスターたちの世界へ。</p><button id="splash62Go" type="button">♪ タップしてはじめる</button><small>MONSTER ARENA · Ver.6.9</small></div></div>
+<div id="splash62" role="dialog" aria-modal="true" aria-label="ゲーム起動と音楽の開始"><div class="panel"><h1>モンスターアリーナ</h1><p>音楽とともに、モンスターたちの世界へ。</p><button id="splash62Go" type="button">♪ タップしてはじめる</button><small>MONSTER ARENA · Ver.7.0</small></div></div>
 <script id="splash62-js">(()=>{const splash=document.getElementById('splash62');const button=document.getElementById('splash62Go');button.addEventListener('click',()=>{const music=document.getElementById('music61Hint');if(music)music.click();splash.hidden=true;const home=document.getElementById('home57');if(home)home.removeAttribute('aria-hidden');window.dispatchEvent(new Event('resize'));},{once:true});})();</script><style id="patch65-css">
 #fullscreenToggle,#manualFull,#hudExit{display:none!important}
 #tourneyOverlay.tourney-fixed{z-index:2147482000!important}
@@ -1519,4 +1519,43 @@ updateToggle();setPhase('home');checkHp();
  function proceed(e){if(screen.hidden||!onContinue||performance.now()-openedAt<650)return;e.preventDefault();const next=onContinue;onContinue=null;screen.hidden=true;next();}
  screen.addEventListener('click',proceed);
  screen.addEventListener('keydown',e=>{if(e.key==='Enter'||e.key===' '){proceed(e)}});
-})();</script></body></html>
+})();</script><style id="version-history-70-css">
+#vh70Open{border:1px solid #d8e8ff8c;background:#10223dbb;color:#fff;border-radius:999px;padding:7px 16px;font:600 12px system-ui,sans-serif;cursor:pointer;touch-action:manipulation}
+#vh70[hidden]{display:none!important}
+#vh70{position:fixed;inset:0;z-index:2147483000;background:#07101bea;color:#f7fbff;display:flex;align-items:center;justify-content:center;padding:max(12px,env(safe-area-inset-top)) max(12px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));font-family:system-ui,-apple-system,sans-serif;box-sizing:border-box}
+#vh70 *{box-sizing:border-box}
+#vh70Panel{width:min(740px,100%);height:min(95dvh,640px);border:1px solid #9cb7df77;border-radius:18px;background:#11233b;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 15px 55px #000a}
+#vh70Header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:13px 17px;background:#172e4b;border-bottom:1px solid #9bb8d633}
+#vh70Header h2{margin:0;font-size:clamp(17px,3vw,23px)}
+#vh70Close{border:1px solid #a8c3e377;background:#30496b;color:white;border-radius:10px;padding:9px 14px;font-weight:700;cursor:pointer}
+#vh70Body{overflow-y:auto;overscroll-behavior:contain;padding:14px 18px 28px;-webkit-overflow-scrolling:touch;touch-action:pan-y}
+#vh70Latest{padding:12px 14px;background:#203f61;border:1px solid #7db9ec66;border-radius:12px;margin-bottom:15px}
+#vh70Latest strong{font-size:18px;color:#ffe19a}
+#vh70Latest p{font-size:12px;line-height:1.55;margin:6px 0}
+#vh70Build{font-family:monospace;font-size:11px;color:#d2e4ff;overflow-wrap:anywhere}
+#vh70 h3{font-size:15px;margin:18px 0 8px;color:#ffdf9e}
+#vh70Features{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px}
+#vh70Features div{padding:7px 9px;border:1px solid #89a6c744;border-radius:8px;display:flex;flex-direction:column;gap:2px;font-size:12px}
+#vh70Features small{color:#b9cee7}
+.vh70-item{display:grid;grid-template-columns:70px 1fr;gap:10px;border-bottom:1px solid #9db6d62d;padding:9px 0;font-size:13px}
+.vh70-ver{color:#ffdf9e;font-weight:800}
+.vh70-item p{font-size:12px;color:#c9d8ea;margin:3px 0;line-height:1.5}
+#vh70Note{color:#bed1e8;font-size:11px;line-height:1.6}
+@media(max-height:430px){#vh70Header{padding:7px 12px}#vh70Body{padding:8px 12px 18px}#vh70Latest{padding:8px 10px}}
+</style>
+<div id="vh70" hidden role="dialog" aria-modal="true" aria-label="更新履歴">
+ <section id="vh70Panel"><header id="vh70Header"><h2>更新履歴｜MONSTER ARENA</h2><button type="button" id="vh70Close">閉じる ×</button></header>
+ <div id="vh70Body"><div id="vh70Latest"><strong>現在の配布版 Ver.7.0</strong><p>Ver.6.9のゲーム機能を維持し、更新履歴の閲覧機能を追加した版です。</p><div id="vh70Build">基準ソース（6.9）SHA-256先頭12桁：bcb8bb4ee3c3<br>ビルド識別子：MA-7.0-bcb8bb4ee3c3</div></div>
+ <h3>この版に含まれる主な機能</h3><div id="vh70Features"><div><span>✓ 全画面バトル／透明スティック</span><small>Ver.5.9〜</small></div><div><span>✓ HP25％以下の赤ゲージ</span><small>Ver.6.0〜</small></div><div><span>✓ 初回タップでBGM開始</span><small>Ver.6.2〜</small></div><div><span>✓ LOSE演出</span><small>Ver.6.5〜</small></div><div><span>✓ WIN演出</span><small>Ver.6.6〜</small></div><div><span>✓ 長尺・変化型BGM</span><small>Ver.6.7〜</small></div><div><span>✓ 障害物を避ける初期配置</span><small>Ver.6.8〜</small></div><div><span>✓ 敵AI難易度調整</span><small>Ver.6.9〜</small></div></div>
+ <h3>バージョンごとの変更内容（新しい順）</h3><article class="vh70-item"><div class="vh70-ver">Ver.7.0</div><div><strong>更新履歴とビルド確認</strong><p>タイトル画面から全更新履歴を閲覧。現行版の識別情報と主な機能の確認欄を追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.9</div><div><strong>敵AIの難易度調整</strong><p>敵の技クールタイム32％増、敵ダメージ86％、敵の効果抜群倍率を1.5倍へ調整。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.8</div><div><strong>障害物を避ける初期配置</strong><p>岩・障害物の当たり判定と周辺の空きスペースを確認して出現位置を選択。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.7</div><div><strong>アダプティブBGM</strong><p>長い曲構成と強弱、HP減少時に同じ曲へ緊迫レイヤーを重ねる方式。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.6</div><div><strong>勝利演出・全場面BGM</strong><p>WIN演出、タップで次のトーナメント表へ進む仕組み、勝利用BGM。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.5</div><div><strong>敗北演出・操作範囲</strong><p>LOSE演出、タップで再挑戦へ進む仕組み、移動範囲・初期位置・空振り攻撃の調整。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.4</div><div><strong>オーケストラ風BGM</strong><p>弦・金管・ピアノ・打楽器風の音色と場面別の音楽表現。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.3</div><div><strong>中間調整版</strong><p>配布ファイルは現存。詳細な差分は個別確認が必要。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.2</div><div><strong>起動タップ画面</strong><p>初回タップでBGMを有効化し、タイトル待機画面へ移動。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.1</div><div><strong>iPhone音声開始の修正</strong><p>音量と音声開始処理を調整し、音楽再生ボタンを追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.0</div><div><strong>場面別BGMとHP表示</strong><p>タイトル・選択・トーナメント・戦闘・決着等のBGM、HP25％以下の赤ゲージ。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.9</div><div><strong>全画面バトル</strong><p>背景を大きく表示し、左下に技、右下に半透明スティックを重ねる配置。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.8</div><div><strong>横画面対応</strong><p>縦画面の回転案内、横向きレイアウト、誤拡大対策。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.7</div><div><strong>動くタイトル画面</strong><p>モンスターが動くタイトル、スタートボタン、バージョン表示。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.6</div><div><strong>配布用PWAの整備</strong><p>ホーム画面から起動できる配布形式を整備（この番号の単体HTMLは現存未確認）。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.5</div><div><strong>対戦・操作の改修</strong><p>操作性と戦闘画面を調整。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.4</div><div><strong>トーナメント関連の調整</strong><p>画面構成と操作を調整。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.3</div><div><strong>戦闘UIの調整</strong><p>操作表示や戦闘画面の配置を調整。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.2</div><div><strong>戦闘レイアウト</strong><p>バトル画面と操作エリアを上下に分割。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.1</div><div><strong>手動操作</strong><p>移動パッド、攻撃技ボタン、手動／自動移動の切り替えを追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.0</div><div><strong>基本バトルの基盤</strong><p>モンスター・技・対戦画面を備えたゲーム本体。</p></div></article>
+ <p id="vh70Note">※ 5.0〜6.4の一部は開発時の説明を基にした要約です。詳細不明の箇所はその旨を記載しています。履歴はこの配布ファイルに含まれる実装の説明であり、GitHub Pagesで現在配信されている版を自動照合するものではありません。</p>
+ </div></section></div>
+<script id="version-history-70-js">(()=>{
+ const panel=document.getElementById('vh70'),open=document.getElementById('vh70Open'),close=document.getElementById('vh70Close');
+ if(!panel||!open||!close)return;
+ open.addEventListener('click',()=>{panel.hidden=false;close.focus();});
+ close.addEventListener('click',()=>{panel.hidden=true;open.focus();});
+ panel.addEventListener('click',e=>{if(e.target===panel)panel.hidden=true;});
+ document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!panel.hidden)panel.hidden=true;});
+})();</script>
+</body></html>
