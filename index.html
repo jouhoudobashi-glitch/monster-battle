@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" name="viewport"/><title>モンスターアリーナ | MONSTER ARENA 7.2.9</title><meta name="theme-color" content="#101827"/>
+<html lang="ja"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" name="viewport"/><title>モンスターアリーナ | MONSTER ARENA 7.2.10</title><meta name="theme-color" content="#101827"/>
 <link rel="manifest" href="./manifest.webmanifest"/>
 <link rel="apple-touch-icon" sizes="180x180" href="./icons/icon-180.png"/>
 <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png"/>
@@ -346,23 +346,23 @@ const types=[{"name":"ノーマル","color":"#c9c5b5"},{"name":"炎","color":"#f
 const TYPE_CHART={"0":{"strong":[],"weak":[12]},"1":{"strong":[3,5,11],"weak":[1,2,12,14]},"2":{"strong":[1,8,12],"weak":[2,3,14]},"3":{"strong":[2,8,12],"weak":[1,3,7,9,11,14]},"4":{"strong":[2,9],"weak":[4,3,8,14]},"5":{"strong":[3,8,9,14],"weak":[1,2,5]},"6":{"strong":[0,5,12],"weak":[7,9,10,11,13]},"7":{"strong":[3],"weak":[7,8,12,13]},"8":{"strong":[1,4,7,12],"weak":[3,9,11]},"9":{"strong":[3,6,11],"weak":[4,12]},"10":{"strong":[6,7],"weak":[10]},"11":{"strong":[3,10],"weak":[1,6,7,9,13]},"12":{"strong":[1,5,9,11],"weak":[6,8]},"13":{"strong":[10,13],"weak":[0]},"14":{"strong":[14],"weak":[]}};
 function typeMultiplier(atk,def){return TYPE_CHART[atk].strong.includes(def)?2:TYPE_CHART[atk].weak.includes(def)?.5:1}
 const skills=[
-{name:'火炎弾',type:1,power:64,accuracy:.82,range:370,cd:3.4,wind:.48,shape:'bolt'},
-{name:'火炎放射',type:1,power:48,accuracy:.92,range:165,cd:4.0,wind:.62,shape:'cone'},
-{name:'体当たり',type:1,power:52,accuracy:.94,range:75,cd:2.3,wind:.25,shape:'close'},
-{name:'必中火球',type:1,power:32,accuracy:1,range:9999,cd:7,wind:.68,shape:'homing'},
-{name:'水鉄砲',type:2,power:57,accuracy:.88,range:360,cd:2.9,wind:.42,shape:'bolt'},
-{name:'水流波',type:2,power:43,accuracy:.92,range:170,cd:3.8,wind:.58,shape:'cone'},
-{name:'甲羅突進',type:2,power:65,accuracy:.9,range:85,cd:4.1,wind:.3,shape:'close'},
-{name:'必中水弾',type:2,power:30,accuracy:1,range:9999,cd:7,wind:.65,shape:'homing'},
-{name:'葉っぱカッター',type:3,power:56,accuracy:.83,range:390,cd:2.7,wind:.42,shape:'bolt'},
-{name:'つる攻撃',type:3,power:52,accuracy:.95,range:170,cd:3.3,wind:.5,shape:'cone'},
-{name:'種子爆弾',type:3,power:73,accuracy:.78,range:300,cd:4.7,wind:.62,shape:'bolt'},
-{name:'必中の根',type:3,power:29,accuracy:1,range:9999,cd:6.7,wind:.6,shape:'homing'},
-{name:'巨大化',type:1,power:0,accuracy:1,range:9999,cd:14,wind:.55,shape:'support',support:'giant'},
-{name:'硬化',type:2,power:0,accuracy:1,range:9999,cd:14,wind:.45,shape:'support',support:'armor'},
-{name:'加速',type:3,power:0,accuracy:1,range:9999,cd:12,wind:.35,shape:'support',support:'haste'},
-{name:'高速離脱',type:1,power:0,accuracy:1,range:9999,cd:8,wind:.12,shape:'support',support:'dash'},
-{name:'縮小',type:3,power:0,accuracy:1,range:9999,cd:14,wind:.4,shape:'support',support:'shrink'},{"name":"衝撃弾","type":0,"power":58,"accuracy":0.88,"range":430,"cd":3.1,"wind":0.4,"shape":"bolt"},{"name":"音速の波","type":0,"power":49,"accuracy":0.93,"range":205,"cd":4.1,"wind":0.55,"shape":"cone"},{"name":"猛進タックル","type":0,"power":67,"accuracy":0.9,"range":95,"cd":3.8,"wind":0.28,"shape":"close"},{"name":"必中の一撃","type":0,"power":34,"accuracy":1,"range":9999,"cd":7.4,"wind":0.68,"shape":"homing"},{"name":"紅蓮火球","type":1,"power":58,"accuracy":0.88,"range":430,"cd":3.1,"wind":0.4,"shape":"bolt"},{"name":"灼熱の息吹","type":1,"power":49,"accuracy":0.93,"range":205,"cd":4.1,"wind":0.55,"shape":"cone"},{"name":"火焔突撃","type":1,"power":67,"accuracy":0.9,"range":95,"cd":3.8,"wind":0.28,"shape":"close"},{"name":"追尾する火種","type":1,"power":34,"accuracy":1,"range":9999,"cd":7.4,"wind":0.68,"shape":"homing"},{"name":"水晶弾","type":2,"power":58,"accuracy":0.88,"range":430,"cd":3.1,"wind":0.4,"shape":"bolt"},{"name":"激流の渦","type":2,"power":49,"accuracy":0.93,"range":205,"cd":4.1,"wind":0.55,"shape":"cone"},{"name":"波乗り突進","type":2,"power":67,"accuracy":0.9,"range":95,"cd":3.8,"wind":0.28,"shape":"close"},{"name":"追跡水泡","type":2,"power":34,"accuracy":1,"range":9999,"cd":7.4,"wind":0.68,"shape":"homing"},{"name":"若葉の刃","type":3,"power":58,"accuracy":0.88,"range":430,"cd":3.1,"wind":0.4,"shape":"bolt"},{"name":"花粉の嵐","type":3,"power":49,"accuracy":0.93,"range":205,"cd":4.1,"wind":0.55,"shape":"cone"},{"name":"いばら突進","type":3,"power":67,"accuracy":0.9,"range":95,"cd":3.8,"wind":0.28,"shape":"close"},{"name":"追尾する種","type":3,"power":34,"accuracy":1,"range":9999,"cd":7.4,"wind":0.68,"shape":"homing"},{"name":"雷光弾","type":4,"power":58,"accuracy":0.88,"range":430,"cd":3.1,"wind":0.4,"shape":"bolt"},{"name":"放電の扇","type":4,"power":49,"accuracy":0.93,"range":205,"cd":4.1,"wind":0.55,"shape":"cone"},{"name":"雷撃突進","type":4,"power":67,"accuracy":0.9,"range":95,"cd":3.8,"wind":0.28,"shape":"close"},{"name":"追尾電磁球","type":4,"power":34,"accuracy":1,"range":9999,"cd":7.4,"wind":0.68,"shape":"homing"},{"name":"氷結弾","type":5,"power":58,"accuracy":0.88,"range":430,"cd":3.1,"wind":0.4,"shape":"bolt"},{"name":"吹雪の息吹","type":5,"power":49,"accuracy":0.93,"range":205,"cd":4.1,"wind":0.55,"shape":"cone"},{"name":"氷牙突進","type":5,"power":67,"accuracy":0.9,"range":95,"cd":3.8,"wind":0.28,"shape":"close"},{"name":"追尾氷晶","type":5,"power":34,"accuracy":1,"range":9999,"cd":7.4,"wind":0.68,"shape":"homing"},{"name":"気合弾","type":6,"power":58,"accuracy":0.88,"range":430,"cd":3.1,"wind":0.4,"shape":"bolt"},{"name":"闘気の波","type":6,"power":49,"accuracy":0.93,"range":205,"cd":4.1,"wind":0.55,"shape":"cone"},{"name":"烈風拳","type":6,"power":67,"accuracy":0.9,"range":95,"cd":3.8,"wind":0.28,"shape":"close"},{"name":"追尾気功弾","type":6,"power":34,"accuracy":1,"range":9999,"cd":7.4,"wind":0.68,"shape":"homing"},{"name":"毒液弾","type":7,"power":58,"accuracy":0.88,"range":430,"cd":3.1,"wind":0.4,"shape":"bolt"},{"name":"毒霧の扇","type":7,"power":49,"accuracy":0.93,"range":205,"cd":4.1,"wind":0.55,"shape":"cone"},{"name":"毒牙突進","type":7,"power":67,"accuracy":0.9,"range":95,"cd":3.8,"wind":0.28,"shape":"close"},{"name":"追尾毒胞子","type":7,"power":34,"accuracy":1,"range":9999,"cd":7.4,"wind":0.68,"shape":"homing"},{"name":"土塊弾","type":8,"power":58,"accuracy":0.88,"range":430,"cd":3.1,"wind":0.4,"shape":"bolt"},{"name":"砂嵐の扇","type":8,"power":49,"accuracy":0.93,"range":205,"cd":4.1,"wind":0.55,"shape":"cone"},{"name":"地割れ突進","type":8,"power":67,"accuracy":0.9,"range":95,"cd":3.8,"wind":0.28,"shape":"close"},{"name":"追尾岩塊","type":8,"power":34,"accuracy":1,"range":9999,"cd":7.4,"wind":0.68,"shape":"homing"},{"name":"風刃弾","type":9,"power":58,"accuracy":0.88,"range":430,"cd":3.1,"wind":0.4,"shape":"bolt"},{"name":"突風の扇","type":9,"power":49,"accuracy":0.93,"range":205,"cd":4.1,"wind":0.55,"shape":"cone"},{"name":"翼撃突進","type":9,"power":67,"accuracy":0.9,"range":95,"cd":3.8,"wind":0.28,"shape":"close"},{"name":"追尾旋風","type":9,"power":34,"accuracy":1,"range":9999,"cd":7.4,"wind":0.68,"shape":"homing"},{"name":"念力弾","type":10,"power":58,"accuracy":0.88,"range":430,"cd":3.1,"wind":0.4,"shape":"bolt"},{"name":"精神波","type":10,"power":49,"accuracy":0.93,"range":205,"cd":4.1,"wind":0.55,"shape":"cone"},{"name":"思念頭突き","type":10,"power":67,"accuracy":0.9,"range":95,"cd":3.8,"wind":0.28,"shape":"close"},{"name":"追尾念動球","type":10,"power":34,"accuracy":1,"range":9999,"cd":7.4,"wind":0.68,"shape":"homing"},{"name":"甲殻弾","type":11,"power":58,"accuracy":0.88,"range":430,"cd":3.1,"wind":0.4,"shape":"bolt"},{"name":"虫羽の嵐","type":11,"power":49,"accuracy":0.93,"range":205,"cd":4.1,"wind":0.55,"shape":"cone"},{"name":"角突き","type":11,"power":67,"accuracy":0.9,"range":95,"cd":3.8,"wind":0.28,"shape":"close"},{"name":"追尾する繭","type":11,"power":34,"accuracy":1,"range":9999,"cd":7.4,"wind":0.68,"shape":"homing"},{"name":"岩石弾","type":12,"power":58,"accuracy":0.88,"range":430,"cd":3.1,"wind":0.4,"shape":"bolt"},{"name":"礫の嵐","type":12,"power":49,"accuracy":0.93,"range":205,"cd":4.1,"wind":0.55,"shape":"cone"},{"name":"岩刃突き","type":12,"power":67,"accuracy":0.9,"range":95,"cd":3.8,"wind":0.28,"shape":"close"},{"name":"追尾岩球","type":12,"power":34,"accuracy":1,"range":9999,"cd":7.4,"wind":0.68,"shape":"homing"},{"name":"霊火弾","type":13,"power":58,"accuracy":0.88,"range":430,"cd":3.1,"wind":0.4,"shape":"bolt"},{"name":"呪いの波","type":13,"power":49,"accuracy":0.93,"range":205,"cd":4.1,"wind":0.55,"shape":"cone"},{"name":"影の爪","type":13,"power":67,"accuracy":0.9,"range":95,"cd":3.8,"wind":0.28,"shape":"close"},{"name":"追尾する魂","type":13,"power":34,"accuracy":1,"range":9999,"cd":7.4,"wind":0.68,"shape":"homing"},{"name":"竜気弾","type":14,"power":58,"accuracy":0.88,"range":430,"cd":3.1,"wind":0.4,"shape":"bolt"},{"name":"竜巻の息吹","type":14,"power":49,"accuracy":0.93,"range":205,"cd":4.1,"wind":0.55,"shape":"cone"},{"name":"竜爪突進","type":14,"power":67,"accuracy":0.9,"range":95,"cd":3.8,"wind":0.28,"shape":"close"},{"name":"追尾竜珠","type":14,"power":34,"accuracy":1,"range":9999,"cd":7.4,"wind":0.68,"shape":"homing"}];
+{name:'ほのおだま',type:1,power:64,accuracy:.82,range:370,cd:3.4,wind:.48,shape:'bolt'},
+{name:'ほのおブレス',type:1,power:48,accuracy:.92,range:165,cd:4.0,wind:.62,shape:'cone'},
+{name:'たいあたり',type:1,power:52,accuracy:.94,range:75,cd:2.3,wind:.25,shape:'close'},
+{name:'ひだまサーチ',type:1,power:32,accuracy:1,range:9999,cd:7,wind:.68,shape:'homing'},
+{name:'みずでっぽう',type:2,power:57,accuracy:.88,range:360,cd:2.9,wind:.42,shape:'bolt'},
+{name:'みずのウェーブ',type:2,power:43,accuracy:.92,range:170,cd:3.8,wind:.58,shape:'cone'},
+{name:'こうらダッシュ',type:2,power:65,accuracy:.9,range:85,cd:4.1,wind:.3,shape:'close'},
+{name:'あわホーミング',type:2,power:30,accuracy:1,range:9999,cd:7,wind:.65,shape:'homing'},
+{name:'はっぱカッター',type:3,power:56,accuracy:.83,range:390,cd:2.7,wind:.42,shape:'bolt'},
+{name:'つるスイング',type:3,power:52,accuracy:.95,range:170,cd:3.3,wind:.5,shape:'cone'},
+{name:'たねばくだん',type:3,power:73,accuracy:.78,range:300,cd:4.7,wind:.62,shape:'bolt'},
+{name:'ねっこロック',type:3,power:29,accuracy:1,range:9999,cd:6.7,wind:.6,shape:'homing'},
+{name:'きょだいか',type:1,power:0,accuracy:1,range:9999,cd:14,wind:.55,shape:'support',support:'giant'},
+{name:'かたくなる',type:2,power:0,accuracy:1,range:9999,cd:14,wind:.45,shape:'support',support:'armor'},
+{name:'スピードアップ',type:3,power:0,accuracy:1,range:9999,cd:12,wind:.35,shape:'support',support:'haste'},
+{name:'クイックにげ',type:1,power:0,accuracy:1,range:9999,cd:8,wind:.12,shape:'support',support:'dash'},
+{name:'ちいさくなる',type:3,power:0,accuracy:1,range:9999,cd:14,wind:.4,shape:'support',support:'shrink'},{"name":'ふみこみづき',"type":0,"power":58,"accuracy":0.88,"range":430,"cd":3.1,"wind":0.4,"shape":"bolt"},{"name":'れんぞくツメ',"type":0,"power":49,"accuracy":0.93,"range":205,"cd":4.1,"wind":0.55,"shape":"cone"},{"name":'でんこうせっか',"type":0,"power":67,"accuracy":0.9,"range":95,"cd":3.8,"wind":0.28,"shape":"close"},{"name":'しっぽうち',"type":0,"power":34,"accuracy":1,"range":9999,"cd":7.4,"wind":0.68,"shape":"homing"},{"name":'ぐれんのたま',"type":1,"power":58,"accuracy":0.88,"range":430,"cd":3.1,"wind":0.4,"shape":"bolt"},{"name":'しゃくねついき',"type":1,"power":49,"accuracy":0.93,"range":205,"cd":4.1,"wind":0.55,"shape":"cone"},{"name":'かえんとっしん',"type":1,"power":67,"accuracy":0.9,"range":95,"cd":3.8,"wind":0.28,"shape":"close"},{"name":'ひだねついせき',"type":1,"power":34,"accuracy":1,"range":9999,"cd":7.4,"wind":0.68,"shape":"homing"},{"name":'すいしょうだま',"type":2,"power":58,"accuracy":0.88,"range":430,"cd":3.1,"wind":0.4,"shape":"bolt"},{"name":'げきりゅううず',"type":2,"power":49,"accuracy":0.93,"range":205,"cd":4.1,"wind":0.55,"shape":"cone"},{"name":'なみのりづき',"type":2,"power":67,"accuracy":0.9,"range":95,"cd":3.8,"wind":0.28,"shape":"close"},{"name":'あわついせき',"type":2,"power":34,"accuracy":1,"range":9999,"cd":7.4,"wind":0.68,"shape":"homing"},{"name":'わかばカッター',"type":3,"power":58,"accuracy":0.88,"range":430,"cd":3.1,"wind":0.4,"shape":"bolt"},{"name":'かふんあらし',"type":3,"power":49,"accuracy":0.93,"range":205,"cd":4.1,"wind":0.55,"shape":"cone"},{"name":'いばらダッシュ',"type":3,"power":67,"accuracy":0.9,"range":95,"cd":3.8,"wind":0.28,"shape":"close"},{"name":'たねついせき',"type":3,"power":34,"accuracy":1,"range":9999,"cd":7.4,"wind":0.68,"shape":"homing"},{"name":'らいこうだま',"type":4,"power":58,"accuracy":0.88,"range":430,"cd":3.1,"wind":0.4,"shape":"bolt"},{"name":'ほうでんのかぜ',"type":4,"power":49,"accuracy":0.93,"range":205,"cd":4.1,"wind":0.55,"shape":"cone"},{"name":'でんこうせっか',"type":4,"power":67,"accuracy":0.9,"range":95,"cd":3.8,"wind":0.28,"shape":"close"},{"name":'でんじチェイス',"type":4,"power":34,"accuracy":1,"range":9999,"cd":7.4,"wind":0.68,"shape":"homing"},{"name":'こおりだま',"type":5,"power":58,"accuracy":0.88,"range":430,"cd":3.1,"wind":0.4,"shape":"bolt"},{"name":'ふぶきブレス',"type":5,"power":49,"accuracy":0.93,"range":205,"cd":4.1,"wind":0.55,"shape":"cone"},{"name":'こおりのキバ',"type":5,"power":67,"accuracy":0.9,"range":95,"cd":3.8,"wind":0.28,"shape":"close"},{"name":'こおりチェイス',"type":5,"power":34,"accuracy":1,"range":9999,"cd":7.4,"wind":0.68,"shape":"homing"},{"name":'れんだパンチ',"type":6,"power":58,"accuracy":0.88,"range":430,"cd":3.1,"wind":0.4,"shape":"bolt"},{"name":'まわしげり',"type":6,"power":49,"accuracy":0.93,"range":205,"cd":4.1,"wind":0.55,"shape":"cone"},{"name":'ふみアッパー',"type":6,"power":67,"accuracy":0.9,"range":95,"cd":3.8,"wind":0.28,"shape":"close"},{"name":'かたタックル',"type":6,"power":34,"accuracy":1,"range":9999,"cd":7.4,"wind":0.68,"shape":"homing"},{"name":'どくえきだま',"type":7,"power":58,"accuracy":0.88,"range":430,"cd":3.1,"wind":0.4,"shape":"bolt"},{"name":'どくぎり',"type":7,"power":49,"accuracy":0.93,"range":205,"cd":4.1,"wind":0.55,"shape":"cone"},{"name":'どくキバづき',"type":7,"power":67,"accuracy":0.9,"range":95,"cd":3.8,"wind":0.28,"shape":"close"},{"name":'どくついせき',"type":7,"power":34,"accuracy":1,"range":9999,"cd":7.4,"wind":0.68,"shape":"homing"},{"name":'つちだま',"type":8,"power":58,"accuracy":0.88,"range":430,"cd":3.1,"wind":0.4,"shape":"bolt"},{"name":'すなあらし',"type":8,"power":49,"accuracy":0.93,"range":205,"cd":4.1,"wind":0.55,"shape":"cone"},{"name":'じわれダッシュ',"type":8,"power":67,"accuracy":0.9,"range":95,"cd":3.8,"wind":0.28,"shape":"close"},{"name":'いわついせき',"type":8,"power":34,"accuracy":1,"range":9999,"cd":7.4,"wind":0.68,"shape":"homing"},{"name":'かぜのやいば',"type":9,"power":58,"accuracy":0.88,"range":430,"cd":3.1,"wind":0.4,"shape":"bolt"},{"name":'つむじかぜ',"type":9,"power":49,"accuracy":0.93,"range":205,"cd":4.1,"wind":0.55,"shape":"cone"},{"name":'つばさアタック',"type":9,"power":67,"accuracy":0.9,"range":95,"cd":3.8,"wind":0.28,"shape":"close"},{"name":'かぜついせき',"type":9,"power":34,"accuracy":1,"range":9999,"cd":7.4,"wind":0.68,"shape":"homing"},{"name":'ねんりきだま',"type":10,"power":58,"accuracy":0.88,"range":430,"cd":3.1,"wind":0.4,"shape":"bolt"},{"name":'サイコウェーブ',"type":10,"power":49,"accuracy":0.93,"range":205,"cd":4.1,"wind":0.55,"shape":"cone"},{"name":'ねんりきヘッド',"type":10,"power":67,"accuracy":0.9,"range":95,"cd":3.8,"wind":0.28,"shape":"close"},{"name":'サイコサーチ',"type":10,"power":34,"accuracy":1,"range":9999,"cd":7.4,"wind":0.68,"shape":"homing"},{"name":'こうかくだま',"type":11,"power":58,"accuracy":0.88,"range":430,"cd":3.1,"wind":0.4,"shape":"bolt"},{"name":'むしばねあらし',"type":11,"power":49,"accuracy":0.93,"range":205,"cd":4.1,"wind":0.55,"shape":"cone"},{"name":'ツノアタック',"type":11,"power":67,"accuracy":0.9,"range":95,"cd":3.8,"wind":0.28,"shape":"close"},{"name":'まゆチェイス',"type":11,"power":34,"accuracy":1,"range":9999,"cd":7.4,"wind":0.68,"shape":"homing"},{"name":'がんせきだま',"type":12,"power":58,"accuracy":0.88,"range":430,"cd":3.1,"wind":0.4,"shape":"bolt"},{"name":'こいしあらし',"type":12,"power":49,"accuracy":0.93,"range":205,"cd":4.1,"wind":0.55,"shape":"cone"},{"name":'いわブレード',"type":12,"power":67,"accuracy":0.9,"range":95,"cd":3.8,"wind":0.28,"shape":"close"},{"name":'がんせきサーチ',"type":12,"power":34,"accuracy":1,"range":9999,"cd":7.4,"wind":0.68,"shape":"homing"},{"name":'おにびだま',"type":13,"power":58,"accuracy":0.88,"range":430,"cd":3.1,"wind":0.4,"shape":"bolt"},{"name":'のろいのなみ',"type":13,"power":49,"accuracy":0.93,"range":205,"cd":4.1,"wind":0.55,"shape":"cone"},{"name":'かげのツメ',"type":13,"power":67,"accuracy":0.9,"range":95,"cd":3.8,"wind":0.28,"shape":"close"},{"name":'たましいサーチ',"type":13,"power":34,"accuracy":1,"range":9999,"cd":7.4,"wind":0.68,"shape":"homing"},{"name":'りゅうきだま',"type":14,"power":58,"accuracy":0.88,"range":430,"cd":3.1,"wind":0.4,"shape":"bolt"},{"name":'たつまきブレス',"type":14,"power":49,"accuracy":0.93,"range":205,"cd":4.1,"wind":0.55,"shape":"cone"},{"name":'ドラゴンクロー',"type":14,"power":67,"accuracy":0.9,"range":95,"cd":3.8,"wind":0.28,"shape":"close"},{"name":'りゅうサーチ',"type":14,"power":34,"accuracy":1,"range":9999,"cd":7.4,"wind":0.68,"shape":"homing"}];
 const SUPPORTS=[12,13,14,15,16],SUPPORT_DURATION={giant:7,armor:8,haste:6,shrink:7,dash:.25};
 let supportChoice=[12,13];
 function activeSupport(f){return f.buff&&f.buff.time>0?f.buff.kind:null}
@@ -409,9 +409,9 @@ function tone(freq,duration,kind='sine',gain=.28,slide=1,delay=0){
  g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(Math.max(.0002,gain),t+.009);g.gain.exponentialRampToValueAtTime(.0001,t+duration);
  o.connect(g);g.connect(SE.master);o.start(t);o.stop(t+duration+.02);
 }
-function noise(duration=.15,level=.16,cutoff=900){
+function noise(duration=.15,level=.16,cutoff=900,delay=0){
  if(!SE.enabled||!SE.ctx||!SE.master)return;
- const c=SE.ctx,t=c.currentTime,n=Math.ceil(c.sampleRate*duration),b=c.createBuffer(1,n,c.sampleRate),v=b.getChannelData(0);
+ const c=SE.ctx,t=c.currentTime+delay,n=Math.ceil(c.sampleRate*duration),b=c.createBuffer(1,n,c.sampleRate),v=b.getChannelData(0);
  for(let i=0;i<n;i++)v[i]=(Math.random()*2-1)*(1-i/n);
  const source=c.createBufferSource(),f=c.createBiquadFilter(),g=c.createGain();source.buffer=b;f.type='lowpass';f.frequency.value=cutoff;g.gain.setValueAtTime(level,t);g.gain.exponentialRampToValueAtTime(.0001,t+duration);
  source.connect(f);f.connect(g);g.connect(SE.master);source.start(t);
@@ -436,15 +436,21 @@ function sound(event,type=0,shape='bolt'){
   if(shape==='dash')noise(.12,.1,2600);
  }
  else if(event==='koGong'){
-  // Three resonant, inharmonic brass/metal bell strikes: KAAAN, KAAAN, KAAAN.
-  for(const at of [0,.54,1.08]){
-    tone(540,.86,'triangle',.28,1.003,at);
-    tone(808,.76,'sine',.20,.998,at);
-    tone(1192,.68,'sine',.13,1.01,at);
-    tone(1724,.45,'sine',.07,1.015,at);
-    tone(260,.25,'triangle',.07,.76,at);
+  // Version 7.2.10: first gong 0.50 s after fatal hit; three 0.48 s strikes
+  // at 0.50 s intervals. Gong-only levels are about 1.85x the prior version.
+  // Lower the MP3 BGM slightly during the strikes; do not pause/restart it.
+  const strikes=[.50,1.00,1.50],duration=.48,boost=1.85;
+  for(const at of strikes){
+    tone(540,duration,'triangle',.28*boost,1.003,at);
+    tone(808,duration,'sine',.20*boost,.998,at);
+    tone(1192,duration,'sine',.13*boost,1.01,at);
+    tone(1724,.40,'sine',.07*boost,1.015,at);
+    tone(260,.32,'triangle',.07*boost,.76,at);
+    noise(.065,.16*boost,2800,at);
   }
-  noise(.09,.24,2800);
+  window.dispatchEvent(new CustomEvent('arena-ko-gong-scheduled',{
+    detail:{delays:strikes,secondPerStrike:duration,gainBoost:boost}
+  }));
  }
  else if(event==='win'){[523,659,784,1047].forEach((f,i)=>tone(f,.20,'triangle',.17,1,.13*i))}
 }
@@ -530,19 +536,25 @@ function togglePause(){if(!game||!game.active||game.ended)return;game.paused=!ga
 function lineBlocked(a,b){for(let r of rocks){let vx=b.x-a.x,vy=b.y-a.y,t=Math.max(0,Math.min(1,((r.x-a.x)*vx+(r.y-a.y)*vy)/(vx*vx+vy*vy||1)));if(Math.hypot(a.x+vx*t-r.x,a.y+vy*t-r.y)<r.r+8)return true}return false}
 function free(x,y){if(x<255||x>FIELD.w-110||y<205||y>FIELD.h-95)return false;return !rocks.some(r=>Math.hypot(x-r.x,y-r.y)<r.r+32)}
 // v4.6 legacy overrides (rebalanced by v4.7 below).
-Object.assign(skills[19],{name:'電光石火タックル',power:78,accuracy:.94,range:265,cd:4.7,wind:.22,shape:'close',contact:'rush',travel:.25});
-Object.assign(skills[41],{name:'連打パンチ',power:94,accuracy:.94,range:104,cd:3.6,wind:.19,shape:'close',contact:'punch',travel:.18});
-Object.assign(skills[42],{name:'回し蹴り',power:112,accuracy:.88,range:110,cd:4.6,wind:.34,shape:'close',contact:'kick',travel:.22});
-Object.assign(skills[43],{name:'猛進ラッシュ',power:105,accuracy:.91,range:188,cd:5.0,wind:.26,shape:'close',contact:'rush',travel:.27});
+Object.assign(skills[19],{name:'でんこうせっか',power:78,accuracy:.94,range:265,cd:4.7,wind:.22,shape:'close',contact:'rush',travel:.25});
+Object.assign(skills[41],{name:'れんだパンチ',power:94,accuracy:.94,range:104,cd:3.6,wind:.19,shape:'close',contact:'punch',travel:.18});
+Object.assign(skills[42],{name:'まわしげり',power:112,accuracy:.88,range:110,cd:4.6,wind:.34,shape:'close',contact:'kick',travel:.22});
+Object.assign(skills[43],{name:'ふみアッパー',power:105,accuracy:.91,range:188,cd:5.0,wind:.26,shape:'close',contact:'rush',travel:.27});
 // v4.7: Normal and Fighting are physical-only disciplines. No ranged counters.
-Object.assign(skills[17],{name:'踏み込みタックル',type:0,power:64,accuracy:.94,range:94,cd:3.1,wind:.27,shape:'close',contact:'rush',travel:.23});
-Object.assign(skills[18],{name:'連続ひっかき',type:0,power:57,accuracy:.95,range:79,cd:2.7,wind:.22,shape:'close',contact:'claw',travel:.30});
-Object.assign(skills[19],{name:'電光石火タックル',type:0,power:74,accuracy:.93,range:215,cd:5.0,wind:.26,shape:'close',contact:'rush',travel:.28});
-Object.assign(skills[20],{name:'しっぽ打ち',type:0,power:61,accuracy:.93,range:78,cd:3.4,wind:.29,shape:'close',contact:'tail',travel:.27});
-Object.assign(skills[41],{name:'連打パンチ',type:6,power:77,accuracy:.93,range:81,cd:3.7,wind:.25,shape:'close',contact:'punch',travel:.32});
-Object.assign(skills[42],{name:'回し蹴り',type:6,power:89,accuracy:.87,range:86,cd:4.8,wind:.35,shape:'close',contact:'kick',travel:.38});
-Object.assign(skills[43],{name:'踏み込みアッパー',type:6,power:83,accuracy:.91,range:84,cd:4.5,wind:.30,shape:'close',contact:'uppercut',travel:.31});
-Object.assign(skills[44],{name:'ショルダータックル',type:6,power:75,accuracy:.94,range:107,cd:4.2,wind:.31,shape:'close',contact:'rush',travel:.29});
+Object.assign(skills[17],{name:'ふみこみづき',type:0,power:64,accuracy:.94,range:94,cd:3.1,wind:.27,shape:'close',contact:'rush',travel:.23});
+Object.assign(skills[18],{name:'れんぞくツメ',type:0,power:57,accuracy:.95,range:79,cd:2.7,wind:.22,shape:'close',contact:'claw',travel:.30});
+Object.assign(skills[19],{name:'でんこうせっか',type:0,power:74,accuracy:.93,range:215,cd:5.0,wind:.26,shape:'close',contact:'rush',travel:.28});
+Object.assign(skills[20],{name:'しっぽうち',type:0,power:61,accuracy:.93,range:78,cd:3.4,wind:.29,shape:'close',contact:'tail',travel:.27});
+Object.assign(skills[41],{name:'れんだパンチ',type:6,power:77,accuracy:.93,range:81,cd:3.7,wind:.25,shape:'close',contact:'punch',travel:.32});
+Object.assign(skills[42],{name:'まわしげり',type:6,power:89,accuracy:.87,range:86,cd:4.8,wind:.35,shape:'close',contact:'kick',travel:.38});
+Object.assign(skills[43],{name:'ふみアッパー',type:6,power:83,accuracy:.91,range:84,cd:4.5,wind:.30,shape:'close',contact:'uppercut',travel:.31});
+Object.assign(skills[44],{name:'かたタックル',type:6,power:75,accuracy:.94,range:107,cd:4.2,wind:.31,shape:'close',contact:'rush',travel:.29});
+// Version 7.2.10: ensure short, readable skill names at runtime, after legacy overrides.
+skills.forEach((skill, index) => {
+  if ([...skill.name].length > 7 || /[\u3400-\u9fff\uf900-\ufaff]/u.test(skill.name)) {
+    throw new Error(`Skill label invalid at index ${index}: ${skill.name}`);
+  }
+});
 // Type-locked fourth slot: never inject ranged or off-type skills into these fighters.
 const originalCounterMove=counterMove;
 counterMove=function(myId,enemyId){
@@ -940,20 +952,8 @@ function drawEffects(){
  }
 }
 
-// Ver.7.2.9: Fatal-hit camera + independent 3-second knockout animation.
+// Ver.7.2.10: fatal-hit camera, offscreen knockback and 9-FPS stop-motion impact.
 // Combat logic is stopped; only this animation's requestAnimationFrame continues.
-function drawClosedEyes729(f){
-  // Species-specific head offsets on the existing articulated sprite (no change to normal art).
-  const heads=[[31,-52],[30,-50],[28,-64],[26,-64],[30,-60],[30,-60],[25,-64],[27,-55],[21,-55],[27,-64],[29,-64],[25,-61],[19,-53],[17,-47],[27,-85]];
-  const h=heads[f.id]||[25,-85],face=f.dir>=0?1:-1;
-  ctx.save();ctx.translate(f.x+face*h[0],f.y+h[1]);ctx.scale(face,1);
-  // A short, dark down-curved eyelid with a pale highlight and comic impact spark.
-  ctx.lineCap='round';ctx.lineJoin='round';
-  ctx.strokeStyle='#f3e4ce';ctx.lineWidth=5;ctx.beginPath();ctx.moveTo(-9,-2);ctx.quadraticCurveTo(0,5,9,-2);ctx.stroke();
-  ctx.strokeStyle='#17212d';ctx.lineWidth=3.3;ctx.beginPath();ctx.moveTo(-9,-2);ctx.quadraticCurveTo(0,5,9,-2);ctx.stroke();
-  ctx.strokeStyle='#fefcff';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(11,-9);ctx.lineTo(18,-14);ctx.moveTo(13,-3);ctx.lineTo(21,-4);ctx.stroke();
-  ctx.restore();
-}
 function beginKnockout729(winner,loser,skill){
   if(!game||game.ended||game.finishing)return;
   const battle=game;game.finishing=true;game.active=false;game.paused=true;
@@ -961,31 +961,40 @@ function beginKnockout729(winner,loser,skill){
   loser.dir=winner.x>=loser.x?1:-1;
   loser.state='hurt';loser.stateTime=0;
   const start=performance.now(),duration=3000;
+  // Deliberately present 9 frames/second during the knockout, while leaving browser/game FPS untouched.
+  // Quantized positions and camera create an arcade-style stop-motion impact, not actual lag.
+  const steps=27, stepMs=duration/steps, travel=FIELD.w+220;
+  let lastStep=-1;
   document.getElementById('pause').disabled=true;
-  document.getElementById('status').textContent='決着！ 最後の一撃をスローモーションで再生中…';
+  document.getElementById('status').textContent='決着！ 最後の一撃をコマ送りで再生中…';
   sound('koGong');
-  window.dispatchEvent(new CustomEvent('arena-knockout-start',{detail:{loser:loser.m.name,winner:winner.m.name,duration}}));
+  window.dispatchEvent(new CustomEvent('arena-knockout-start',{detail:{loser:loser.m.name,winner:winner.m.name,duration,visualFps:9,travel}}));
   function knockFrame(now){
     if(game!==battle||!battle.finishing)return;
     const p=Math.max(0,Math.min(1,(now-start)/duration));
-    // Hold the impact for an instant, then fling the loser one quarter-field away.
-    const q=p<=.14?0:1-Math.pow(1-(p-.14)/.86,2.1);
-    loser.x=ox+dir*FIELD.w*.25*q;
-    loser.y=oy-86*Math.sin(Math.PI*q)+36*q;
-    loser.stateTime=p*.20;
-    const zoom=1.18+.50*Math.sin(Math.PI*.5*Math.min(1,p/.25))-.22*Math.max(0,(p-.57)/.43);
+    const step=p>=1?steps:Math.min(steps-1,Math.floor((now-start)/stepMs));
+    if(step===lastStep && p<1){requestAnimationFrame(knockFrame);return;}
+    lastStep=step;
+    const q=step/steps;
+    // Constant-velocity knockback, at least a whole arena width, until fully offscreen.
+    loser.x=ox+dir*travel*q;
+    loser.y=oy-86*Math.sin(Math.PI*q)+32*q;
+    loser.stateTime=q*.20;
+    const zoom=1.18+.50*Math.sin(Math.PI*.5*Math.min(1,q/.25))-.22*Math.max(0,(q-.57)/.43);
     const fX=ox+(loser.x-ox)*.47;
     const fY=oy-80;
     const cameraX=Math.min(FIELD.w-FIELD.w/(zoom*2),Math.max(FIELD.w/(zoom*2),fX));
     const cameraY=Math.min(FIELD.h-FIELD.h/(zoom*2),Math.max(FIELD.h/(zoom*2),fY));
+    // Frame-stepped whole-scene shake, never a performance throttle.
+    const shakeX=([0,4,-4,2,-2][step%5])*(1-.5*q);
+    const shakeY=([0,-3,2,-2,3][step%5])*(1-.5*q);
     ctx.save();ctx.fillStyle='#030c1c';ctx.fillRect(0,0,FIELD.w,FIELD.h);
-    ctx.translate(FIELD.w/2,FIELD.h/2);ctx.scale(zoom,zoom);ctx.translate(-cameraX,-cameraY);
-    // Existing monsters, battle background and skill effects remain frozen except for the losing fighter.
-    draw();drawClosedEyes729(loser);
+    ctx.translate(FIELD.w/2+shakeX,FIELD.h/2+shakeY);ctx.scale(zoom,zoom);ctx.translate(-cameraX,-cameraY);
+    draw(); // Preserve each monster's original sprite; no painted-on eyes or artificial facial marks.
     ctx.restore();
-    if(p<.22){ctx.save();ctx.globalAlpha=(1-p/.22)*.26;ctx.fillStyle='#fff8db';ctx.fillRect(0,0,FIELD.w,FIELD.h);ctx.restore();}
-    if(p>.28&&p<.96){
-      const a=Math.min(1,(p-.28)*7,(.96-p)*8);
+    if(q<.22){ctx.save();ctx.globalAlpha=(1-q/.22)*.26;ctx.fillStyle='#fff8db';ctx.fillRect(0,0,FIELD.w,FIELD.h);ctx.restore();}
+    if(q>.23&&q<.96){
+      const a=Math.min(1,(q-.23)*7,(.96-q)*8);
       ctx.save();ctx.globalAlpha=Math.max(0,a);ctx.textAlign='center';ctx.font='1000 italic 124px system-ui';ctx.lineWidth=13;ctx.strokeStyle='#0b1737';ctx.fillStyle='#fff2b9';ctx.shadowBlur=34;ctx.shadowColor='#ffc95b';ctx.strokeText('K.O.!',FIELD.w/2,FIELD.h*.25);ctx.fillText('K.O.!',FIELD.w/2,FIELD.h*.25);ctx.restore();
     }
     if(p<1)requestAnimationFrame(knockFrame);
@@ -1710,7 +1719,7 @@ requestAnimationFrame(sync);
 <canvas aria-hidden="true" id="home57Canvas"></canvas>
 <div id="home57Top"><h1>モンスターアリーナ</h1><p>15体のモンスターが集う、夢のバトルフィールド</p></div>
 <div id="home57Scene">花咲く草原</div>
-<div id="home57Bottom"><button id="home57Start" type="button">▶ スタート</button><div id="home57Version">MONSTER ARENA · Ver.7.2.9</div><button id="vh70Open" type="button">更新履歴・現在の機能を確認</button></div>
+<div id="home57Bottom"><button id="home57Start" type="button">▶ スタート</button><div id="home57Version">MONSTER ARENA · Ver.7.2.10</div><button id="vh70Open" type="button">更新履歴・現在の機能を確認</button></div>
 </div>
 <script id="home57-script">(()=>{
 'use strict';
@@ -1869,7 +1878,7 @@ updateToggle();setPhase('home');checkHp();
 @keyframes splash62pulse{50%{box-shadow:0 0 35px #f4c66aa0;filter:brightness(1.07)}}
 @media(prefers-reduced-motion:reduce){#splash62 button{animation:none}}
 </style>
-<div aria-label="ゲーム起動と音楽の開始" aria-modal="true" id="splash62" role="dialog"><div class="panel"><h1>モンスターアリーナ</h1><p>音楽とともに、モンスターたちの世界へ。</p><button id="splash62Go" type="button">♪ タップしてはじめる</button><small>MONSTER ARENA · Ver.7.2.9</small></div></div>
+<div aria-label="ゲーム起動と音楽の開始" aria-modal="true" id="splash62" role="dialog"><div class="panel"><h1>モンスターアリーナ</h1><p>音楽とともに、モンスターたちの世界へ。</p><button id="splash62Go" type="button">♪ タップしてはじめる</button><small>MONSTER ARENA · Ver.7.2.10</small></div></div>
 <script id="splash62-js">(()=>{const splash=document.getElementById('splash62');const button=document.getElementById('splash62Go');button.addEventListener('click',()=>{const music=document.getElementById('music61Hint');if(music)music.click();splash.hidden=true;const home=document.getElementById('home57');if(home)home.removeAttribute('aria-hidden');window.dispatchEvent(new Event('resize'));},{once:true});})();</script><style id="patch65-css">
 #fullscreenToggle,#manualFull,#hudExit{display:none!important}
 #tourneyOverlay.tourney-fixed{z-index:2147482000!important}
@@ -1952,9 +1961,9 @@ updateToggle();setPhase('home');checkHp();
 </style>
 <div aria-label="更新履歴" aria-modal="true" hidden="" id="vh70" role="dialog">
 <section id="vh70Panel"><header id="vh70Header"><h2>更新履歴｜MONSTER ARENA</h2><button id="vh70Close" type="button">閉じる ×</button></header>
-<div id="vh70Body"><div id="vh70Latest"><strong>Ver.7.2.9</strong><p>15種類全員が参戦する4回戦トーナメント（NPCに不戦勝1枠）に拡張。HPが0になる最後の一撃は戦闘を3秒間停止し、スローズーム・目をつぶるリアクション・相手から離れる方向への吹き飛び・3回のゴング音を追加。決勝直前の5秒演出と優勝BGMは従来どおりです。</p><div id="vh70Build">基準ソース（6.9）SHA-256先頭12桁：bcb8bb4ee3c3<br/>ビルド識別子：MA-7.2.9-fifteen-ko</div></div>
+<div id="vh70Body"><div id="vh70Latest"><strong>Ver.7.2.10</strong><p>KO時は目の加工をせず、約9コマ/秒で等速の場外吹き飛ばしを演出。0.5秒後から0.5秒間隔で3打のゴングを鳴らします。飾り文字を透明背景にし、全77技名を漢字なし・7文字以内へ統一しました。</p><div id="vh70Build">ビルド識別子：MA-7.2.10-ko-skillnames</div></div>
 <h3>この版に含まれる主な機能</h3><div id="vh70Features"><div><span>✓ 全画面バトル／透明スティック</span><small>Ver.5.9〜</small></div><div><span>✓ HP25％以下の赤ゲージ</span><small>Ver.6.0〜</small></div><div><span>✓ 初回タップでBGM開始</span><small>Ver.6.2〜</small></div><div><span>✓ LOSE演出</span><small>Ver.6.5〜</small></div><div><span>✓ WIN演出</span><small>Ver.6.6〜</small></div><div><span>✓ 長尺・変化型BGM</span><small>Ver.6.7〜</small></div><div><span>✓ 障害物を避ける初期配置</span><small>Ver.6.8〜</small></div><div><span>✓ 敵AI難易度調整</span><small>Ver.6.9〜（7.1で補正修正）</small></div><div><span>✓ AI全自動／手動操作の選択</span><small>Ver.7.1〜</small></div></div>
-<h3>バージョンごとの変更内容（新しい順）</h3><article class="vh70-item"><div class="vh70-ver">Ver.7.2.9</div><div><strong>15体トーナメント・4回戦化・決着スローモーション</strong><p>15種類すべてが参加する16枠の勝ち抜き戦（不戦勝はNPCのみ）。1回戦→準々決勝→準決勝→決勝でプレイヤーは4試合。最後の一撃に3秒間のカメラズーム、閉眼の被弾表現、画面の約4分の1の吹き飛びと3回のゴングSEを追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.8</div><div><strong>戦闘前の演出・優勝BGM継続・背景拡大</strong><p>1回戦・準決勝に「バトルスタート」、決勝に5秒の対戦カード演出と「ファイナルバトルスタート」を追加。開始演出が終わるまで戦闘を進めず、優勝BGMをVICTORY画面でも途切れさせず再生。半透明モンスターを画面高に合わせて大きく表示。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.7</div><div><strong>軽快な勝利ファンファーレ・優勝演出の順番変更</strong><p>通常WINはwin_loop.mp3、優勝トーナメント表はchampion_loop.mp3を再生。決勝勝利後にトーナメント表→右端への勝者移動→暗転→VICTORYへ移り、最後の画面から次の大会へ進む。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.6</div><div><strong>iPhoneホーム画面アプリ化</strong><p>PWAマニフェストの読み込み、iOS独立起動設定、ホーム画面アイコン、Service Workerの登録処理を追加。ゲーム本体と4曲のBGMは7.2.5から変更なし。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.5</div><div><strong>4曲のMP3 BGM対応</strong><p>タイトル・モンスター選択・通常戦闘・決勝戦のBGMを外部MP3に対応。既存の効果音と優勝演出を維持。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.4</div><div><strong>A/Sコース・コース別優勝記録</strong><p>従来のかんたんをAコース ふつう、従来のふつうをSコース むずかしいに改名。難易度の実際の補正は変更せず、各モンスターの優勝回数をコース別に保存・表示。旧記録はコース不明として保持。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.3</div><div><strong>優勝記録・優勝演出・祝福サウンド</strong><p>モンスター別優勝回数を端末内に保存しタイトルから確認。優勝時の背景に半透明の大型モンスター、専用ファンファーレを追加。Ver.7.3は停止中。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.3</div><div><strong>優勝VICTORY画面の表示不具合修正</strong><p>決勝WIN後に優勝画面がバトル画面の背面に隠れていたz-indexの設定を修正。大会ルールと難易度設定は7.2.1を維持。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.3</div><div><strong>勝敗ネタバレ防止・優勝演出・難易度選択</strong><p>未実施の試合結果を伏せ、ラウンド進行時に他の試合を抽選。決勝勝利後にVICTORYと優勝モンスターが降りてくる専用画面を追加。かんたんは従来の敵ダメージ軽減、ふつうは敵ダメージ軽減なし（攻撃間隔の既存調整は維持）。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.3（停止中）</div><div><strong>敗者復活バトルロイヤル案</strong><p>試作した6体AIバトルロイヤルは今回の配布版には含めない。Ver.7.2から継続開発。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2</div><div><strong>アイコン付きトーナメント表と決勝演出</strong><p>8体の参加者アイコンを線でつなぎ、勝者の進出・対戦カードの発光・決勝のズームと集中線を追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.1</div><div><strong>敵ダメージ補正の修正・全自動AI操作</strong><p>敵の通常ダメージ86％・効果抜群1.5倍を実際の命中計算に反映。キャラ選択の先頭で全自動AI操作か自分で操作を選択できるように変更。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.0</div><div><strong>更新履歴とビルド確認</strong><p>タイトル画面から全更新履歴を閲覧。現行版の識別情報と主な機能の確認欄を追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.9</div><div><strong>敵AIの難易度調整</strong><p>敵の技クールタイム32％増。ダメージ86％・効果抜群1.5倍は当時計算式への反映漏れがあり、Ver.7.2で修正。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.8</div><div><strong>障害物を避ける初期配置</strong><p>岩・障害物の当たり判定と周辺の空きスペースを確認して出現位置を選択。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.7</div><div><strong>アダプティブBGM</strong><p>長い曲構成と強弱、HP減少時に同じ曲へ緊迫レイヤーを重ねる方式。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.6</div><div><strong>勝利演出・全場面BGM</strong><p>WIN演出、タップで次のトーナメント表へ進む仕組み、勝利用BGM。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.5</div><div><strong>敗北演出・操作範囲</strong><p>LOSE演出、タップで再挑戦へ進む仕組み、移動範囲・初期位置・空振り攻撃の調整。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.4</div><div><strong>オーケストラ風BGM</strong><p>弦・金管・ピアノ・打楽器風の音色と場面別の音楽表現。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.3</div><div><strong>中間調整版</strong><p>配布ファイルは現存。詳細な差分は個別確認が必要。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.2</div><div><strong>起動タップ画面</strong><p>初回タップでBGMを有効化し、タイトル待機画面へ移動。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.1</div><div><strong>iPhone音声開始の修正</strong><p>音量と音声開始処理を調整し、音楽再生ボタンを追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.0</div><div><strong>場面別BGMとHP表示</strong><p>タイトル・選択・トーナメント・戦闘・決着等のBGM、HP25％以下の赤ゲージ。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.9</div><div><strong>全画面バトル</strong><p>背景を大きく表示し、左下に技、右下に半透明スティックを重ねる配置。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.8</div><div><strong>横画面対応</strong><p>縦画面の回転案内、横向きレイアウト、誤拡大対策。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.7</div><div><strong>動くタイトル画面</strong><p>モンスターが動くタイトル、スタートボタン、バージョン表示。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.6</div><div><strong>配布用PWAの整備</strong><p>ホーム画面から起動できる配布形式を整備（この番号の単体HTMLは現存未確認）。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.5</div><div><strong>対戦・操作の改修</strong><p>操作性と戦闘画面を調整。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.4</div><div><strong>トーナメント関連の調整</strong><p>画面構成と操作を調整。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.3</div><div><strong>戦闘UIの調整</strong><p>操作表示や戦闘画面の配置を調整。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.2</div><div><strong>戦闘レイアウト</strong><p>バトル画面と操作エリアを上下に分割。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.1</div><div><strong>手動操作</strong><p>移動パッド、攻撃技ボタン、手動／自動移動の切り替えを追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.0</div><div><strong>基本バトルの基盤</strong><p>モンスター・技・対戦画面を備えたゲーム本体。</p></div></article>
+<h3>バージョンごとの変更内容（新しい順）</h3><article class="vh70-item"><div class="vh70-ver">Ver.7.2.10</div><div><strong>場外まで吹き飛ばすKO演出・飾り文字の透明化・全技名短縮</strong><p>KO中は戦闘を停止し、3秒間の9コマ/秒表示で全画面をコマ送り風に演出。敗者は等速で画面外へ飛び、目の加工は行わない。決着0.5秒後から各0.5秒間隔・約0.48秒長のゴング3打を強調し、BGM音量だけを一時調整。WINとバトル開始演出の背景を透明に変更。77件の技名を7文字以内・漢字なしに統一。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.9</div><div><strong>15体トーナメント・4回戦化・決着スローモーション</strong><p>15種類すべてが参加する16枠の勝ち抜き戦（不戦勝はNPCのみ）。1回戦→準々決勝→準決勝→決勝でプレイヤーは4試合。最後の一撃に3秒間のカメラズーム、閉眼の被弾表現、画面の約4分の1の吹き飛びと3回のゴングSEを追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.8</div><div><strong>戦闘前の演出・優勝BGM継続・背景拡大</strong><p>1回戦・準決勝に「バトルスタート」、決勝に5秒の対戦カード演出と「ファイナルバトルスタート」を追加。開始演出が終わるまで戦闘を進めず、優勝BGMをVICTORY画面でも途切れさせず再生。半透明モンスターを画面高に合わせて大きく表示。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.7</div><div><strong>軽快な勝利ファンファーレ・優勝演出の順番変更</strong><p>通常WINはwin_loop.mp3、優勝トーナメント表はchampion_loop.mp3を再生。決勝勝利後にトーナメント表→右端への勝者移動→暗転→VICTORYへ移り、最後の画面から次の大会へ進む。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.6</div><div><strong>iPhoneホーム画面アプリ化</strong><p>PWAマニフェストの読み込み、iOS独立起動設定、ホーム画面アイコン、Service Workerの登録処理を追加。ゲーム本体と4曲のBGMは7.2.5から変更なし。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.5</div><div><strong>4曲のMP3 BGM対応</strong><p>タイトル・モンスター選択・通常戦闘・決勝戦のBGMを外部MP3に対応。既存の効果音と優勝演出を維持。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.4</div><div><strong>A/Sコース・コース別優勝記録</strong><p>従来のかんたんをAコース ふつう、従来のふつうをSコース むずかしいに改名。難易度の実際の補正は変更せず、各モンスターの優勝回数をコース別に保存・表示。旧記録はコース不明として保持。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.3</div><div><strong>優勝記録・優勝演出・祝福サウンド</strong><p>モンスター別優勝回数を端末内に保存しタイトルから確認。優勝時の背景に半透明の大型モンスター、専用ファンファーレを追加。Ver.7.3は停止中。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.3</div><div><strong>優勝VICTORY画面の表示不具合修正</strong><p>決勝WIN後に優勝画面がバトル画面の背面に隠れていたz-indexの設定を修正。大会ルールと難易度設定は7.2.1を維持。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.3</div><div><strong>勝敗ネタバレ防止・優勝演出・難易度選択</strong><p>未実施の試合結果を伏せ、ラウンド進行時に他の試合を抽選。決勝勝利後にVICTORYと優勝モンスターが降りてくる専用画面を追加。かんたんは従来の敵ダメージ軽減、ふつうは敵ダメージ軽減なし（攻撃間隔の既存調整は維持）。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.3（停止中）</div><div><strong>敗者復活バトルロイヤル案</strong><p>試作した6体AIバトルロイヤルは今回の配布版には含めない。Ver.7.2から継続開発。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2</div><div><strong>アイコン付きトーナメント表と決勝演出</strong><p>8体の参加者アイコンを線でつなぎ、勝者の進出・対戦カードの発光・決勝のズームと集中線を追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.1</div><div><strong>敵ダメージ補正の修正・全自動AI操作</strong><p>敵の通常ダメージ86％・効果抜群1.5倍を実際の命中計算に反映。キャラ選択の先頭で全自動AI操作か自分で操作を選択できるように変更。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.0</div><div><strong>更新履歴とビルド確認</strong><p>タイトル画面から全更新履歴を閲覧。現行版の識別情報と主な機能の確認欄を追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.9</div><div><strong>敵AIの難易度調整</strong><p>敵の技クールタイム32％増。ダメージ86％・効果抜群1.5倍は当時計算式への反映漏れがあり、Ver.7.2で修正。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.8</div><div><strong>障害物を避ける初期配置</strong><p>岩・障害物の当たり判定と周辺の空きスペースを確認して出現位置を選択。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.7</div><div><strong>アダプティブBGM</strong><p>長い曲構成と強弱、HP減少時に同じ曲へ緊迫レイヤーを重ねる方式。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.6</div><div><strong>勝利演出・全場面BGM</strong><p>WIN演出、タップで次のトーナメント表へ進む仕組み、勝利用BGM。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.5</div><div><strong>敗北演出・操作範囲</strong><p>LOSE演出、タップで再挑戦へ進む仕組み、移動範囲・初期位置・空振り攻撃の調整。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.4</div><div><strong>オーケストラ風BGM</strong><p>弦・金管・ピアノ・打楽器風の音色と場面別の音楽表現。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.3</div><div><strong>中間調整版</strong><p>配布ファイルは現存。詳細な差分は個別確認が必要。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.2</div><div><strong>起動タップ画面</strong><p>初回タップでBGMを有効化し、タイトル待機画面へ移動。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.1</div><div><strong>iPhone音声開始の修正</strong><p>音量と音声開始処理を調整し、音楽再生ボタンを追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.0</div><div><strong>場面別BGMとHP表示</strong><p>タイトル・選択・トーナメント・戦闘・決着等のBGM、HP25％以下の赤ゲージ。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.9</div><div><strong>全画面バトル</strong><p>背景を大きく表示し、左下に技、右下に半透明スティックを重ねる配置。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.8</div><div><strong>横画面対応</strong><p>縦画面の回転案内、横向きレイアウト、誤拡大対策。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.7</div><div><strong>動くタイトル画面</strong><p>モンスターが動くタイトル、スタートボタン、バージョン表示。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.6</div><div><strong>配布用PWAの整備</strong><p>ホーム画面から起動できる配布形式を整備（この番号の単体HTMLは現存未確認）。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.5</div><div><strong>対戦・操作の改修</strong><p>操作性と戦闘画面を調整。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.4</div><div><strong>トーナメント関連の調整</strong><p>画面構成と操作を調整。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.3</div><div><strong>戦闘UIの調整</strong><p>操作表示や戦闘画面の配置を調整。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.2</div><div><strong>戦闘レイアウト</strong><p>バトル画面と操作エリアを上下に分割。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.1</div><div><strong>手動操作</strong><p>移動パッド、攻撃技ボタン、手動／自動移動の切り替えを追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.0</div><div><strong>基本バトルの基盤</strong><p>モンスター・技・対戦画面を備えたゲーム本体。</p></div></article>
 <p id="vh70Note">※ 5.0〜6.4の一部は開発時の説明を基にした要約です。詳細不明の箇所はその旨を記載しています。履歴はこの配布ファイルに含まれる実装の説明であり、GitHub Pagesで現在配信されている版を自動照合するものではありません。</p>
 </div></section></div>
 <script id="version-history-70-js">(()=>{
@@ -2011,19 +2020,35 @@ window.__arenaRecordDebug={get stats(){return JSON.parse(JSON.stringify(stats))}
 'use strict';
 const paths={home:'audio/title.mp3',select:'audio/select.mp3',round:'audio/battle.mp3',danger:'audio/battle.mp3',final:'audio/final.mp3',finalDanger:'audio/final.mp3',victory:'audio/win_loop.mp3',champion:'audio/champion_loop.mp3',championScreen:'audio/champion_loop.mp3'};
 const player=new Audio();player.preload='none';player.loop=true;player.volume=0;
-let phase='home',src='',unlocked=false,revision=0,fadeTimer=0,error=null;
+let phase='home',src='',unlocked=false,revision=0,fadeTimer=0,error=null,koDucked=false,koDuckTimer=0;
 const toggle=document.getElementById('bgm60Toggle');
 const enabled=()=>Boolean(window.__arenaMusicDebug?.enabled);
+const bgmVolume=()=>koDucked?.14:.26;
 function stopFade(){if(fadeTimer){clearInterval(fadeTimer);fadeTimer=0;}}
 function fade(target,ms,done){stopFade();let from=player.volume,start=performance.now();fadeTimer=setInterval(()=>{let p=Math.min(1,(performance.now()-start)/ms);player.volume=Math.max(0,Math.min(1,from+(target-from)*p));if(p>=1){stopFade();done?.();}},30);}
 function apply(){let token=++revision,path=unlocked&&enabled()&&!document.hidden?paths[phase]:null;
  if(!path){fade(0,180,()=>{if(token===revision)player.pause()});return;}
  if(path!==src){stopFade();player.pause();src=path;player.src=path;player.volume=0;player.load();}
- if(!player.paused){fade(.26,280);return;}
+ if(!player.paused){fade(bgmVolume(),280);return;}
  // Invoke play directly during a user gesture when first unlocked on iOS.
- try{let result=player.play();if(result&&typeof result.then==='function')result.then(()=>{if(token===revision){error=null;fade(.26,350);}}).catch(e=>{if(token===revision){error=e?.name||'playback error';console.warn('External BGM:',path,error);}});else fade(.26,350);}catch(e){error=e?.name||'playback error';}
+ try{let result=player.play();if(result&&typeof result.then==='function')result.then(()=>{if(token===revision){error=null;fade(bgmVolume(),350);}}).catch(e=>{if(token===revision){error=e?.name||'playback error';console.warn('External BGM:',path,error);}});else fade(bgmVolume(),350);}catch(e){error=e?.name||'playback error';}
 }
 window.addEventListener('arena-bgm-phase',e=>{if(e.detail?.phase){phase=e.detail.phase;apply();}});
+// Gong audibility without stopping the BGM or altering its playback position.
+window.addEventListener('arena-knockout-start',()=>{
+  koDucked=true;
+  if(koDuckTimer)clearTimeout(koDuckTimer);
+  if(unlocked&&enabled()&&!player.paused)fade(bgmVolume(),120);
+  koDuckTimer=setTimeout(()=>{
+    koDuckTimer=0;koDucked=false;
+    if(unlocked&&enabled()&&!player.paused)fade(bgmVolume(),240);
+  },2200);
+});
+window.addEventListener('arena-knockout-finished',()=>{
+  if(koDuckTimer){clearTimeout(koDuckTimer);koDuckTimer=0;}
+  if(koDucked){koDucked=false;if(unlocked&&enabled()&&!player.paused)fade(bgmVolume(),180);}
+});
+
 function unlock(){unlocked=true;if(enabled())apply();}
 // pointerdown runs before click; the existing toggle changes state on click.
 document.addEventListener('pointerdown',()=>{if(!unlocked)unlock();},{passive:true});
@@ -2031,7 +2056,7 @@ if(toggle)toggle.addEventListener('click',()=>queueMicrotask(apply));
 document.getElementById('music61Hint')?.addEventListener('click',()=>queueMicrotask(()=>{unlocked=true;apply();}));
 document.addEventListener('click',()=>{if(unlocked&&enabled()&&player.paused)apply();},{passive:true});
 document.addEventListener('visibilitychange',()=>{if(document.hidden){++revision;stopFade();player.pause();player.volume=0;}else if(unlocked)apply();});
-window.__arenaExternalBgm={get phase(){return phase},get src(){return src},get enabled(){return enabled()},get paused(){return player.paused},get error(){return error},player};
+window.__arenaExternalBgm={get phase(){return phase},get src(){return src},get enabled(){return enabled()},get paused(){return player.paused},get error(){return error},get koDucked(){return koDucked},player};
 })();</script><script id="pwa726-register">(()=>{
 'use strict';
 // PWA support: HTTPS on GitHub Pages; SW is optional for standalone launch.
@@ -2042,4 +2067,15 @@ window.addEventListener('load',()=>{
     console.warn('MONSTER ARENA: service worker registration failed',err);
   });
 },{once:true});
-})();</script></body></html>
+})();</script><style id="patch7210-transparent-title-style">
+/* Transparent title lettering: keep glyph glow/outline, remove the flat colored panel. */
+#battle728Intro,#battle728Intro.final{background:transparent!important;box-shadow:none!important;backdrop-filter:none!important;}
+#battle728Intro .battle728Aura{opacity:.15;pointer-events:none;}
+#battle728Intro .battle728Word,#win66 .win-word{background:transparent!important;box-shadow:none!important;border:none!important;backdrop-filter:none!important;padding:0!important;}
+#battle728Intro .battle728Word{filter:drop-shadow(0 3px 13px rgba(3,9,27,.8));}
+#win66{background:transparent!important;box-shadow:none!important;backdrop-filter:none!important;}
+#win66::before{opacity:.12!important;}
+#win66 .win-word{-webkit-text-stroke:clamp(1px,.20vw,3px) #7b4b1a!important;text-shadow:0 4px 0 #9b6228,0 8px 24px #071020,0 0 34px #ffda75,0 0 52px #fbb84c!important;}
+#win66 .win-sub,#win66 .win-tap{text-shadow:0 2px 10px #051124,0 1px 4px #061124;}
+</style>
+</body></html>
