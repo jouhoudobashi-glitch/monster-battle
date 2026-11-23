@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" name="viewport"/><title>モンスターアリーナ | MONSTER ARENA 7.2.14</title><meta name="theme-color" content="#101827"/>
+<html lang="ja"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" name="viewport"/><title>モンスターアリーナ | MONSTER ARENA 7.2.15</title><meta name="theme-color" content="#101827"/>
 <link rel="manifest" href="./manifest.webmanifest"/>
 <link rel="apple-touch-icon" sizes="180x180" href="./icons/icon-180.png"/>
 <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png"/>
@@ -332,7 +332,7 @@ button,.skillKey,#manualPad,#home57Start,#launchScreen,#tourneyOverlay,#arenaVie
 }
 </style>
 <style id="player-special-713-css">
-/* MONSTER ARENA 7.2.14 - independent player-only SP UI */
+/* MONSTER ARENA 7.2.15 - independent player-only SP UI */
 #special713Panel{margin:10px 0 16px;padding:13px 15px;border:1px solid #668ba2;border-radius:13px;background:linear-gradient(120deg,#101f34,#202d49);color:#eef6ff}
 .special713Heading{display:flex;justify-content:space-between;align-items:center;gap:10px}
 .special713Heading strong{font-size:15px;color:#dcf5ff;letter-spacing:.03em}
@@ -386,13 +386,35 @@ button,.skillKey,#manualPad,#home57Start,#launchScreen,#tourneyOverlay,#arenaVie
 #launchScreen.mode714-growth #launchMons .launchMon[data-m="6"]{min-width:160px;max-width:250px}
 #mode714Trial input{accent-color:#ffd381}
 @media(orientation:landscape) and (max-height:450px){#mode714{padding:6px 8px;margin-bottom:5px}.mode714-card{padding:6px}.mode714-card strong{font-size:12px}.mode714-card small{font-size:9px}#mode714Note{font-size:10px;margin-top:5px}#mode714Trial{margin-top:5px;padding:6px}}
-</style></head><body><div aria-label="横画面にしてください" id="rotate58" role="status"><div class="rot-card"><div aria-hidden="true" class="rot-phone">📱</div><strong>iPhoneを横向きにしてください</strong><p>モンスターアリーナは横画面専用です。<br/>画面の向きのロックを解除し、iPhoneを横向きにするとゲームが表示されます。</p></div></div><div aria-label="対戦の準備" aria-modal="true" id="launchScreen" role="dialog"><div id="launchInner"><h2>MONSTER ARENA <span style="color:#9bdcf7">7.2.14</span></h2><p>自分のモンスターとフィールドを選択。ライバルはランダムで登場します。</p><section id="mode714" role="group" aria-label="ゲームモードの選択">
+</style><style id="growth715-ui">
+/* Only growth mode gets the extra two-button SP row; normal mode is unchanged. */
+#launchScreen.mode714-growth .launchMon:not([data-m="6"]){display:flex!important}
+#launchScreen.mode714-growth .launchMon{display:flex!important}
+#launchScreen.mode714-growth #launchMons{display:flex!important;justify-content:initial!important;flex-wrap:wrap}
+#launchScreen.mode714-growth #launchMons .launchMon{min-width:unset!important;max-width:unset!important}
+#mode714Trial{display:none!important}
+#arenaViewport.battle-screen #skillPad{overflow:visible!important}
+#arenaViewport.battle-screen #special715Row{position:absolute!important;left:0!important;right:0!important;bottom:calc(100% + 6px)!important;width:100%!important;display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:5px!important;height:clamp(42px,9.2dvh,63px)!important;pointer-events:auto!important;z-index:50!important}
+#arenaViewport.battle-screen #special715Row[hidden],#special715Row[hidden]{display:none!important}
+#special715Row .special715Btn{position:relative;min-width:0;height:100%;border-radius:9px;border:1.5px solid #9fe7ffbf;background:#0d3b58dc;color:#f2faff;touch-action:manipulation;overflow:hidden;padding:2px 4px;display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:1px;font:700 clamp(9px,1.2vw,12px)/1.1 system-ui;text-shadow:0 1px 2px #05101f;backdrop-filter:blur(3px)}
+#special715Row .special715Btn strong{display:block;font-size:clamp(8px,1.05vw,10px);letter-spacing:.04em;color:#ffe19a}
+#special715Row .special715Btn .special715Name{display:block;font-size:clamp(10px,1.35vw,14px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;width:100%;text-align:left}
+#special715Row .special715Btn small{font-size:clamp(8px,1vw,10px);font-weight:600;opacity:.9}
+#special715Row .special715Btn:disabled{opacity:.66;filter:saturate(.58)}
+#special715Row .special715Btn.special715Ready{background:linear-gradient(115deg,#126278dd,#176494ee);border-color:#ffdc81;box-shadow:0 0 16px #ffde8c66}
+#special715Row .special715Gauge{position:absolute;left:0;bottom:0;height:4px;width:100%;background:#041a29}
+#special715Row .special715Gauge i{display:block;width:0;height:100%;background:linear-gradient(90deg,#55ccf9,#ffe08a);transition:width .14s ease}
+@media(orientation:landscape) and (max-height:440px){
+ #arenaViewport.battle-screen #special715Row{height:clamp(38px,10.5dvh,48px)!important;bottom:calc(100% + 4px)!important}
+ #special715Row .special715Btn .special715Name{font-size:clamp(9px,1.2vw,11px)}
+}
+</style></head><body><div aria-label="横画面にしてください" id="rotate58" role="status"><div class="rot-card"><div aria-hidden="true" class="rot-phone">📱</div><strong>iPhoneを横向きにしてください</strong><p>モンスターアリーナは横画面専用です。<br/>画面の向きのロックを解除し、iPhoneを横向きにするとゲームが表示されます。</p></div></div><div aria-label="対戦の準備" aria-modal="true" id="launchScreen" role="dialog"><div id="launchInner"><h2>MONSTER ARENA <span style="color:#9bdcf7">7.2.15</span></h2><p>自分のモンスターとフィールドを選択。ライバルはランダムで登場します。</p><section id="mode714" role="group" aria-label="ゲームモードの選択">
   <div class="mode714-title">① ゲームモードを選ぶ</div>
   <div class="mode714-options">
     <label class="mode714-card"><input name="gameMode714" type="radio" value="normal" checked><span><strong>通常モード</strong><small>これまでどおり。15体から選択・育成補正なし・従来の優勝記録</small></span></label>
-    <label class="mode714-card"><input name="gameMode714" type="radio" value="growth"><span><strong>成長モード</strong><small>ブレイズベアで育成＋新SP技「ばくれつパンチ」を試そう</small></span></label>
+    <label class="mode714-card"><input name="gameMode714" type="radio" value="growth"><span><strong>成長モード</strong><small>15体から育てる1体を選択。Lv.2・Lv.10でSP技を習得</small></span></label>
   </div>
-  <label id="mode714Trial"><input id="mode714TryPunch" type="checkbox" checked> <span>ばくれつパンチを体験（Lv.10未満でも使用可・初回SP100）</span></label>
+  
   <div id="mode714Note" role="status">通常モードでは経験値・成長補正・SP技は使いません。従来の遊び方と優勝記録を保持します。</div>
 </section><div aria-label="難易度選択" id="difficulty721" role="group"><div class="mode71-label">② 難易度を選ぶ</div><div class="mode71-options"><label><input checked="" name="difficulty721" type="radio" value="easy"/><span>Aコース　ふつう<small>敵の攻撃ダメージを軽減</small></span></label><label><input name="difficulty721" type="radio" value="normal"/><span>Sコース　むずかしい<small>敵のダメージ補正なし</small></span></label></div></div><div aria-label="操作モード" id="mode71" role="group"><div class="mode71-label">③ 操作方法を選ぶ</div><div class="mode71-options"><label><input checked="" name="playMode71" type="radio" value="manual"/><span>自分で操作<small>移動・攻撃を自分で操作</small></span></label><label><input name="playMode71" type="radio" value="ai"/><span>AI操作<small>移動・技の選択・攻撃まで全自動</small></span></label></div></div><h3>④ 自分のモンスターを選ぶ</h3><div id="launchMons"></div><div id="launchArenaInfo">会場は毎試合ランダム！ 決勝は王都コロシアムです。</div><div id="launchBottom"><div id="launchInfo">攻撃技3つは自分のタイプ、4つ目は相手の弱点を突く技に自動変更。サポート技1つも装備します。</div><button id="launchGo" type="button">▶ ランダム対戦開始</button></div></div></div><main><header><h1>MONSTER ARENA <span style="color:#f3bd68">5.9</span></h1><p>プレイヤー操作バトル · 超横長フィールド・15タイプ・60技の技図鑑・予測回避AI・効果音対応版</p></header><div class="error" id="fatal"></div><div class="layout"><section><div class="panel"><div class="hpbar"><div><strong id="nameA">炎のフレイムリザード</strong><div class="meter"><div class="fill" id="hpA" style="width:100%"></div></div><small id="numA">300 / 300</small></div><div class="vs">VS</div><div style="text-align:right"><strong id="nameB">水のアクアタートル</strong><div class="meter"><div class="fill bfill" id="hpB" style="width:100%"></div></div><small id="numB">450 / 450</small></div></div><div class="arena-selector"><div class="arena-selector-head"><strong>バトルフィールドを選択</strong><span id="arenaTitle">花咲く草原 ｜ 草原・岩と花</span></div><div class="arena-choices" id="arenaChoices"></div></div><div class="arena" id="arenaViewport"><canvas height="600" id="field" width="1440"></canvas><div class="fullscreen-hud"><div class="hud-top"><div class="hud-fighter"><strong id="hudNameA"></strong><div class="hud-meter"><div class="hud-fill" id="hudHpA"></div></div><small id="hudNumA"></small></div><div class="hud-versus">VS</div><div class="hud-fighter right"><strong id="hudNameB"></strong><div class="hud-meter"><div class="hud-fill opponent" id="hudHpB"></div></div><small id="hudNumB"></small></div></div><div class="hud-bottom"><span id="hudStatus">対戦準備中</span><div class="hud-actions"><button id="hudStart">▶ 開始</button><button id="hudPause">Ⅱ 停止</button><button id="hudRestart">↻ 再戦</button><button id="hudExit">✕ 戻る</button></div></div></div></div><div class="controls"><button aria-hidden="true" hidden="" id="fullscreenToggle">全画面</button><button class="primary" id="start">▶ バトル開始</button><button disabled="" id="pause">一時停止</button><button id="restart">再戦</button><button aria-pressed="true" id="soundToggle">🔊 SE ON</button><label style="display:flex;align-items:center;gap:4px;font-size:12px">音量 <input aria-label="効果音の音量" id="seVolume" max="100" min="0" style="width:80px" type="range" value="45"/></label><div class="speed"><button class="active" data-speed="1">1×</button><button data-speed="2">2×</button><button data-speed="4">4×</button></div></div><div class="status" id="status">対戦相手を選んで「バトル開始」を押してください。</div><div class="result" id="result"></div></div><div class="panel"><strong>戦闘ログ</strong><div aria-live="polite" class="log" id="log"></div></div></section><aside><div class="panel"><h3 style="margin-top:0">対戦設定</h3><div class="pick"><div><label for="selectA">モンスターA</label><select id="selectA"><option value="0">🔥 フレイムリザード</option><option value="1">💧 アクアタートル</option><option value="2">🌿 リーフフォックス</option></select></div><div><label for="selectB">モンスターB</label><select id="selectB"><option value="1">💧 アクアタートル</option><option value="0">🔥 フレイムリザード</option><option value="2">🌿 リーフフォックス</option></select></div></div><div id="previewA"></div><div id="previewB"></div></div><div class="panel legend"><strong>戦闘ルール</strong><p>各モンスターは攻撃技4種類＋サポート技1種類を自動選択。タイプ一致は1.2倍、有利は2倍、不利は0.5倍です。飛び道具は岩に遮られ、必中技は岩を無視します。新しい攻撃技にはタイプ別の独立した光・弾・範囲エフェクトを描画します。</p><p>待機・歩行・攻撃・被弾の画像を切り替え、左右移動は反転表示で再利用します。技の判断は約0.2秒ごと。攻撃可能でも移動を続け、敵の予備動作や弾道を予測して回避します。</p><p>最大180秒。サポート技は状況に応じて使用し、連打を制限。直線弾は相手が移動すると回避できます。</p></div></aside></div><section class="panel" style="margin-top:14px"><h3 style="margin-top:0">15タイプ × 各4技＝60技｜技図鑑</h3><p style="color:#b9c9d6;font-size:13px">各タイプ4種類（直線弾・扇形・近接・追尾）を登録しました。15体のモンスターを選択可能。タイプ一致攻撃は1.2倍。攻撃技4枠目には相手への有利技を自動装備します。</p><div id="typeCatalog" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:9px"></div></section></main><style id="player-growth-712-style">
 /* 7.2.12: player roster progression. Never obscures the battle controls. */
@@ -1548,7 +1570,11 @@ let active=null;
 let awardSequence=0;
 function snapshot(id){if(!validId(id))return empty();return {...empty(),...(data.monsters[String(id)]||{})};}
 function level(id){return levelFor(snapshot(id).totalExp)}
-function bonuses(lv){const p=(lv-1)/(MAX_LEVEL-1);return {hp:1+.15*p,atk:1+.10*p,def:1+.10*p,speed:1+.05*p}}
+function bonuses(lv){
+ // New progression: each milestone permanently adds 20% of the original base stat.
+ // HP is deliberately unchanged until its growth is specified in a later release.
+ return {hp:1,atk:lv>=6?1.4:lv>=3?1.2:1,def:lv>=7?1.4:lv>=4?1.2:1,speed:lv>=8?1.4:lv>=5?1.2:1};
+}
 function trainedStats(id){if(!validId(id))return null;
  const base=mons[Number(id)],lv=level(id),b=bonuses(lv);
  return {level:lv,hp:Math.round(base.hp*b.hp),atk:Math.round(base.atk*b.atk),def:Math.round(base.def*b.def),speed:Number((base.speed*b.speed).toFixed(2))};
@@ -1601,7 +1627,7 @@ function updateSelection(id){
  const ratio=lv===MAX_LEVEL?1:Math.max(0,Math.min(1,(v.totalExp-prev)/(next-prev)));
  panel.querySelector('.growth712Meter i').style.width=`${ratio*100}%`;
  panel.querySelector('.growth712ProgressText').textContent=lv===MAX_LEVEL?'レベルMAX':`EXP ${v.totalExp-prev} / ${next-prev}（累計 ${v.totalExp}）`;
- const statRows=[['HP',base.hp,t.hp],['こうげき',base.atk,t.atk],['ぼうぎょ',base.def,t.def],['すばやさ',base.speed,t.speed]];
+ const statRows=[['HP',base.hp,t.hp],['こうげき',base.atk,t.atk],['ぼうぎょ',base.def,t.def],['スピード',base.speed,t.speed]];
  const stats=panel.querySelector('.growth712Stats');stats.replaceChildren();
  for(const [label,b,a] of statRows){const e=document.createElement('div');e.className='growth712Stat';
   const l=document.createElement('span');l.textContent=label;
@@ -1612,7 +1638,8 @@ function updateSelection(id){
  const manual=window.__arenaModes?.growth&&document.querySelector('input[name="playMode71"]:checked')?.value!=='ai';
  panel.classList.toggle('growth712Inactive',!manual);
  const note=panel.querySelector('.growth712Note');
- note.textContent=(manual?'自分で操作：育成能力を反映・経験値を獲得':'AI全自動：育成能力は使わず、経験値も獲得しません')+(persistenceAvailable?'':' ／ 注意：保存できない状態です');
+ const stages={1:'Lv.2でSP1を覚える',2:'Lv.3：こうげき＋20%',3:'Lv.4：ぼうぎょ＋20%',4:'Lv.5：スピード＋20%',5:'Lv.6：こうげき＋20%',6:'Lv.7：ぼうぎょ＋20%',7:'Lv.8：スピード＋20%',8:'Lv.9：SP再使用が短縮',9:'Lv.10：SP2を覚える'};
+ note.textContent=(manual?'成長モード：自分だけ強化・経験値を獲得':'AI全自動では育成能力は適用されません')+(stages[lv]?' ／ つぎ：'+stages[lv]:' ／ 成長段階の解放済み')+(persistenceAvailable?'':' ／ 注意：保存できない状態です');
 }
 document.querySelectorAll('input[name="playMode71"]').forEach(r=>r.addEventListener('change',()=>{
  const selected=document.querySelector('#launchMons .launchMon.chosen');updateSelection(Number(selected?.dataset.m||0));
@@ -1636,13 +1663,12 @@ window.__arenaGrowth={
 
 </script>
 <script id="game-modes-714">
-/* MONSTER ARENA 7.2.14: independent normal and growth modes. */
+/* MONSTER ARENA 7.2.15: independent normal and growth modes. */
 (()=>{'use strict';
  const root=document.getElementById('launchScreen');
- const TRIAL_MONSTER=6; // Blaze Bear
- let selected='normal', lastNormalMonster=0,lastNormalControl='manual';
- const checkbox=document.getElementById('mode714TryPunch');
- const trial=()=>selected==='growth'&&checkbox.checked;
+ const TRIAL_MONSTER=6; // Legacy compatibility only: now every species can grow.
+ let selected='normal', lastNormalMonster=0,lastGrowthMonster=6,lastNormalControl='manual';
+ const trial=()=>false;
  const apply=()=>{
    root.classList.toggle('mode714-normal',selected==='normal');
    root.classList.toggle('mode714-growth',selected==='growth');
@@ -1652,14 +1678,14 @@ window.__arenaGrowth={
    if(selected==='growth')manual.click();
    else root.querySelector(`input[name="playMode71"][value="${lastNormalControl}"]`)?.click();
    document.getElementById('mode714Note').textContent=selected==='growth'
-    ?'成長モード試作：ブレイズベア1体。経験値とSP技は保存。敵は常に通常能力。'
+    ?'成長モード：15体から選択。Lv.2でSP1、Lv.10でSP2。育成データは自分だけに反映。'
     :'通常モード：15体を自由に選択。育成補正・経験値・SP技は使わず、従来の優勝記録を維持。';
-   document.getElementById('launchGo').textContent=selected==='growth'?'▶ ブレイズベアで育成大会へ':'🏆 トーナメントに挑戦！';
+   document.getElementById('launchGo').textContent=selected==='growth'?'▶ 育てたモンスターで大会へ':'🏆 トーナメントに挑戦！';
    document.getElementById('launchInfo').textContent=selected==='growth'
-    ?'成長モード：ブレイズベアで4試合。ばくれつパンチは試作体験できます。'
+    ?'成長モード：好きな1体で4試合。Lv.2・Lv.10で技を習得。'
     :'全15体が参加・4回戦。従来のトーナメントルールと能力で戦います。';
    if(root.querySelector('.launchMon')){
-     const id=selected==='growth'?TRIAL_MONSTER:lastNormalMonster;
+     const id=selected==='growth'?lastGrowthMonster:lastNormalMonster;
      root.querySelector(`.launchMon[data-m="${id}"]`)?.click();
    }
  };
@@ -1676,13 +1702,9 @@ window.__arenaGrowth={
    apply();
  };
  root.querySelectorAll('input[name="gameMode714"]').forEach(el=>el.addEventListener('change',()=>change(el.value)));
- checkbox.addEventListener('change',()=>{
-    const current=root.querySelector('.launchMon.chosen');
-    if(current)window.__arenaSpecial?.updateSelection(Number(current.dataset.m));
- });
  window.__arenaModes={get mode(){return selected},get growth(){return selected==='growth'},get trial(){return trial()},
-  get monster(){return TRIAL_MONSTER},get lastNormalMonster(){return lastNormalMonster},
-  rememberNormalMonster(id){if(selected==='normal'&&Number.isInteger(Number(id)))lastNormalMonster=Number(id)},
+  get monster(){return lastGrowthMonster},get lastNormalMonster(){return lastNormalMonster},
+  rememberNormalMonster(id){if(!Number.isInteger(Number(id))||Number(id)<0||Number(id)>=15)return; if(selected==='normal')lastNormalMonster=Number(id);else lastGrowthMonster=Number(id)},
   setMode:change,trialEnabled:trial};
  apply();
 })();
@@ -1705,7 +1727,7 @@ window.__arenaGrowth={
 })();
 </script>
 <script id="player-special-713">
-/* MONSTER ARENA 7.2.14 - player-exclusive special attacks; no NPC skill unlocks. */
+/* MONSTER ARENA 7.2.15 - player-exclusive special attacks; no NPC skill unlocks. */
 (()=>{
 'use strict';
 // All named techniques respect the established 7-character, kanji-free convention.
@@ -1728,43 +1750,33 @@ const SPECIES=[
 ];
 if(SPECIES.length!==15||SPECIES.some(s=>['beam','dash'].some(k=>[...s[k]].length>7||/[\u3400-\u9fff\uf900-\ufaff]/u.test(s[k]))))throw Error('固有技名の制約違反');
 const MAX_GAUGE=100,MAX_USES=2,BEAR_ID=6;
-const PUNCH_NAME='ばくれつパンチ';
-if([...PUNCH_NAME].length>7||/[\u3400-\u9fff]/u.test(PUNCH_NAME))throw Error('ばくれつパンチの技名が規則違反');
-const label=kind=>kind==='beam'?'ビーム':kind==='dash'?'ダッシュ':'パンチ';
-const ability=(id,kind)=>({kind,name:kind==='punch'?PUNCH_NAME:SPECIES[id][kind],type:mons[id].type,
- power:kind==='punch'?65:kind==='beam'?82:77,accuracy:1,range:kind==='punch'?95:kind==='beam'?620:400,
- cd:10,shape:kind==='punch'?'special-punch':kind==='beam'?'special-beam':'special-dash',
+const PUNCH_NAME='ばくれつパンチ',COMBO_NAME='ばくれつれんだ';
+if([PUNCH_NAME,COMBO_NAME].some(n=>[...n].length>7||/[\u3400-\u9fff]/u.test(n)))throw Error('近接SPの技名が規則違反');
+const label=kind=>kind==='beam'?'ビーム':kind==='dash'?'ダッシュ':kind==='combo'?'れんだ':'パンチ';
+const ability=(id,kind)=>({kind,name:kind==='punch'?PUNCH_NAME:kind==='combo'?COMBO_NAME:SPECIES[id][kind],type:mons[id].type,
+ power:kind==='punch'?65:kind==='combo'?35:kind==='beam'?82:77,accuracy:1,range:(kind==='punch'||kind==='combo')?95:kind==='beam'?620:400,
+ cd:10,shape:kind==='punch'?'special-punch':kind==='combo'?'special-combo':kind==='beam'?'special-beam':'special-dash',
  special713:true,specialPunch714:kind==='punch'});
-function learned(id){
- const lv=window.__arenaGrowth?.level(id)||1;
- const s=SPECIES[Number(id)];if(!s)return [];
- const skills=lv>=10?[s.first,s.first==='beam'?'dash':'beam']:lv>=5?[s.first]:[];
- if(Number(id)===BEAR_ID&&window.__arenaModes?.growth&&(lv>=10||window.__arenaModes.trial))skills.push('punch');
- return skills;
+function slots(id){
+ const i=Number(id),s=SPECIES[i],lv=window.__arenaGrowth?.level(i)||1;
+ if(!s)return [null,null];
+ return [lv>=2?(i===BEAR_ID?'punch':s.first):null,
+         lv>=10?(i===BEAR_ID?'combo':s.first==='beam'?'dash':'beam'):null];
 }
-function equipped(id){
- const unlocked=learned(id);if(!unlocked.length)return null;
- const saved=window.__arenaGrowth?.getRecord(id)?.equippedSpecial;
- return unlocked.includes(saved)?saved:unlocked[0];
-}
+function learned(id){return slots(id).filter(Boolean)}
+function equipped(id){return slots(id)[0]||null}
 function profile(id){
- if(!Number.isInteger(Number(id))||Number(id)<0||Number(id)>=15)return null;
- const i=Number(id),unlocked=learned(i),kind=equipped(i);
- return {id:i,level:window.__arenaGrowth?.level(i)||1,first:SPECIES[i].first,learned:unlocked,
- equipped:kind,names:{beam:SPECIES[i].beam,dash:SPECIES[i].dash,punch:PUNCH_NAME}};
+ const i=Number(id);if(!Number.isInteger(i)||i<0||i>=15)return null;
+ const pair=slots(i);return {id:i,level:window.__arenaGrowth?.level(i)||1,
+   first:SPECIES[i].first,learned:pair.filter(Boolean),slots:pair,equipped:pair[0],
+   names:{beam:SPECIES[i].beam,dash:SPECIES[i].dash,punch:PUNCH_NAME,combo:COMBO_NAME}};
 }
-function chooseEquipment(id,kind){
- const i=Number(id);
- if(!learned(i).includes(kind))return false;
- const success=window.__arenaGrowth?.setSpecialEquipment(i,kind);
- if(success){updateSelection(i);return true}
- return false;
-}
+function chooseEquipment(id,kind){return learned(id).includes(kind)} // Legacy API: both SP slots are available; no equipment switch.
 // The selected monster is the only fighter that may gain this component.
 function attach(f){
  if(!f||f.side!==0||!window.__arenaModes?.growth||!window.__arenaGrowth?.active?.manual||window.__arenaGrowth.active.id!==f.id||manualInput.fullAI)return null;
- const kind=equipped(f.id);if(!kind)return null;
- f.special713={kind,skill:ability(f.id,kind),gauge:(window.__arenaModes.trial&&f.id===BEAR_ID?100:0),used:0,action:null,trail:[],cooldown:0};
+ const pair=slots(f.id),kind=pair[0];if(!kind)return null;
+ f.special713={kind,skill:ability(f.id,kind),slots:pair,gauge:0,used:0,action:null,trail:[],cooldown:0};
  return f.special713;
 }
 function gainGauge(f,n){
@@ -1774,33 +1786,35 @@ function gainGauge(f,n){
 }
 function onHit(attacker,victim,skill){
  if(skill?.special713)return; // Special skills don't refill themselves.
- if(attacker?.side===0)gainGauge(attacker,20);
- if(victim?.side===0)gainGauge(victim,10);
+ if(attacker?.side===0)gainGauge(attacker,(window.__arenaGrowth?.level(attacker.id)||1)>=9?25:20);
+ if(victim?.side===0)gainGauge(victim,(window.__arenaGrowth?.level(victim.id)||1)>=9?13:10);
 }
 let latest=null;
-function cast(){
+function cast(slotIndex=0){
  if(!window.__arenaModes?.growth||!game?.active||game.ended||game.finishing||game.paused||manualInput.fullAI)return false;
  const f=game.fighters?.[0],e=game.fighters?.[1],s=f?.special713;
+ const kind=s?.slots?.[slotIndex],selectedSkill=kind?ability(f.id,kind):null;
+ if(!selectedSkill)return false;
  if(!s||!e||s.used>=MAX_USES||s.gauge<MAX_GAUGE||s.action||s.cooldown>0||f.cast||f.actionLock>0){
   if(s&&s.gauge<MAX_GAUGE)manualNotice('SPゲージがたりない');
   return false;
  }
- if(s.kind==='punch'&&dist(f,e)>s.skill.range+hitRadius(e)){manualNotice('ちかづいて！');return false;}
- s.gauge=0;s.used++;s.cooldown=10;
+ if(kind==='punch'&&dist(f,e)>selectedSkill.range+hitRadius(e)){manualNotice('ちかづいて！');return false;}
+ s.gauge=0;s.used++;s.cooldown=(window.__arenaGrowth?.level(f.id)||1)>=9?7:10;
  const anchor=attackAnchor(f);
  let dx=e.x-f.x,dy=e.y-f.y,m=Math.hypot(dx,dy)||1;dx/=m;dy/=m;
- s.action={kind:s.kind,skill:s.skill,elapsed:0,hit:false,
+ s.action={kind,skill:selectedSkill,elapsed:0,hit:false,strikes:0,
   dx,dy,anchorX:anchor.x,anchorY:anchor.y,travel:0,
   stop:false,blocked:false,beamEnd:null};
  s.trail=[];f.dir=dx>=0?1:-1;f.state='attack';f.stateTime=0;
  f.actionLock=Math.max(f.actionLock,.3);
- floating.push({x:f.x,y:f.y-132,t:0,label:s.skill.name,color:'#e9feff',life:1.1,kind:'skill'});
- log(`【SP】${f.m.name} → ${s.skill.name}`);
+ floating.push({x:f.x,y:f.y-132,t:0,label:selectedSkill.name,color:'#e9feff',life:1.1,kind:'skill'});
+ log(`【SP${slotIndex+1}】${f.m.name} → ${selectedSkill.name}`);
  audioInit();
  // A rising synthesized cue; the six existing MP3 music tracks are untouched.
  tone(300,.24,'sine',.16,1.8);tone(520,.22,'triangle',.10,1.65,.08);
- window.dispatchEvent(new CustomEvent('arena-special-start',{detail:{name:s.skill.name,kind:s.kind,monster:f.m.name,used:s.used}}));
- latest={kind:s.kind,id:f.id,name:s.skill.name,hit:false,blocked:false,travel:0};
+ window.dispatchEvent(new CustomEvent('arena-special-start',{detail:{name:selectedSkill.name,kind,slot:slotIndex+1,monster:f.m.name,used:s.used}}));
+ latest={kind,id:f.id,name:selectedSkill.name,slot:slotIndex+1,hit:false,strikes:0,blocked:false,travel:0};
  return true;
 }
 function beamEndPoint(f,e){
@@ -1847,6 +1861,33 @@ function update(dt,battle){
    tone(390,.2,'sawtooth',.19,.47);noise(.20,.11,1400);
   }
   if(a.elapsed>=1.18){s.action=null;f.state='idle';f.stateTime=0}
+ }else if(a.kind==='combo'){
+  // Three chasing hits. Each strike has a visible approach and independent contact check.
+  const beats=[.32,.76,1.20];
+  if(a.strikes<3){
+   const due=beats[a.strikes],approach=due-.23;
+   if(a.elapsed>=approach&&a.elapsed<due){
+    let dx=e.x-f.x,dy=e.y-f.y,d=Math.hypot(dx,dy)||1;
+    let remaining=Math.min(1080*dt,Math.max(0,d-(hitRadius(e)+57)));
+    while(remaining>.001){
+     const step=Math.min(5,remaining),nx=f.x+dx/d*step,ny=f.y+dy/d*step;
+     if(!free(nx,ny))break;
+     s.trail.push({x:f.x,y:f.y,t:.26});f.x=nx;f.y=ny;a.travel+=step;remaining-=step;
+    }
+    f.dir=dx>=0?1:-1;
+   }
+   if(a.elapsed>=due){
+    const strike=a.strikes+1;a.strikes++;
+    const inRange=dist(f,e)<=a.skill.range+hitRadius(e)&&!lineBlocked(f,e);
+    if(inRange){
+     const hitSkill={...a.skill,specialPunch714:strike===3};
+     const hit=specialHit(f,e,hitSkill);
+     latest.hit=latest.hit||hit;latest.strikes+=hit?1:0;
+    }else{f.stats.misses++;floating.push({x:e.x,y:e.y-80,t:0,label:'MISS',color:'#fff'});sound('miss',f.m.type);}
+    tone(155+strike*42,.15,'triangle',.18,.64);noise(.10,.09,720);
+   }
+  }
+  if(a.elapsed>=1.55){s.action=null;f.state='idle';f.stateTime=0}
  }else if(a.kind==='punch'){
   if(a.elapsed>=.25&&!a.hit){
    a.hit=true;const within=dist(f,e)<=a.skill.range+hitRadius(e)&&!lineBlocked(f,e);
@@ -1971,8 +2012,9 @@ function draw(ctx,battle){
     ctx.shadowBlur=0;ctx.strokeStyle='#ffffff';ctx.lineWidth=3;
     ctx.beginPath();ctx.arc(end.x,end.y,19+8*Math.sin(a.elapsed*18),0,Math.PI*2);ctx.stroke();
    }
-  }else if(a.kind==='punch'){
-   const impact=Math.max(0,1-Math.abs(a.elapsed-.27)/.23);
+  }else if(a.kind==='punch'||a.kind==='combo'){
+   const pulse=a.kind==='combo'?(Math.abs(a.elapsed-.32)<.17?.32:Math.abs(a.elapsed-.76)<.17?.76:1.20):.27;
+   const impact=Math.max(0,1-Math.abs(a.elapsed-pulse)/.23);
    const centerX=f.x+a.dx*62,centerY=f.y+a.dy*62-44;
    ctx.globalAlpha=.18+impact*.76;
    ctx.strokeStyle='#fff2c2';ctx.shadowColor='#ffb13c';ctx.shadowBlur=20+impact*28;
@@ -1992,58 +2034,59 @@ function draw(ctx,battle){
  ctx.restore();
  drawStunnedTarget(ctx,battle);
 }
-let panel=null,button=null,buttonName=null,buttonMeter=null;
+let panel=null,row=null,buttons=[];
 function ensureSelectionPanel(){
  if(panel)return panel;
  const growth=document.getElementById('growth712Panel');if(!growth)return null;
- panel=document.createElement('section');panel.id='special713Panel';panel.setAttribute('aria-label','主人公専用の固有技');
- panel.innerHTML=`<div class="special713Heading"><strong>SP・主人公専用技</strong><span>Lv.5 / Lv.10 ＋ ばくれつパンチ体験</span></div><p class="special713Info">手動操作時だけ使用可能。試合中、通常技命中でSP+20・被弾でSP+10。</p><div class="special713Options"></div><div class="special713Foot">SP100で発動／1試合に最大2回。敵モンスターは使えません。</div>`;
+ panel=document.createElement('section');panel.id='special713Panel';panel.setAttribute('aria-label','育成SP技の習得');
+ panel.innerHTML='<div class="special713Heading"><strong>主人公専用・SP技</strong><span>Lv.2 / Lv.10</span></div><p class="special713Info">通常モードはSPなし。成長モードのみSP1・SP2を別々に発動できます。</p><div class="special713Options"></div><div class="special713Foot">SPゲージは共通100／1試合で合計2回。Lv.9で再使用が早くなります。</div>';
  growth.insertAdjacentElement('afterend',panel);return panel;
 }
 function updateSelection(id){
  const box=ensureSelectionPanel(),p=profile(id);if(!box||!p)return;
  const opts=box.querySelector('.special713Options');opts.replaceChildren();
  const manual=window.__arenaModes?.growth&&document.querySelector('input[name="playMode71"]:checked')?.value!=='ai';
- for(const kind of [...(p.id===BEAR_ID?[p.first,p.first==='beam'?'dash':'beam','punch']:[p.first,p.first==='beam'?'dash':'beam'])]){
-  const locked=!p.learned.includes(kind),card=document.createElement('button');
-  card.type='button';card.className='special713Option';
-  card.classList.toggle('is-equipped',p.equipped===kind);card.disabled=locked||!manual;
-  const min=kind===p.first?5:10;
-  card.innerHTML=`<span class="special713Glyph">${kind==='beam'?'✦':kind==='punch'?'✹':'➤'}</span><span class="special713Description"><strong>${p.names[kind]}</strong><small>${kind==='beam'?'ビーム：長射程620・岩で停止':kind==='punch'?'パンチ：強い吹き飛ばし＋1秒停止':'ダッシュ：最大400・岩を通れない'}</small></span><span class="special713State">${locked?'Lv.'+min+'で解放':p.equipped===kind?'装備中':'装備する'}</span>`;
-  card.onclick=()=>chooseEquipment(id,kind);
+ [0,1].forEach(i=>{
+  const kind=p.slots[i],min=i===0?2:10,ref=kind||((p.id===BEAR_ID)?(i?'combo':'punch'):(i===0?p.first:p.first==='beam'?'dash':'beam'));
+  const card=document.createElement('div');card.className='special713Option';card.classList.toggle('is-equipped',!!kind);
+  card.innerHTML=`<span class="special713Glyph">${i===0?'①':'②'}</span><span class="special713Description"><strong>SP${i+1} · ${p.names[ref]}</strong><small>${ref==='beam'?'ビーム：長射程620・岩で停止':ref==='dash'?'こうそくいどう：最大400':ref==='combo'?'3回自動で追いかけて連続攻撃':'パンチ：吹き飛ばし＋1秒停止'}</small></span><span class="special713State">${kind?'習得済み':'Lv.'+min+'で習得'}</span>`;
   opts.appendChild(card);
- }
- box.querySelector('.special713Info').textContent=manual?`Lv.${p.level} ／ 手動操作でのみ発動。攻撃命中でSP+20・被弾でSP+10。`:
- `Lv.${p.level} ／ AI全自動では固有技も育成能力も使いません。`;
+ });
+ box.querySelector('.special713Info').textContent=manual?`Lv.${p.level}・育成SP技。命中でゲージ増加。`: `Lv.${p.level}・通常モードでは使用できません。`;
  box.classList.toggle('special713Inactive',!manual);
 }
 function mountHud(){
- if(button)return;
- const top=document.getElementById('manualTop');if(!top)return;
- button=document.createElement('button');button.type='button';button.id='special713Button';button.title='育てたモンスターの固有技（6キー）';
- button.innerHTML='<strong>SP</strong><small id="special713ButtonName">固有技</small><span class="special713ButtonMeter"><i></i></span>';
- buttonName=button.querySelector('small');buttonMeter=button.querySelector('i');
- button.onclick=cast;top.appendChild(button);
+ if(row)return;
+ const pad=document.getElementById('skillPad');if(!pad)return;
+ row=document.createElement('div');row.id='special715Row';row.setAttribute('aria-label','特殊技1と特殊技2');
+ for(let i=0;i<2;i++){
+  const btn=document.createElement('button');btn.type='button';btn.className='special715Btn';btn.dataset.slot=String(i);
+  btn.innerHTML=`<strong>特殊技 ${i+1}</strong><span class="special715Name">未習得</span><small>Lv.${i===0?2:10}</small><span class="special715Gauge"><i></i></span>`;
+  btn.onclick=()=>cast(i);row.appendChild(btn);buttons.push(btn);
+ }
+ pad.appendChild(row);row.hidden=true;
  window.addEventListener('keydown',ev=>{
-  if(ev.repeat||ev.key!=='6'||['INPUT','SELECT','TEXTAREA'].includes(document.activeElement?.tagName))return;
-  cast();
+  if(ev.repeat||!['6','7'].includes(ev.key)||['INPUT','SELECT','TEXTAREA'].includes(document.activeElement?.tagName))return;
+  cast(ev.key==='6'?0:1);
  });
 }
 function syncHud(){
- if(!button){mountHud();if(!button)return}
- const f=game?.fighters?.[0],s=f?.special713;
- const visible=!!(window.__arenaModes?.growth&&s&&!manualInput.fullAI);
- button.hidden=!visible;
+ if(!row){mountHud();if(!row)return}
+ const f=game?.fighters?.[0],s=f?.special713,visible=!!(window.__arenaModes?.growth&&f&&!manualInput.fullAI);
+ row.hidden=!visible;
  if(!visible)return;
- buttonName.textContent=label(s.kind);
- buttonMeter.style.width=(s.gauge/MAX_GAUGE*100)+'%';
- const ready=game?.active&&!game.paused&&!game.ended&&!game.finishing&&s.gauge>=MAX_GAUGE&&s.used<MAX_USES&&!s.action&&!f.cast&&f.actionLock<=0&&s.cooldown<=0;
- button.disabled=!ready;
- button.classList.toggle('special713Ready',!!ready);
- button.title=`${s.skill.name}：SP ${s.gauge}/100　残り${MAX_USES-s.used}回`;
+ buttons.forEach((btn,i)=>{
+  const kind=s?.slots?.[i],skill=kind?ability(f.id,kind):null;
+  btn.querySelector('.special715Name').textContent=skill?.name||'未習得';
+  btn.querySelector('small').textContent=skill?(s.used>=MAX_USES?'使用済み':s.cooldown>0?`あと${s.cooldown.toFixed(1)}秒`:`SP ${s.gauge}/100`):`Lv.${i===0?2:10}で習得`;
+  btn.querySelector('.special715Gauge i').style.width=((s?.gauge||0)/MAX_GAUGE*100)+'%';
+  const ready=skill&&s&&game?.active&&!game.paused&&!game.ended&&!game.finishing&&s.gauge>=MAX_GAUGE&&s.used<MAX_USES&&!s.action&&!f.cast&&f.actionLock<=0&&s.cooldown<=0;
+  btn.disabled=!ready;btn.classList.toggle('special715Ready',!!ready);
+  btn.title=skill?`${skill.name}：SP${i+1}・ゲージ${s.gauge}/100・残り${MAX_USES-s.used}回`:`SP${i+1}は未習得`;
+ });
 }
 window.__arenaSpecial={
- species:SPECIES,learned,equipped,profile,chooseEquipment,attach,gainGauge,onHit,cast,
+ species:SPECIES,slots,learned,equipped,profile,chooseEquipment,attach,gainGauge,onHit,cast,
  tick:update,draw,updateSelection,mountHud,syncHud,ability,onPunchHit,updateStun,
  get latest(){return latest},get current(){return game?.fighters?.[0]?.special713||null}
 };
@@ -2305,7 +2348,7 @@ function fight(){
   stage='battle';document.getElementById('start').click();locked=false;
  },1500);
 }
-function begin(){if(window.__arenaModes?.growth)chosenMon=window.__arenaModes.monster;cancelBattleTransition();window.MONSTER_ARENA_DIFFICULTY=root.querySelector('input[name="difficulty721"]:checked')?.value||'easy';manualInput.fullAI=!!root.querySelector('input[name="playMode71"]:checked')?.value?.includes('ai');manualInput.auto=false;manualInput.queued=null;if(window.__arenaModes?.growth){manualInput.fullAI=false;window.__arenaGrowth?.activate(chosenMon,true)}else window.__arenaGrowth?.deactivate();makeBracket();root.classList.add('hidden');stage='bracket';show('🏆 トーナメント開幕！',`${name(chosenMon)}で4連勝を目指そう！ 15体全員が参加。1枠のみ不戦勝だよ。`,'▶ 1回戦をはじめる',fight)}
+function begin(){cancelBattleTransition();window.MONSTER_ARENA_DIFFICULTY=root.querySelector('input[name="difficulty721"]:checked')?.value||'easy';manualInput.fullAI=!!root.querySelector('input[name="playMode71"]:checked')?.value?.includes('ai');manualInput.auto=false;manualInput.queued=null;if(window.__arenaModes?.growth){manualInput.fullAI=false;window.__arenaGrowth?.activate(chosenMon,true)}else window.__arenaGrowth?.deactivate();makeBracket();root.classList.add('hidden');stage='bracket';show('🏆 トーナメント開幕！',`${name(chosenMon)}で4連勝を目指そう！ 15体全員が参加。1枠のみ不戦勝だよ。`,'▶ 1回戦をはじめる',fight)}
 function toSelection(){cancelBattleTransition();cancelChampionSequence();stage='setup';window.__arenaGrowth?.deactivate();render();window.dispatchEvent(new CustomEvent('arena-selection-return'));document.getElementById('arenaViewport').classList.remove('battle-screen');document.body.classList.remove('battle-layout-active');hide();if(game){game.active=false;game.paused=true}root.classList.remove('hidden');document.getElementById('launchGo').focus()}
 function showChampion721(mon,after){
  // The bracket is finished: the VICTORY screen is the final screen and owns the restart button.
@@ -2372,7 +2415,7 @@ function onEnd(e){
  }
 }
 window.addEventListener('arena-battle-end',onEnd);
-document.getElementById('launchGo').textContent=window.__arenaModes?.growth?'▶ ブレイズベアで育成大会へ':'🏆 トーナメントに挑戦！';
+document.getElementById('launchGo').textContent=window.__arenaModes?.growth?'▶ 育てたモンスターで大会へ':'🏆 トーナメントに挑戦！';
 document.querySelector('#launchInner p').textContent='自分のモンスターを選ぼう！ 対戦相手と会場は自動で決まるよ。決勝はコロシアム！';
 document.getElementById('launchInfo').textContent='全15体が参加・4回戦。1枠のみ不戦勝、プレイヤーは4試合！ 決勝はコロシアム。';
 document.getElementById('launchGo').addEventListener('click',begin);
@@ -2391,7 +2434,7 @@ const overlay=document.createElement('div');overlay.id='manualControls';
 overlay.innerHTML=`<div id="manualTop"><button id="autoToggle">移動：手動</button><button id="manualPause">Ⅱ 停止</button><button id="manualSupport">補助技 5</button></div><div id="manualPad"><div id="padKnob"></div></div><div id="skillPad"></div><div id="manualHelp">方向キー / WASD・技 1〜4・補助 5</div>`;
 arena.appendChild(overlay);arena.classList.add('manual-ready');
 const outside=document.createElement('div');outside.id='manualOutside';outside.innerHTML='<button id="outsideAuto">移動：手動</button><button id="outsideHint">操作：方向キー／WASD ＋ 技1〜4</button>';
-arena.after(outside);window.__arenaSpecial?.mountHud();
+arena.after(outside);
 const pad=document.getElementById('manualPad'),knob=document.getElementById('padKnob');
 function setPad(ev){const r=pad.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=(ev.clientX-cx)/(r.width*.36),dy=(ev.clientY-cy)/(r.height*.36),mag=Math.max(1,Math.hypot(dx,dy));manualInput.pointer={x:dx/mag,y:dy/mag};knob.style.transform=`translate(calc(-50% + ${manualInput.pointer.x*80}%),calc(-50% + ${manualInput.pointer.y*80}%))`}
 function clearPad(){manualInput.pointer=null;knob.style.transform='translate(-50%,-50%)'}
@@ -2406,7 +2449,7 @@ window.addEventListener('keydown',ev=>{if(['INPUT','SELECT','TEXTAREA'].includes
 window.addEventListener('keyup',ev=>manualInput.keys.delete(ev.key.length===1?ev.key.toLowerCase():ev.key));
 window.addEventListener('blur',()=>{manualInput.keys.clear();clearPad()});
 const skillPad=document.getElementById('skillPad');
-for(let i=0;i<5;i++){const b=document.createElement('button');b.className='skillKey';b.type='button';b.innerHTML='<div class="coolMask"></div><span class="skillText"></span>';b.onclick=()=>manualSkill(i);skillPad.appendChild(b)}
+for(let i=0;i<5;i++){const b=document.createElement('button');b.className='skillKey';b.type='button';b.innerHTML='<div class="coolMask"></div><span class="skillText"></span>';b.onclick=()=>manualSkill(i);skillPad.appendChild(b)}window.__arenaSpecial?.mountHud();
 function sync(){const f=game?.fighters?.[0];const active=!!(game&&game.active&&!game.ended);arena.classList.toggle('manual-ready',active&&!manualInput.fullAI);arena.classList.toggle('ai-watch-mode',active&&manualInput.fullAI);
  if(f){[...skillPad.children].forEach((b,i)=>{const sk=skills[f.m.skills[i]];if(!sk)return;const cd=Math.max(0,f.cd[i]);b.querySelector('.skillText').innerHTML=`${i+1}. ${sk.name}<small>${sk.support?'補助技':sk.power+'威力'} · ${cd>0?cd.toFixed(1)+'秒':'使用可'}</small>`;b.querySelector('.coolMask').style.transform=`scaleY(${Math.min(1,cd/Math.max(.1,sk.cd))})`;b.disabled=cd>.01||!active||game.paused;b.classList.toggle('skill-cooling',cd>.01);b.classList.toggle('skill-queued',manualInput.queued===i);b.classList.toggle('skill-ready',cd<=.01&&active&&!game.paused);});}
  document.getElementById('manualPause').textContent=game?.paused?'▶ 再開':'Ⅱ 停止';window.__arenaSpecial?.syncHud();requestAnimationFrame(sync)}
@@ -2416,7 +2459,7 @@ requestAnimationFrame(sync);
 <canvas aria-hidden="true" id="home57Canvas"></canvas>
 <div id="home57Top"><h1>モンスターアリーナ</h1><p>15体のモンスターが集う、夢のバトルフィールド</p></div>
 <div id="home57Scene">花咲く草原</div>
-<div id="home57Bottom"><button id="home57Start" type="button">▶ スタート</button><div id="home57Version">MONSTER ARENA · Ver.7.2.14</div><button id="vh70Open" type="button">更新履歴・現在の機能を確認</button></div>
+<div id="home57Bottom"><button id="home57Start" type="button">▶ スタート</button><div id="home57Version">MONSTER ARENA · Ver.7.2.15</div><button id="vh70Open" type="button">更新履歴・現在の機能を確認</button></div>
 </div>
 <script id="home57-script">(()=>{
 'use strict';
@@ -2578,7 +2621,7 @@ updateToggle();setPhase('home');checkHp();
 @keyframes splash62pulse{50%{box-shadow:0 0 35px #f4c66aa0;filter:brightness(1.07)}}
 @media(prefers-reduced-motion:reduce){#splash62 button{animation:none}}
 </style>
-<div aria-label="ゲーム起動と音楽の開始" aria-modal="true" id="splash62" role="dialog"><div class="panel"><h1>モンスターアリーナ</h1><p>音楽とともに、モンスターたちの世界へ。</p><button id="splash62Go" type="button">♪ タップしてはじめる</button><small>MONSTER ARENA · Ver.7.2.14</small></div></div>
+<div aria-label="ゲーム起動と音楽の開始" aria-modal="true" id="splash62" role="dialog"><div class="panel"><h1>モンスターアリーナ</h1><p>音楽とともに、モンスターたちの世界へ。</p><button id="splash62Go" type="button">♪ タップしてはじめる</button><small>MONSTER ARENA · Ver.7.2.15</small></div></div>
 <script id="splash62-js">(()=>{const splash=document.getElementById('splash62');const button=document.getElementById('splash62Go');button.addEventListener('click',()=>{const music=document.getElementById('music61Hint');if(music)music.click();splash.hidden=true;const home=document.getElementById('home57');if(home)home.removeAttribute('aria-hidden');window.dispatchEvent(new Event('resize'));},{once:true});})();</script><style id="patch65-css">
 #fullscreenToggle,#manualFull,#hudExit{display:none!important}
 #tourneyOverlay.tourney-fixed{z-index:2147482000!important}
@@ -2661,9 +2704,9 @@ updateToggle();setPhase('home');checkHp();
 </style>
 <div aria-label="更新履歴" aria-modal="true" hidden="" id="vh70" role="dialog">
 <section id="vh70Panel"><header id="vh70Header"><h2>更新履歴｜MONSTER ARENA</h2><button id="vh70Close" type="button">閉じる ×</button></header>
-<div id="vh70Body"><div id="vh70Latest"><strong>Ver.7.2.14</strong><p>育てた自分のモンスター専用のSP技を追加。Lv.5で最初の技、Lv.10でもう1つを習得し、ビーム系・長距離ダッシュ系から装備。通常技を変えず、敵とAI全自動には適用しません。SPゲージと演出を追加。</p><div id="vh70Build">ビルド識別子：MA-7.2.14-player-special</div></div>
+<div id="vh70Body"><div id="vh70Latest"><strong>Ver.7.2.15</strong><p>成長モードを15体に拡大。Lv.2でSP1、Lv.10でSP2を習得し、4つの通常技の上に2つの特殊技を横並びに配置。Lv.3〜8の能力強化、Lv.9のSP再使用短縮、ブレイズベアの3連追撃を追加。通常モードは従来の仕様を維持します。</p><div id="vh70Build">ビルド識別子：MA-7.2.15-growth-two-specials</div></div>
 <h3>この版に含まれる主な機能</h3><div id="vh70Features"><div><span>✓ 全画面バトル／透明スティック</span><small>Ver.5.9〜</small></div><div><span>✓ HP25％以下の赤ゲージ</span><small>Ver.6.0〜</small></div><div><span>✓ 初回タップでBGM開始</span><small>Ver.6.2〜</small></div><div><span>✓ LOSE演出</span><small>Ver.6.5〜</small></div><div><span>✓ WIN演出</span><small>Ver.6.6〜</small></div><div><span>✓ 長尺・変化型BGM</span><small>Ver.6.7〜</small></div><div><span>✓ 障害物を避ける初期配置</span><small>Ver.6.8〜</small></div><div><span>✓ 敵AI難易度調整</span><small>Ver.6.9〜（7.1で補正修正）</small></div><div><span>✓ AI全自動／手動操作の選択</span><small>Ver.7.1〜</small></div></div>
-<h3>バージョンごとの変更内容（新しい順）</h3><article class="vh70-item"><div class="vh70-ver">Ver.7.2.14</div><div><strong>通常モード・成長モード分離とばくれつパンチ試作</strong><p>通常モードは従来の15体・成長なし・旧優勝記録を維持。成長モードはブレイズベア1体で育成と専用SP技を試せる。Lv.10でばくれつパンチ習得。試作体験設定時は低レベルでも利用可。敵は通常能力のまま。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.13</div><div><strong>主人公専用SP技：ビームと高速移動</strong><p>手動操作で育てた自分のモンスターのみLv.5・Lv.10で2種類の固有技を習得。専用SPボタン・ゲージ・15体別技名・障害物判定・装備保存を追加。敵は固有技を使いません。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.12</div><div><strong>自分のモンスターの成長</strong><p>手動操作時に限り、15体別に経験値・レベル・能力成長を保存。ランダム敵とAI全自動には適用しません。固有技は次回実装予定。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.11</div><div><strong>距離別ノックバック・KO後の勝者カメラ・右手進行ボタン</strong><p>近接命中は被弾側の当たり判定直径1体分、非近接は半分だけ、障害物と場外境界を守りノックバック。KOの9コマ/秒・3秒演出とゴングは保持し、その後0.5秒で勝者へカメラをスイング。勝者は可動パーツを振って喜び、通常WIN画面にもモンスターを表示。トーナメント「次へ」は右下の親指エリアに配置し、従来の内蔵音源・進出SEだけ音量アップ。MP3音量は維持。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.10</div><div><strong>場外まで吹き飛ばすKO演出・飾り文字の透明化・全技名短縮</strong><p>KO中は戦闘を停止し、3秒間の9コマ/秒表示で全画面をコマ送り風に演出。敗者は等速で画面外へ飛び、目の加工は行わない。決着0.5秒後から各0.5秒間隔・約0.48秒長のゴング3打を強調し、BGM音量だけを一時調整。WINとバトル開始演出の背景を透明に変更。77件の技名を7文字以内・漢字なしに統一。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.9</div><div><strong>15体トーナメント・4回戦化・決着スローモーション</strong><p>15種類すべてが参加する16枠の勝ち抜き戦（不戦勝はNPCのみ）。1回戦→準々決勝→準決勝→決勝でプレイヤーは4試合。最後の一撃に3秒間のカメラズーム、閉眼の被弾表現、画面の約4分の1の吹き飛びと3回のゴングSEを追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.8</div><div><strong>戦闘前の演出・優勝BGM継続・背景拡大</strong><p>1回戦・準決勝に「バトルスタート」、決勝に5秒の対戦カード演出と「ファイナルバトルスタート」を追加。開始演出が終わるまで戦闘を進めず、優勝BGMをVICTORY画面でも途切れさせず再生。半透明モンスターを画面高に合わせて大きく表示。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.7</div><div><strong>軽快な勝利ファンファーレ・優勝演出の順番変更</strong><p>通常WINはwin_loop.mp3、優勝トーナメント表はchampion_loop.mp3を再生。決勝勝利後にトーナメント表→右端への勝者移動→暗転→VICTORYへ移り、最後の画面から次の大会へ進む。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.6</div><div><strong>iPhoneホーム画面アプリ化</strong><p>PWAマニフェストの読み込み、iOS独立起動設定、ホーム画面アイコン、Service Workerの登録処理を追加。ゲーム本体と4曲のBGMは7.2.5から変更なし。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.5</div><div><strong>4曲のMP3 BGM対応</strong><p>タイトル・モンスター選択・通常戦闘・決勝戦のBGMを外部MP3に対応。既存の効果音と優勝演出を維持。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.4</div><div><strong>A/Sコース・コース別優勝記録</strong><p>従来のかんたんをAコース ふつう、従来のふつうをSコース むずかしいに改名。難易度の実際の補正は変更せず、各モンスターの優勝回数をコース別に保存・表示。旧記録はコース不明として保持。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.3</div><div><strong>優勝記録・優勝演出・祝福サウンド</strong><p>モンスター別優勝回数を端末内に保存しタイトルから確認。優勝時の背景に半透明の大型モンスター、専用ファンファーレを追加。Ver.7.3は停止中。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.3</div><div><strong>優勝VICTORY画面の表示不具合修正</strong><p>決勝WIN後に優勝画面がバトル画面の背面に隠れていたz-indexの設定を修正。大会ルールと難易度設定は7.2.1を維持。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.3</div><div><strong>勝敗ネタバレ防止・優勝演出・難易度選択</strong><p>未実施の試合結果を伏せ、ラウンド進行時に他の試合を抽選。決勝勝利後にVICTORYと優勝モンスターが降りてくる専用画面を追加。かんたんは従来の敵ダメージ軽減、ふつうは敵ダメージ軽減なし（攻撃間隔の既存調整は維持）。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.3（停止中）</div><div><strong>敗者復活バトルロイヤル案</strong><p>試作した6体AIバトルロイヤルは今回の配布版には含めない。Ver.7.2から継続開発。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2</div><div><strong>アイコン付きトーナメント表と決勝演出</strong><p>8体の参加者アイコンを線でつなぎ、勝者の進出・対戦カードの発光・決勝のズームと集中線を追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.1</div><div><strong>敵ダメージ補正の修正・全自動AI操作</strong><p>敵の通常ダメージ86％・効果抜群1.5倍を実際の命中計算に反映。キャラ選択の先頭で全自動AI操作か自分で操作を選択できるように変更。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.0</div><div><strong>更新履歴とビルド確認</strong><p>タイトル画面から全更新履歴を閲覧。現行版の識別情報と主な機能の確認欄を追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.9</div><div><strong>敵AIの難易度調整</strong><p>敵の技クールタイム32％増。ダメージ86％・効果抜群1.5倍は当時計算式への反映漏れがあり、Ver.7.2で修正。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.8</div><div><strong>障害物を避ける初期配置</strong><p>岩・障害物の当たり判定と周辺の空きスペースを確認して出現位置を選択。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.7</div><div><strong>アダプティブBGM</strong><p>長い曲構成と強弱、HP減少時に同じ曲へ緊迫レイヤーを重ねる方式。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.6</div><div><strong>勝利演出・全場面BGM</strong><p>WIN演出、タップで次のトーナメント表へ進む仕組み、勝利用BGM。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.5</div><div><strong>敗北演出・操作範囲</strong><p>LOSE演出、タップで再挑戦へ進む仕組み、移動範囲・初期位置・空振り攻撃の調整。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.4</div><div><strong>オーケストラ風BGM</strong><p>弦・金管・ピアノ・打楽器風の音色と場面別の音楽表現。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.3</div><div><strong>中間調整版</strong><p>配布ファイルは現存。詳細な差分は個別確認が必要。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.2</div><div><strong>起動タップ画面</strong><p>初回タップでBGMを有効化し、タイトル待機画面へ移動。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.1</div><div><strong>iPhone音声開始の修正</strong><p>音量と音声開始処理を調整し、音楽再生ボタンを追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.0</div><div><strong>場面別BGMとHP表示</strong><p>タイトル・選択・トーナメント・戦闘・決着等のBGM、HP25％以下の赤ゲージ。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.9</div><div><strong>全画面バトル</strong><p>背景を大きく表示し、左下に技、右下に半透明スティックを重ねる配置。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.8</div><div><strong>横画面対応</strong><p>縦画面の回転案内、横向きレイアウト、誤拡大対策。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.7</div><div><strong>動くタイトル画面</strong><p>モンスターが動くタイトル、スタートボタン、バージョン表示。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.6</div><div><strong>配布用PWAの整備</strong><p>ホーム画面から起動できる配布形式を整備（この番号の単体HTMLは現存未確認）。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.5</div><div><strong>対戦・操作の改修</strong><p>操作性と戦闘画面を調整。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.4</div><div><strong>トーナメント関連の調整</strong><p>画面構成と操作を調整。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.3</div><div><strong>戦闘UIの調整</strong><p>操作表示や戦闘画面の配置を調整。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.2</div><div><strong>戦闘レイアウト</strong><p>バトル画面と操作エリアを上下に分割。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.1</div><div><strong>手動操作</strong><p>移動パッド、攻撃技ボタン、手動／自動移動の切り替えを追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.0</div><div><strong>基本バトルの基盤</strong><p>モンスター・技・対戦画面を備えたゲーム本体。</p></div></article>
+<h3>バージョンごとの変更内容（新しい順）</h3><article class="vh70-item"><div class="vh70-ver">Ver.7.2.15</div><div><strong>成長段階の再設計とSP技2枠</strong><p>Lv.2でSP1、Lv.3〜5で攻撃・防御・速度が各1.2倍、Lv.6〜8で各1.4倍、Lv.9でSP再使用短縮、Lv.10でSP2を習得。成長モードは15体選択可能。ブレイズベアの3回自動追撃、属性ビームと高速移動を追加し、特殊技2つを通常技の上へ配置。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.14</div><div><strong>通常モード・成長モード分離とばくれつパンチ試作</strong><p>通常モードは従来の15体・成長なし・旧優勝記録を維持。成長モードはブレイズベア1体で育成と専用SP技を試せる。Lv.10でばくれつパンチ習得。試作体験設定時は低レベルでも利用可。敵は通常能力のまま。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.13</div><div><strong>主人公専用SP技：ビームと高速移動</strong><p>手動操作で育てた自分のモンスターのみLv.5・Lv.10で2種類の固有技を習得。専用SPボタン・ゲージ・15体別技名・障害物判定・装備保存を追加。敵は固有技を使いません。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.12</div><div><strong>自分のモンスターの成長</strong><p>手動操作時に限り、15体別に経験値・レベル・能力成長を保存。ランダム敵とAI全自動には適用しません。固有技は次回実装予定。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.11</div><div><strong>距離別ノックバック・KO後の勝者カメラ・右手進行ボタン</strong><p>近接命中は被弾側の当たり判定直径1体分、非近接は半分だけ、障害物と場外境界を守りノックバック。KOの9コマ/秒・3秒演出とゴングは保持し、その後0.5秒で勝者へカメラをスイング。勝者は可動パーツを振って喜び、通常WIN画面にもモンスターを表示。トーナメント「次へ」は右下の親指エリアに配置し、従来の内蔵音源・進出SEだけ音量アップ。MP3音量は維持。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.10</div><div><strong>場外まで吹き飛ばすKO演出・飾り文字の透明化・全技名短縮</strong><p>KO中は戦闘を停止し、3秒間の9コマ/秒表示で全画面をコマ送り風に演出。敗者は等速で画面外へ飛び、目の加工は行わない。決着0.5秒後から各0.5秒間隔・約0.48秒長のゴング3打を強調し、BGM音量だけを一時調整。WINとバトル開始演出の背景を透明に変更。77件の技名を7文字以内・漢字なしに統一。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.9</div><div><strong>15体トーナメント・4回戦化・決着スローモーション</strong><p>15種類すべてが参加する16枠の勝ち抜き戦（不戦勝はNPCのみ）。1回戦→準々決勝→準決勝→決勝でプレイヤーは4試合。最後の一撃に3秒間のカメラズーム、閉眼の被弾表現、画面の約4分の1の吹き飛びと3回のゴングSEを追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.8</div><div><strong>戦闘前の演出・優勝BGM継続・背景拡大</strong><p>1回戦・準決勝に「バトルスタート」、決勝に5秒の対戦カード演出と「ファイナルバトルスタート」を追加。開始演出が終わるまで戦闘を進めず、優勝BGMをVICTORY画面でも途切れさせず再生。半透明モンスターを画面高に合わせて大きく表示。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.7</div><div><strong>軽快な勝利ファンファーレ・優勝演出の順番変更</strong><p>通常WINはwin_loop.mp3、優勝トーナメント表はchampion_loop.mp3を再生。決勝勝利後にトーナメント表→右端への勝者移動→暗転→VICTORYへ移り、最後の画面から次の大会へ進む。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.6</div><div><strong>iPhoneホーム画面アプリ化</strong><p>PWAマニフェストの読み込み、iOS独立起動設定、ホーム画面アイコン、Service Workerの登録処理を追加。ゲーム本体と4曲のBGMは7.2.5から変更なし。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.5</div><div><strong>4曲のMP3 BGM対応</strong><p>タイトル・モンスター選択・通常戦闘・決勝戦のBGMを外部MP3に対応。既存の効果音と優勝演出を維持。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.4</div><div><strong>A/Sコース・コース別優勝記録</strong><p>従来のかんたんをAコース ふつう、従来のふつうをSコース むずかしいに改名。難易度の実際の補正は変更せず、各モンスターの優勝回数をコース別に保存・表示。旧記録はコース不明として保持。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.3</div><div><strong>優勝記録・優勝演出・祝福サウンド</strong><p>モンスター別優勝回数を端末内に保存しタイトルから確認。優勝時の背景に半透明の大型モンスター、専用ファンファーレを追加。Ver.7.3は停止中。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.3</div><div><strong>優勝VICTORY画面の表示不具合修正</strong><p>決勝WIN後に優勝画面がバトル画面の背面に隠れていたz-indexの設定を修正。大会ルールと難易度設定は7.2.1を維持。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.3</div><div><strong>勝敗ネタバレ防止・優勝演出・難易度選択</strong><p>未実施の試合結果を伏せ、ラウンド進行時に他の試合を抽選。決勝勝利後にVICTORYと優勝モンスターが降りてくる専用画面を追加。かんたんは従来の敵ダメージ軽減、ふつうは敵ダメージ軽減なし（攻撃間隔の既存調整は維持）。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.3（停止中）</div><div><strong>敗者復活バトルロイヤル案</strong><p>試作した6体AIバトルロイヤルは今回の配布版には含めない。Ver.7.2から継続開発。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2</div><div><strong>アイコン付きトーナメント表と決勝演出</strong><p>8体の参加者アイコンを線でつなぎ、勝者の進出・対戦カードの発光・決勝のズームと集中線を追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.1</div><div><strong>敵ダメージ補正の修正・全自動AI操作</strong><p>敵の通常ダメージ86％・効果抜群1.5倍を実際の命中計算に反映。キャラ選択の先頭で全自動AI操作か自分で操作を選択できるように変更。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.0</div><div><strong>更新履歴とビルド確認</strong><p>タイトル画面から全更新履歴を閲覧。現行版の識別情報と主な機能の確認欄を追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.9</div><div><strong>敵AIの難易度調整</strong><p>敵の技クールタイム32％増。ダメージ86％・効果抜群1.5倍は当時計算式への反映漏れがあり、Ver.7.2で修正。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.8</div><div><strong>障害物を避ける初期配置</strong><p>岩・障害物の当たり判定と周辺の空きスペースを確認して出現位置を選択。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.7</div><div><strong>アダプティブBGM</strong><p>長い曲構成と強弱、HP減少時に同じ曲へ緊迫レイヤーを重ねる方式。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.6</div><div><strong>勝利演出・全場面BGM</strong><p>WIN演出、タップで次のトーナメント表へ進む仕組み、勝利用BGM。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.5</div><div><strong>敗北演出・操作範囲</strong><p>LOSE演出、タップで再挑戦へ進む仕組み、移動範囲・初期位置・空振り攻撃の調整。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.4</div><div><strong>オーケストラ風BGM</strong><p>弦・金管・ピアノ・打楽器風の音色と場面別の音楽表現。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.3</div><div><strong>中間調整版</strong><p>配布ファイルは現存。詳細な差分は個別確認が必要。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.2</div><div><strong>起動タップ画面</strong><p>初回タップでBGMを有効化し、タイトル待機画面へ移動。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.1</div><div><strong>iPhone音声開始の修正</strong><p>音量と音声開始処理を調整し、音楽再生ボタンを追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.0</div><div><strong>場面別BGMとHP表示</strong><p>タイトル・選択・トーナメント・戦闘・決着等のBGM、HP25％以下の赤ゲージ。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.9</div><div><strong>全画面バトル</strong><p>背景を大きく表示し、左下に技、右下に半透明スティックを重ねる配置。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.8</div><div><strong>横画面対応</strong><p>縦画面の回転案内、横向きレイアウト、誤拡大対策。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.7</div><div><strong>動くタイトル画面</strong><p>モンスターが動くタイトル、スタートボタン、バージョン表示。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.6</div><div><strong>配布用PWAの整備</strong><p>ホーム画面から起動できる配布形式を整備（この番号の単体HTMLは現存未確認）。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.5</div><div><strong>対戦・操作の改修</strong><p>操作性と戦闘画面を調整。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.4</div><div><strong>トーナメント関連の調整</strong><p>画面構成と操作を調整。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.3</div><div><strong>戦闘UIの調整</strong><p>操作表示や戦闘画面の配置を調整。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.2</div><div><strong>戦闘レイアウト</strong><p>バトル画面と操作エリアを上下に分割。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.1</div><div><strong>手動操作</strong><p>移動パッド、攻撃技ボタン、手動／自動移動の切り替えを追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.0</div><div><strong>基本バトルの基盤</strong><p>モンスター・技・対戦画面を備えたゲーム本体。</p></div></article>
 <p id="vh70Note">※ 5.0〜6.4の一部は開発時の説明を基にした要約です。詳細不明の箇所はその旨を記載しています。履歴はこの配布ファイルに含まれる実装の説明であり、GitHub Pagesで現在配信されている版を自動照合するものではありません。</p>
 </div></section></div>
 <script id="version-history-70-js">(()=>{
