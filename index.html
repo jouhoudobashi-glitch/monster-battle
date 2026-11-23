@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" name="viewport"/><title>モンスターアリーナ | MONSTER ARENA 7.2.15</title><meta name="theme-color" content="#101827"/>
+<html lang="ja"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" name="viewport"/><title>モンスターアリーナ | MONSTER ARENA 7.2.16</title><meta name="theme-color" content="#101827"/>
 <link rel="manifest" href="./manifest.webmanifest"/>
 <link rel="apple-touch-icon" sizes="180x180" href="./icons/icon-180.png"/>
 <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png"/>
@@ -408,7 +408,7 @@ button,.skillKey,#manualPad,#home57Start,#launchScreen,#tourneyOverlay,#arenaVie
  #arenaViewport.battle-screen #special715Row{height:clamp(38px,10.5dvh,48px)!important;bottom:calc(100% + 4px)!important}
  #special715Row .special715Btn .special715Name{font-size:clamp(9px,1.2vw,11px)}
 }
-</style></head><body><div aria-label="横画面にしてください" id="rotate58" role="status"><div class="rot-card"><div aria-hidden="true" class="rot-phone">📱</div><strong>iPhoneを横向きにしてください</strong><p>モンスターアリーナは横画面専用です。<br/>画面の向きのロックを解除し、iPhoneを横向きにするとゲームが表示されます。</p></div></div><div aria-label="対戦の準備" aria-modal="true" id="launchScreen" role="dialog"><div id="launchInner"><h2>MONSTER ARENA <span style="color:#9bdcf7">7.2.15</span></h2><p>自分のモンスターとフィールドを選択。ライバルはランダムで登場します。</p><section id="mode714" role="group" aria-label="ゲームモードの選択">
+</style></head><body><div aria-label="横画面にしてください" id="rotate58" role="status"><div class="rot-card"><div aria-hidden="true" class="rot-phone">📱</div><strong>iPhoneを横向きにしてください</strong><p>モンスターアリーナは横画面専用です。<br/>画面の向きのロックを解除し、iPhoneを横向きにするとゲームが表示されます。</p></div></div><div aria-label="対戦の準備" aria-modal="true" id="launchScreen" role="dialog"><div id="launchInner"><h2>MONSTER ARENA <span style="color:#9bdcf7">7.2.16</span></h2><p>自分のモンスターとフィールドを選択。ライバルはランダムで登場します。</p><section id="mode714" role="group" aria-label="ゲームモードの選択">
   <div class="mode714-title">① ゲームモードを選ぶ</div>
   <div class="mode714-options">
     <label class="mode714-card"><input name="gameMode714" type="radio" value="normal" checked><span><strong>通常モード</strong><small>これまでどおり。15体から選択・育成補正なし・従来の優勝記録</small></span></label>
@@ -1201,6 +1201,7 @@ function manualSkill(k){
 function manualNotice(t){if(game&&game.fighters[0])floating.push({x:game.fighters[0].x,y:game.fighters[0].y-135,t:0,label:t,color:'#ffe4a0',life:.9,kind:'notice'})}
 
 function tick(dt){
+ if(window.__arenaEffects716?.hold?.(dt,game))return;
  game.elapsed+=dt;let [a,b]=game.fighters;
  if(game.elapsed<dt+.001){chooseTactic(a,b,true);chooseTactic(b,a,true)}
  for(let f of [a,b]){
@@ -1239,6 +1240,7 @@ function tick(dt){
  }
  updateEffects(dt);
  window.__arenaSpecial?.tick(dt,game);
+ window.__arenaEffects716?.tick?.(dt,game);
  if(game.finishing)return;
  for(let p of particles)p.t+=dt;particles=particles.filter(p=>p.t<.6);
  for(let x of floating)x.t+=dt;floating=floating.filter(x=>x.t<(x.life||1));
@@ -1517,7 +1519,13 @@ function drawFighter(f){
  if(f.cast){let q=1-f.cast.left/Math.max(.15,f.cast.wind);ctx.save();ctx.globalAlpha=.2+.4*q;ctx.strokeStyle=types[f.m.type].color;ctx.lineWidth=2+q*3;ctx.beginPath();ctx.arc(f.x,f.y-38,31+12*q,0,Math.PI*2);ctx.stroke();ctx.restore()}
 }
 
-function draw(){drawBG();if(!game)return;let fs=[...game.fighters].sort((a,b)=>a.y-b.y);fs.forEach(drawFighter);drawEffects();window.__arenaSpecial?.draw(ctx,game);for(let p of particles){ctx.save();ctx.globalAlpha=1-p.t/.6;ctx.strokeStyle=p.color;ctx.lineWidth=7;ctx.beginPath();ctx.arc(p.x,p.y-25,12+p.t*95,0,Math.PI*2);ctx.stroke();ctx.restore()}for(let f of floating){ctx.save();const life=f.life||1,progress=Math.min(1,f.t/life);ctx.globalAlpha=Math.min(1,(1-progress)*2);ctx.font=(f.kind==='notice'?'bold 27px':f.kind==='skill'?'bold 23px':'bold 24px')+' system-ui';ctx.textAlign='center';ctx.strokeStyle='#172131';ctx.lineWidth=5;const yy=f.y-progress*40;ctx.strokeText(f.label,f.x,yy);ctx.fillStyle=f.color;ctx.fillText(f.label,f.x,yy);ctx.restore()}ctx.fillStyle='#102438bb';ctx.fillRect(FIELD.w/2-100,12,200,34);ctx.fillStyle='white';ctx.font='bold 16px system-ui';ctx.textAlign='center';ctx.fillText('残り '+Math.max(0,180-game.elapsed).toFixed(1)+' 秒',FIELD.w/2,35)}
+function draw(){
+ if(!game){drawBG();return;}
+ const cam=window.__arenaEffects716?.camera?.(game);
+ ctx.save();
+ if(cam){ctx.translate(FIELD.w/2,FIELD.h/2);ctx.scale(cam.zoom,cam.zoom);ctx.translate(-FIELD.w/2+cam.x,-FIELD.h/2+cam.y);}
+ drawBG();window.__arenaEffects716?.drawGround?.(ctx,game);
+ let fs=[...game.fighters].sort((a,b)=>a.y-b.y);fs.forEach(drawFighter);drawEffects();window.__arenaSpecial?.draw(ctx,game);for(let p of particles){ctx.save();ctx.globalAlpha=1-p.t/.6;ctx.strokeStyle=p.color;ctx.lineWidth=7;ctx.beginPath();ctx.arc(p.x,p.y-25,12+p.t*95,0,Math.PI*2);ctx.stroke();ctx.restore()}for(let f of floating){ctx.save();const life=f.life||1,progress=Math.min(1,f.t/life);ctx.globalAlpha=Math.min(1,(1-progress)*2);ctx.font=(f.kind==='notice'?'bold 27px':f.kind==='skill'?'bold 23px':'bold 24px')+' system-ui';ctx.textAlign='center';ctx.strokeStyle='#172131';ctx.lineWidth=5;const yy=f.y-progress*40;ctx.strokeText(f.label,f.x,yy);ctx.fillStyle=f.color;ctx.fillText(f.label,f.x,yy);ctx.restore()}ctx.restore();window.__arenaEffects716?.drawScreen?.(ctx,game);ctx.fillStyle='#102438bb';ctx.fillRect(FIELD.w/2-100,12,200,34);ctx.fillStyle='white';ctx.font='bold 16px system-ui';ctx.textAlign='center';ctx.fillText('残り '+Math.max(0,180-game.elapsed).toFixed(1)+' 秒',FIELD.w/2,35)}
 function loop(t){if(!game||!game.active||game.paused||game.ended)return;try{let dt=Math.min(.04,Math.max(0,(t-frameLast)/1000))*speed;frameLast=t;let sub=Math.max(1,Math.ceil(dt/.016));for(let i=0;i<sub&&!game.ended&&!game.finishing;i++)tick(dt/sub);if(game.finishing)return;draw();if(game.active&&!game.ended&&!game.paused)requestAnimationFrame(loop)}catch(e){fail(e);game.active=false}}
 function preview(id,target){let m=mons[+$(id).value],side=id==='selectA'?0:1;let selected=battleMoves(+$(id).value,side);
  let skillRows=selected.map((si,k)=>{let s=skills[si];return `<div><span>${s.name}${s.type===m.type&&!s.support?' <small style="color:#b6ff9e">[一致×1.2]</small>':''}${k===3?' <small style="color:#ffd67b">[相手に有利・自動装備]</small>':''}</span><span>${s.support?'サポート':s.power+' / '+Math.round(s.accuracy*100)+'%'}</span></div>`}).join('');
@@ -1727,7 +1735,7 @@ window.__arenaGrowth={
 })();
 </script>
 <script id="player-special-713">
-/* MONSTER ARENA 7.2.15 - player-exclusive special attacks; no NPC skill unlocks. */
+/* MONSTER ARENA 7.2.16 - player-only specials, three-layer visual enhancement. */
 (()=>{
 'use strict';
 // All named techniques respect the established 7-character, kanji-free convention.
@@ -1813,6 +1821,7 @@ function cast(slotIndex=0){
  audioInit();
  // A rising synthesized cue; the six existing MP3 music tracks are untouched.
  tone(300,.24,'sine',.16,1.8);tone(520,.22,'triangle',.10,1.65,.08);
+ window.__arenaEffects716?.start?.(f,e,selectedSkill);
  window.dispatchEvent(new CustomEvent('arena-special-start',{detail:{name:selectedSkill.name,kind,slot:slotIndex+1,monster:f.m.name,used:s.used}}));
  latest={kind,id:f.id,name:selectedSkill.name,slot:slotIndex+1,hit:false,strikes:0,blocked:false,travel:0};
  return true;
@@ -1835,6 +1844,7 @@ function specialHit(f,e,s){
  // The built-in damage calculation, critical strike, hit reaction and KO sequence are reused.
  const oldHP=e.hp;
  applyHit(f,e,s);
+ if(e.hp<oldHP&&!game?.finishing)window.__arenaEffects716?.hit?.(f,e,s);
  // The final blow must not leave a frozen laser/trail painted across the 3-second KO camera.
  if(game?.finishing&&f.special713){f.special713.action=null;f.special713.trail=[];}
  return e.hp<oldHP;
@@ -1858,6 +1868,7 @@ function update(dt,battle){
     f.stats.misses++;sound('miss',f.m.type);
    }
    latest.blocked=a.blocked;
+   if(a.blocked||!inRange)window.__arenaEffects716?.blocked?.(a.beamEnd.x,a.beamEnd.y,f);
    tone(390,.2,'sawtooth',.19,.47);noise(.20,.11,1400);
   }
   if(a.elapsed>=1.18){s.action=null;f.state='idle';f.stateTime=0}
@@ -1904,7 +1915,7 @@ function update(dt,battle){
    while(moved+0.001<remaining){
     const step=Math.min(4,remaining-moved);
     const nx=f.x+a.dx*step,ny=f.y+a.dy*step;
-    if(!free(nx,ny)){a.stop=true;a.blocked=true;break}
+    if(!free(nx,ny)){a.stop=true;a.blocked=true;window.__arenaEffects716?.blocked?.(f.x,f.y-45,f);break}
     const oldX=f.x,oldY=f.y;
     f.x=nx;f.y=ny;moved+=step;a.travel+=step;
     s.trail.push({x:oldX,y:oldY,t:.26});
@@ -1946,7 +1957,9 @@ function onPunchHit(attacker,victim,skill){
 function updateStun(f,dt){
  const state=f?.punch714;if(!state)return false;
  if(state.flight<.3){
+  const before=state.flight;
   state.flight=Math.min(.3,state.flight+dt);
+  if(before<.3&&state.flight>=.3)window.__arenaEffects716?.landing?.(f);
   const t=state.flight/.3;
   f.x=state.fromX+(state.toX-state.fromX)*t;f.y=state.fromY+(state.toY-state.fromY)*t;
  }else {state.stun=Math.max(0,state.stun-dt);}
@@ -1974,6 +1987,7 @@ function drawStunnedTarget(ctx,battle){
  }
 }
 function draw(ctx,battle){
+ if(window.__arenaEffects716?.ready){window.__arenaEffects716.drawCoreEnergy(ctx,battle);drawStunnedTarget(ctx,battle);return;}
  const f=battle?.fighters?.[0],s=f?.special713;if(!s)return;
  const a=s.action,trails=s.trail||[];
  ctx.save();
@@ -2091,6 +2105,351 @@ window.__arenaSpecial={
  get latest(){return latest},get current(){return game?.fighters?.[0]?.special713||null}
 };
 ensureSelectionPanel();
+})();
+
+</script>
+<script id="special-effects-716">
+/* MONSTER ARENA 7.2.16: three-layer special VFX, player growth mode only.
+   Layers: CORE (skill), ENERGY (surrounding motion), ENVIRONMENT (impact/decal).
+   The normal-mode renderer, damage formulas, MP3 player and KO sequence are untouched. */
+(()=>{
+'use strict';
+const MAX_PARTICLES=64, MAX_BURSTS=10, MAX_MARKS=9;
+const TWO_PI=Math.PI*2;
+const clamp=(v,lo=0,hi=1)=>Math.max(lo,Math.min(hi,v));
+const ease=t=>1-Math.pow(1-clamp(t),3);
+const fx={battle:null,particles:[],bursts:[],marks:[],hitStop:0,shock:null,flash:0,impacts:0,starts:0,frame:0};
+function reset(battle){fx.battle=battle;fx.particles=[];fx.bursts=[];fx.marks=[];fx.hitStop=0;fx.shock=null;fx.flash=0;fx.frame=0;}
+function valid(){return !!(window.__arenaModes?.growth && typeof game!=='undefined' && game?.fighters?.[0]?.special713);}
+function typeOf(f){return Number(f?.m?.type)||0;}
+function colorOf(f){return types[typeOf(f)]?.color||'#9ad7f8';}
+function addParticle(x,y,vx,vy,life,size,color,kind='spark'){
+ if(fx.particles.length>=MAX_PARTICLES)fx.particles.shift();
+ fx.particles.push({x,y,vx,vy,life,max:life,size,color,kind});
+}
+function burst(x,y,kind,color,scale=1){
+ fx.bursts.push({x,y,kind,color,life:.47,max:.47,scale});
+ if(fx.bursts.length>MAX_BURSTS)fx.bursts.shift();
+ const n=kind==='combo'?9:kind==='dash'?11:13;
+ for(let i=0;i<n;i++){
+  const angle=(i/n)*TWO_PI+Math.random()*.35;
+  const speed=(85+Math.random()*190)*scale;
+  addParticle(x,y,Math.cos(angle)*speed,Math.sin(angle)*speed-.24*speed,.4+Math.random()*.42,
+   2+Math.random()*4,color,i%4===0?'shard':'spark');
+ }
+}
+function addMark(x,y,type,kind){
+ fx.marks.push({x,y,type,kind,age:0,life:type===1||type===8||type===12?2.4:1.65,
+   seed:fx.impacts*2.399});
+ if(fx.marks.length>MAX_MARKS)fx.marks.shift();
+}
+function shake(x,y,power,kind){
+ fx.shock={x,y,age:0,life:.26,power:Math.min(8,power),kind};
+ fx.flash=Math.max(fx.flash,kind==='combo'?.21:.17);
+ if(kind==='punch'||kind==='combo')fx.hitStop=Math.max(fx.hitStop,kind==='combo'?.065:.085);
+}
+function start(f,e,skill){
+ if(!valid()||!f?.special713)return;
+ if(fx.battle!==game)reset(game);
+ fx.starts++;
+ const kind=skill.kind;
+ const cx=f.x,cy=f.y-40;
+ if(kind==='beam'){
+  for(let i=0;i<12;i++){
+   const a=i*TWO_PI/12,rr=24+Math.random()*35;
+   addParticle(cx+Math.cos(a)*rr,cy+Math.sin(a)*rr, -Math.cos(a)*35,-Math.sin(a)*35,
+    .4+Math.random()*.28,2.5,colorOf(f));
+  }
+ }else if(kind==='dash'){
+  burst(cx,cy,'dash',colorOf(f),.6);
+ }else{
+  for(let i=0;i<8;i++)addParticle(cx+Math.random()*30-15,f.y+10,Math.random()*90-45,-Math.random()*100-.1,
+    .35,2,'#e5bb8d','dust');
+ }
+}
+function hit(f,e,skill){
+ if(!valid()||fx.battle!==game||game.finishing)return;
+ fx.impacts++;
+ const type=typeOf(f),color=colorOf(f),kind=skill.kind||'beam';
+ const x=e.x,y=e.y-41;
+ burst(x,y,kind,color,kind==='combo'?1.05:1);
+ addMark(e.x,e.y+12,type,kind);
+ shake(x,y,kind==='punch'?6:kind==='combo'?7:4,kind);
+ for(let i=0;i<7;i++){
+  const a=Math.random()*TWO_PI,v=50+Math.random()*120;
+  addParticle(e.x,e.y+4,Math.cos(a)*v,Math.sin(a)*v-70,.55,3,'#c5b39e','dust');
+ }
+}
+function blocked(x,y,f){
+ if(!valid()||fx.battle!==game||game.finishing)return;
+ const color=colorOf(f);burst(x,y,'beam',color,.60);addMark(x,y+20,typeOf(f),'beam');
+ fx.flash=Math.max(fx.flash,.06);
+}
+function landing(e){
+ if(!valid()||fx.battle!==game||game.finishing)return;
+ burst(e.x,e.y+10,'land','#c9b79b',.65);
+}
+function hold(dt,battle){
+ if(!fx.hitStop||battle!==fx.battle||battle?.finishing){fx.hitStop=0;return false;}
+ fx.hitStop=Math.max(0,fx.hitStop-dt);
+ return true;
+}
+function tick(dt,battle){
+ if(!battle||!valid())return;
+ if(battle!==fx.battle)reset(battle);
+ fx.frame++;
+ for(const p of fx.particles){p.life-=dt;p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=60*dt;}
+ fx.particles=fx.particles.filter(p=>p.life>0);
+ for(const b of fx.bursts)b.life-=dt;
+ fx.bursts=fx.bursts.filter(b=>b.life>0);
+ for(const m of fx.marks)m.age+=dt;
+ fx.marks=fx.marks.filter(m=>m.age<m.life);
+ if(fx.shock){fx.shock.age+=dt;if(fx.shock.age>=fx.shock.life)fx.shock=null;}
+ fx.flash=Math.max(0,fx.flash-dt*1.25);
+}
+function circle(ctx,x,y,r,stroke,width=2,alpha=1){
+ ctx.globalAlpha=alpha;ctx.strokeStyle=stroke;ctx.lineWidth=width;
+ ctx.beginPath();ctx.arc(x,y,r,0,TWO_PI);ctx.stroke();
+}
+function glow(ctx,x,y,r,col,alpha=1){
+ ctx.save();ctx.globalAlpha=alpha;
+ const g=ctx.createRadialGradient(x,y,1,x,y,r);
+ g.addColorStop(0,'#ffffffdc');g.addColorStop(.20,col+'ad');g.addColorStop(.65,col+'52');g.addColorStop(1,col+'00');
+ ctx.fillStyle=g;ctx.beginPath();ctx.arc(x,y,r,0,TWO_PI);ctx.fill();ctx.restore();
+}
+function mark(ctx,m){
+ const alpha=clamp(1-m.age/m.life),t=m.type,x=m.x,y=m.y;
+ ctx.save();ctx.globalAlpha=alpha*.46;
+ if([1,8,12,6,0].includes(t)){
+  // Scorch/crack pattern; fades, never changes collision or terrain.
+  ctx.fillStyle=t===1?'#312323':t===8||t===12?'#58453a':'#6e5d54';
+  ctx.beginPath();ctx.ellipse(x,y,35,11,0,0,TWO_PI);ctx.fill();
+  ctx.strokeStyle=t===1?'#f78134':'#4a3e36';ctx.lineWidth=2;
+  for(let i=0;i<4;i++){
+   let angle=i*TWO_PI/4+m.seed;
+   ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+Math.cos(angle)*40,y+Math.sin(angle)*16);
+   ctx.lineTo(x+Math.cos(angle+.25)*57,y+Math.sin(angle+.25)*21);ctx.stroke();
+  }
+ }else if(t===5){
+  ctx.strokeStyle='#b2f4ff';ctx.lineWidth=3;
+  for(let i=0;i<5;i++){const a=i*TWO_PI/5+m.seed;
+   ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+Math.cos(a)*44,y+Math.sin(a)*17);ctx.stroke();}
+ }else if(t===2){
+  ctx.strokeStyle='#b3eafc';ctx.lineWidth=3;
+  ctx.beginPath();ctx.ellipse(x,y,28+14*m.age,9+6*m.age,0,0,TWO_PI);ctx.stroke();
+ }else if(t===3||t===11){
+  ctx.fillStyle='#8dde8d';
+  for(let i=0;i<5;i++){
+   const a=i*TWO_PI/5+m.seed;
+   ctx.beginPath();ctx.ellipse(x+Math.cos(a)*23,y+Math.sin(a)*8,8,3,a,0,TWO_PI);ctx.fill();
+  }
+ }else if(t===4){
+  ctx.strokeStyle='#ffeb70';ctx.lineWidth=2;
+  for(let i=0;i<4;i++){
+   const a=i*TWO_PI/4+m.seed;
+   ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x+Math.cos(a)*22,y+Math.sin(a)*9);
+   ctx.lineTo(x+Math.cos(a)*35+6,y+Math.sin(a)*14-3);ctx.stroke();
+  }
+ }else{
+  ctx.strokeStyle=types[t]?.color||'#c4b9f2';ctx.lineWidth=3;
+  ctx.beginPath();ctx.ellipse(x,y,25+6*m.age,9+3*m.age,0,0,TWO_PI);ctx.stroke();
+ }
+ ctx.restore();
+}
+function drawGround(ctx,battle){
+ if(!valid()||!battle||battle!==fx.battle||battle.finishing)return;
+ for(const m of fx.marks)mark(ctx,m);
+}
+function beam(ctx,a,f,e,col){
+ const p=attackAnchor(f),charge=clamp(a.elapsed/.53),phase=a.elapsed;
+ const rr=18+27*charge;
+ // 1. CORE: intense charge sphere + sharply readable beam white center.
+ if(a.elapsed<.53){
+  glow(ctx,p.x,p.y,rr+26,col,.32+.42*charge);
+  circle(ctx,p.x,p.y,rr,col,3,.35+.5*charge);
+  circle(ctx,p.x,p.y,rr+15+Math.sin(phase*17)*4,'#d7ffff',2,.50);
+  ctx.save();ctx.globalAlpha=.85*charge;ctx.fillStyle='#ffffff';
+  ctx.beginPath();ctx.arc(p.x,p.y,4+9*charge,0,TWO_PI);ctx.fill();ctx.restore();
+  // 2. ENERGY: orbiting four rings and converging spark particles.
+  ctx.save();ctx.strokeStyle=col;ctx.lineWidth=2.6;
+  for(let i=0;i<4;i++){
+   const angle=phase*9+i*TWO_PI/4,r=43-21*charge;
+   glow(ctx,p.x+Math.cos(angle)*r,p.y+Math.sin(angle)*r,9,col,.25);
+   circle(ctx,p.x+Math.cos(angle)*r,p.y+Math.sin(angle)*r,4,'#ffffff',1.5,.7*charge);
+  }
+  ctx.restore();
+ }
+ if(a.elapsed>=.53&&a.elapsed<=1.13){
+  const end=a.beamEnd||beamEndPoint(f,e);
+  const dx=end.x-end.fromX,dy=end.y-end.fromY,len=Math.hypot(dx,dy)||1;
+  const ux=dx/len,uy=dy/len,nx=-uy,ny=ux;
+  const fade=clamp((1.17-a.elapsed)/.18),alpha=clamp((a.elapsed-.53)/.075)*fade;
+  ctx.save();ctx.lineCap='round';ctx.globalCompositeOperation='screen';
+  // 3-layer core beam, capped blur radius for mobile browsers.
+  for(const [w,c,opacity,blur] of [[86,col,.25,14],[54,col,.66,10],[26,'#d8f8ff',.88,5],[12,'#ffffff',1,0]]){
+   ctx.globalAlpha=alpha*opacity;ctx.strokeStyle=c;ctx.lineWidth=w;
+   ctx.shadowColor=c;ctx.shadowBlur=blur;ctx.beginPath();ctx.moveTo(end.fromX,end.fromY);ctx.lineTo(end.x,end.y);ctx.stroke();
+  }
+  ctx.shadowBlur=0;
+  // ENERGY: twin helixes travelling along the beam shaft.
+  for(let side of [-1,1]){
+   ctx.globalAlpha=alpha*.73;ctx.strokeStyle=side===1?'#f9ffff':col;ctx.lineWidth=side===1?2.8:3.2;
+   ctx.beginPath();const segments=Math.min(28,Math.max(6,Math.ceil(len/29)));
+   for(let i=0;i<=segments;i++){
+    const u=i/segments,s=12*Math.sin(u*len*.055+phase*25+side*.75)*side;
+    const xx=end.fromX+dx*u+nx*s,yy=end.fromY+dy*u+ny*s;
+    if(i===0)ctx.moveTo(xx,yy);else ctx.lineTo(xx,yy);
+   }ctx.stroke();
+  }
+  // Attribute-specific accents are drawn without extra textures or external assets.
+  const typ=typeOf(f);
+  ctx.globalAlpha=alpha*.75;
+  if(typ===4){
+   // Lightning: sharp branching strokes, visually distinct from the smooth helix.
+   for(let branch=0;branch<3;branch++){
+    const off=(branch-1)*22;ctx.strokeStyle=branch===1?'#fff5b2':col;ctx.lineWidth=branch===1?3.6:2.3;
+    ctx.beginPath();
+    for(let i=0;i<=11;i++){
+     const u=i/11,s=off+((i%2)*2-1)*10;
+     const bx=end.fromX+dx*u+nx*s,by=end.fromY+dy*u+ny*s;
+     if(i===0)ctx.moveTo(bx,by);else ctx.lineTo(bx,by);
+    }ctx.stroke();
+   }
+  }else if(typ===2||typ===5){
+   // Water bubbles and ice diamonds.
+   ctx.strokeStyle='#e6ffff';ctx.fillStyle='#dffaff';ctx.lineWidth=2;
+   for(let i=1;i<=7;i++){
+    const u=i/8,px=end.fromX+dx*u+nx*Math.sin(i*3+phase*17)*24;
+    const py=end.fromY+dy*u+ny*Math.sin(i*3+phase*17)*24;
+    if(typ===2){circle(ctx,px,py,3+i%3,'#ecffff',1.8,alpha*.8);}
+    else{ctx.beginPath();ctx.moveTo(px,py-7);ctx.lineTo(px+5,py);ctx.lineTo(px,py+7);ctx.lineTo(px-5,py);ctx.closePath();ctx.fill();}
+   }
+  }else if(typ===1||typ===3||typ===7||typ===13){
+   // Elemental embers / leaves / venom globules / ghost wisps.
+   for(let i=1;i<=8;i++){
+    const u=i/9,px=end.fromX+dx*u+nx*(13+Math.sin(phase*17+i)*16);
+    const py=end.fromY+dy*u+ny*(13+Math.sin(phase*17+i)*16);
+    ctx.save();ctx.translate(px,py);ctx.rotate(Math.atan2(dy,dx)+i*.38);
+    ctx.fillStyle=typ===1?'#ffe4a4':typ===3?'#a4ff7e':typ===7?'#e9a9fb':'#d7b5ff';
+    ctx.beginPath();ctx.ellipse(0,0,typ===3?9:5,typ===3?3:5,0,0,TWO_PI);ctx.fill();ctx.restore();
+   }
+  }
+  // Bright source and terminal explosion form a continuous readable event.
+  glow(ctx,end.fromX,end.fromY,42,col,alpha*.63);
+  glow(ctx,end.x,end.y,65,col,alpha*.75);
+  circle(ctx,end.x,end.y,17+11*Math.sin(phase*25), '#ffffff',3,alpha*.75);
+  ctx.restore();
+ }
+}
+function dash(ctx,a,f,col,trails){
+ const charge=clamp(a.elapsed/.28);
+ if(a.elapsed<.28){
+  // Wind-up origin: expanding rings and low ground jet.
+  glow(ctx,f.x,f.y-38,42+18*charge,col,.43);
+  circle(ctx,f.x,f.y-40,38+12*charge,col,3,.7);
+  ctx.save();ctx.globalAlpha=.5;ctx.strokeStyle='#ffffff';ctx.lineWidth=2;
+  for(let i=0;i<4;i++){
+   ctx.beginPath();ctx.moveTo(f.x-f.dir*(44+i*18),f.y-70+i*12);
+   ctx.lineTo(f.x-f.dir*(8+i*10),f.y-70+i*12);ctx.stroke();
+  }ctx.restore();
+ }
+ if(a.elapsed>=.28){
+  const im=f.id<3?img[f.id]?.[0]:EXTRA_MONSTER_IMAGES[f.id-3];
+  let seen=0;
+  // 2. ENERGY: maximum of three actual monster silhouettes, not repeated full rig animations.
+  for(let i=trails.length-1;i>=0&&seen<3;i-=4){
+   const tr=trails[i];if(!tr||tr.t<=0)continue;seen++;
+   ctx.save();ctx.globalAlpha=.14+tr.t/.26*.15;ctx.globalCompositeOperation='screen';
+   if(im?.complete&&im.naturalWidth)ctx.drawImage(im,tr.x-66,tr.y-130,132,132);
+   ctx.strokeStyle=col;ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(tr.x,tr.y-45);ctx.lineTo(f.x,f.y-45);ctx.stroke();ctx.restore();
+  }
+  // 1. CORE: travel arc and crisp leading crescent.
+  ctx.save();ctx.globalCompositeOperation='screen';ctx.globalAlpha=.48;ctx.strokeStyle=col;ctx.lineWidth=11;
+  ctx.beginPath();ctx.arc(f.x,f.y-43,43,-1,1.4);ctx.stroke();
+  circle(ctx,f.x,f.y-44,24,'#f0fcff',3,.50);
+  ctx.restore();
+ }
+}
+function punch(ctx,a,f,e,col){
+ const combo=a.kind==='combo',beats=combo?[.32,.76,1.20]:[.25];
+ // Anticipation phase: compressed energy around the limb before contact.
+ const next=beats.find(x=>a.elapsed<x)||beats[beats.length-1];
+ const prep=clamp(1-(next-a.elapsed)/.24);
+ if(prep>0){
+  const px=f.x+a.dx*47,py=f.y-53+a.dy*35;
+  glow(ctx,px,py,22+prep*26,'#ffc46d',.38+prep*.25);
+  circle(ctx,px,py,17+prep*24,'#fff6ca',3,prep*.8);
+  for(let i=0;i<5;i++){
+   const x=f.x-a.dx*(25+i*13),y=f.y-44+Math.sin(i*2+a.elapsed*20)*14;
+   ctx.save();ctx.globalAlpha=prep*.6;ctx.strokeStyle='#ffe2ad';ctx.lineWidth=2.5;
+   ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(x-a.dx*(28+i*2),y-a.dy*(28+i*2));ctx.stroke();ctx.restore();
+  }
+ }
+ // Combo gets visibly stronger successive impacts without changing the hit formula.
+ const strike=combo?Math.min(3,a.strikes):1;
+ for(const beat of beats){
+  const hit=1-Math.abs(a.elapsed-beat)/.14;if(hit<=0)continue;
+  const px=e.x,py=e.y-42;
+  glow(ctx,px,py,35+20*hit,col,.5*hit);
+  circle(ctx,px,py,34+(1-hit)*48,'#ffecc6',5,hit*.75);
+  if(combo&&strike>1){circle(ctx,px,py,52+(1-hit)*23,col,2.5,hit*.45);}
+ }
+}
+function drawBursts(ctx){
+ for(const b of fx.bursts){
+  const u=clamp(1-b.life/b.max),alpha=(1-u)*(1-u);
+  ctx.save();ctx.globalCompositeOperation='screen';
+  glow(ctx,b.x,b.y,28+b.scale*45*ease(u),b.color,alpha*.75);
+  circle(ctx,b.x,b.y,(16+u*77)*b.scale,'#ffffff',5*(1-u)+1,alpha*.91);
+  circle(ctx,b.x,b.y,(23+u*100)*b.scale,b.color,5,alpha*.63);
+  ctx.translate(b.x,b.y);
+  ctx.strokeStyle='#ffffff';ctx.lineWidth=2.8;ctx.globalAlpha=alpha*.9;
+  const n=b.kind==='combo'?12:9;
+  for(let i=0;i<n;i++){
+   const ang=i*TWO_PI/n+(b.kind==='combo'?.15:0),inner=23+u*20,outer=inner+(19+55*u)*b.scale;
+   ctx.beginPath();ctx.moveTo(Math.cos(ang)*inner,Math.sin(ang)*inner);
+   ctx.lineTo(Math.cos(ang)*outer,Math.sin(ang)*outer);ctx.stroke();
+  }
+  ctx.restore();
+ }
+ for(const p of fx.particles){
+  const a=clamp(p.life/p.max);
+  ctx.save();ctx.globalAlpha=a*(p.kind==='dust'?.55:.86);ctx.fillStyle=p.color;
+  if(p.kind==='shard'){
+   ctx.translate(p.x,p.y);ctx.rotate(Math.atan2(p.vy,p.vx));
+   ctx.fillRect(-p.size*1.5,-p.size*.5,p.size*3,p.size);
+  }else{
+   ctx.beginPath();ctx.arc(p.x,p.y,p.size*(.4+.6*a),0,TWO_PI);ctx.fill();
+  }ctx.restore();
+ }
+}
+function drawCoreEnergy(ctx,battle){
+ if(!valid()||battle!==fx.battle||battle.finishing)return;
+ const f=battle?.fighters?.[0],e=battle?.fighters?.[1],s=f?.special713,a=s?.action;
+ if(!f||!e)return;
+ ctx.save();
+ if(a){
+  const col=colorOf(f);
+  if(a.kind==='beam')beam(ctx,a,f,e,col);
+  else if(a.kind==='dash')dash(ctx,a,f,col,s.trail||[]);
+  else punch(ctx,a,f,e,col);
+ }
+ drawBursts(ctx);
+ ctx.restore();
+}
+function camera(battle){
+ if(!valid()||!battle||battle!==fx.battle||battle.finishing||!fx.shock)return null;
+ const s=fx.shock,u=clamp(s.age/s.life),amp=(1-u)*s.power;
+ return {zoom:1+.021*Math.sin(Math.PI*u),x:Math.sin(u*70)*amp,y:Math.cos(u*54)*amp*.65};
+}
+function drawScreen(ctx,battle){
+ if(!valid()||battle!==fx.battle||battle.finishing||fx.flash<=0)return;
+ ctx.save();ctx.globalAlpha=Math.min(.22,fx.flash);ctx.fillStyle='#fff8e7';
+ ctx.fillRect(0,0,FIELD.w,FIELD.h);ctx.restore();
+}
+window.__arenaEffects716={ready:true,start,hit,blocked,landing,hold,tick,drawGround,drawCoreEnergy,camera,drawScreen,
+ get debug(){return {starts:fx.starts,impacts:fx.impacts,marks:fx.marks.length,bursts:fx.bursts.length,
+ particles:fx.particles.length,hitStop:fx.hitStop,flash:fx.flash,active:fx.battle===game&&valid()}}};
 })();
 
 </script>
@@ -2459,7 +2818,7 @@ requestAnimationFrame(sync);
 <canvas aria-hidden="true" id="home57Canvas"></canvas>
 <div id="home57Top"><h1>モンスターアリーナ</h1><p>15体のモンスターが集う、夢のバトルフィールド</p></div>
 <div id="home57Scene">花咲く草原</div>
-<div id="home57Bottom"><button id="home57Start" type="button">▶ スタート</button><div id="home57Version">MONSTER ARENA · Ver.7.2.15</div><button id="vh70Open" type="button">更新履歴・現在の機能を確認</button></div>
+<div id="home57Bottom"><button id="home57Start" type="button">▶ スタート</button><div id="home57Version">MONSTER ARENA · Ver.7.2.16</div><button id="vh70Open" type="button">更新履歴・現在の機能を確認</button></div>
 </div>
 <script id="home57-script">(()=>{
 'use strict';
@@ -2621,7 +2980,7 @@ updateToggle();setPhase('home');checkHp();
 @keyframes splash62pulse{50%{box-shadow:0 0 35px #f4c66aa0;filter:brightness(1.07)}}
 @media(prefers-reduced-motion:reduce){#splash62 button{animation:none}}
 </style>
-<div aria-label="ゲーム起動と音楽の開始" aria-modal="true" id="splash62" role="dialog"><div class="panel"><h1>モンスターアリーナ</h1><p>音楽とともに、モンスターたちの世界へ。</p><button id="splash62Go" type="button">♪ タップしてはじめる</button><small>MONSTER ARENA · Ver.7.2.15</small></div></div>
+<div aria-label="ゲーム起動と音楽の開始" aria-modal="true" id="splash62" role="dialog"><div class="panel"><h1>モンスターアリーナ</h1><p>音楽とともに、モンスターたちの世界へ。</p><button id="splash62Go" type="button">♪ タップしてはじめる</button><small>MONSTER ARENA · Ver.7.2.16</small></div></div>
 <script id="splash62-js">(()=>{const splash=document.getElementById('splash62');const button=document.getElementById('splash62Go');button.addEventListener('click',()=>{const music=document.getElementById('music61Hint');if(music)music.click();splash.hidden=true;const home=document.getElementById('home57');if(home)home.removeAttribute('aria-hidden');window.dispatchEvent(new Event('resize'));},{once:true});})();</script><style id="patch65-css">
 #fullscreenToggle,#manualFull,#hudExit{display:none!important}
 #tourneyOverlay.tourney-fixed{z-index:2147482000!important}
@@ -2704,9 +3063,9 @@ updateToggle();setPhase('home');checkHp();
 </style>
 <div aria-label="更新履歴" aria-modal="true" hidden="" id="vh70" role="dialog">
 <section id="vh70Panel"><header id="vh70Header"><h2>更新履歴｜MONSTER ARENA</h2><button id="vh70Close" type="button">閉じる ×</button></header>
-<div id="vh70Body"><div id="vh70Latest"><strong>Ver.7.2.15</strong><p>成長モードを15体に拡大。Lv.2でSP1、Lv.10でSP2を習得し、4つの通常技の上に2つの特殊技を横並びに配置。Lv.3〜8の能力強化、Lv.9のSP再使用短縮、ブレイズベアの3連追撃を追加。通常モードは従来の仕様を維持します。</p><div id="vh70Build">ビルド識別子：MA-7.2.15-growth-two-specials</div></div>
+<div id="vh70Body"><div id="vh70Latest"><strong>Ver.7.2.16</strong><p>成長モードのSP技4系統を3層エフェクト化。発動予兆、着弾衝撃、属性別の地面反応、残像、ヒットストップを追加。通常モード・能力値・SP消費・既存BGMを維持。</p><p>成長モードを15体に拡大。Lv.2でSP1、Lv.10でSP2を習得し、4つの通常技の上に2つの特殊技を横並びに配置。Lv.3〜8の能力強化、Lv.9のSP再使用短縮、ブレイズベアの3連追撃を追加。通常モードは従来の仕様を維持します。</p><div id="vh70Build">ビルド識別子：MA-7.2.16-special-vfx-three-layer</div></div>
 <h3>この版に含まれる主な機能</h3><div id="vh70Features"><div><span>✓ 全画面バトル／透明スティック</span><small>Ver.5.9〜</small></div><div><span>✓ HP25％以下の赤ゲージ</span><small>Ver.6.0〜</small></div><div><span>✓ 初回タップでBGM開始</span><small>Ver.6.2〜</small></div><div><span>✓ LOSE演出</span><small>Ver.6.5〜</small></div><div><span>✓ WIN演出</span><small>Ver.6.6〜</small></div><div><span>✓ 長尺・変化型BGM</span><small>Ver.6.7〜</small></div><div><span>✓ 障害物を避ける初期配置</span><small>Ver.6.8〜</small></div><div><span>✓ 敵AI難易度調整</span><small>Ver.6.9〜（7.1で補正修正）</small></div><div><span>✓ AI全自動／手動操作の選択</span><small>Ver.7.1〜</small></div></div>
-<h3>バージョンごとの変更内容（新しい順）</h3><article class="vh70-item"><div class="vh70-ver">Ver.7.2.15</div><div><strong>成長段階の再設計とSP技2枠</strong><p>Lv.2でSP1、Lv.3〜5で攻撃・防御・速度が各1.2倍、Lv.6〜8で各1.4倍、Lv.9でSP再使用短縮、Lv.10でSP2を習得。成長モードは15体選択可能。ブレイズベアの3回自動追撃、属性ビームと高速移動を追加し、特殊技2つを通常技の上へ配置。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.14</div><div><strong>通常モード・成長モード分離とばくれつパンチ試作</strong><p>通常モードは従来の15体・成長なし・旧優勝記録を維持。成長モードはブレイズベア1体で育成と専用SP技を試せる。Lv.10でばくれつパンチ習得。試作体験設定時は低レベルでも利用可。敵は通常能力のまま。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.13</div><div><strong>主人公専用SP技：ビームと高速移動</strong><p>手動操作で育てた自分のモンスターのみLv.5・Lv.10で2種類の固有技を習得。専用SPボタン・ゲージ・15体別技名・障害物判定・装備保存を追加。敵は固有技を使いません。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.12</div><div><strong>自分のモンスターの成長</strong><p>手動操作時に限り、15体別に経験値・レベル・能力成長を保存。ランダム敵とAI全自動には適用しません。固有技は次回実装予定。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.11</div><div><strong>距離別ノックバック・KO後の勝者カメラ・右手進行ボタン</strong><p>近接命中は被弾側の当たり判定直径1体分、非近接は半分だけ、障害物と場外境界を守りノックバック。KOの9コマ/秒・3秒演出とゴングは保持し、その後0.5秒で勝者へカメラをスイング。勝者は可動パーツを振って喜び、通常WIN画面にもモンスターを表示。トーナメント「次へ」は右下の親指エリアに配置し、従来の内蔵音源・進出SEだけ音量アップ。MP3音量は維持。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.10</div><div><strong>場外まで吹き飛ばすKO演出・飾り文字の透明化・全技名短縮</strong><p>KO中は戦闘を停止し、3秒間の9コマ/秒表示で全画面をコマ送り風に演出。敗者は等速で画面外へ飛び、目の加工は行わない。決着0.5秒後から各0.5秒間隔・約0.48秒長のゴング3打を強調し、BGM音量だけを一時調整。WINとバトル開始演出の背景を透明に変更。77件の技名を7文字以内・漢字なしに統一。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.9</div><div><strong>15体トーナメント・4回戦化・決着スローモーション</strong><p>15種類すべてが参加する16枠の勝ち抜き戦（不戦勝はNPCのみ）。1回戦→準々決勝→準決勝→決勝でプレイヤーは4試合。最後の一撃に3秒間のカメラズーム、閉眼の被弾表現、画面の約4分の1の吹き飛びと3回のゴングSEを追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.8</div><div><strong>戦闘前の演出・優勝BGM継続・背景拡大</strong><p>1回戦・準決勝に「バトルスタート」、決勝に5秒の対戦カード演出と「ファイナルバトルスタート」を追加。開始演出が終わるまで戦闘を進めず、優勝BGMをVICTORY画面でも途切れさせず再生。半透明モンスターを画面高に合わせて大きく表示。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.7</div><div><strong>軽快な勝利ファンファーレ・優勝演出の順番変更</strong><p>通常WINはwin_loop.mp3、優勝トーナメント表はchampion_loop.mp3を再生。決勝勝利後にトーナメント表→右端への勝者移動→暗転→VICTORYへ移り、最後の画面から次の大会へ進む。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.6</div><div><strong>iPhoneホーム画面アプリ化</strong><p>PWAマニフェストの読み込み、iOS独立起動設定、ホーム画面アイコン、Service Workerの登録処理を追加。ゲーム本体と4曲のBGMは7.2.5から変更なし。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.5</div><div><strong>4曲のMP3 BGM対応</strong><p>タイトル・モンスター選択・通常戦闘・決勝戦のBGMを外部MP3に対応。既存の効果音と優勝演出を維持。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.4</div><div><strong>A/Sコース・コース別優勝記録</strong><p>従来のかんたんをAコース ふつう、従来のふつうをSコース むずかしいに改名。難易度の実際の補正は変更せず、各モンスターの優勝回数をコース別に保存・表示。旧記録はコース不明として保持。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.3</div><div><strong>優勝記録・優勝演出・祝福サウンド</strong><p>モンスター別優勝回数を端末内に保存しタイトルから確認。優勝時の背景に半透明の大型モンスター、専用ファンファーレを追加。Ver.7.3は停止中。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.3</div><div><strong>優勝VICTORY画面の表示不具合修正</strong><p>決勝WIN後に優勝画面がバトル画面の背面に隠れていたz-indexの設定を修正。大会ルールと難易度設定は7.2.1を維持。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.3</div><div><strong>勝敗ネタバレ防止・優勝演出・難易度選択</strong><p>未実施の試合結果を伏せ、ラウンド進行時に他の試合を抽選。決勝勝利後にVICTORYと優勝モンスターが降りてくる専用画面を追加。かんたんは従来の敵ダメージ軽減、ふつうは敵ダメージ軽減なし（攻撃間隔の既存調整は維持）。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.3（停止中）</div><div><strong>敗者復活バトルロイヤル案</strong><p>試作した6体AIバトルロイヤルは今回の配布版には含めない。Ver.7.2から継続開発。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2</div><div><strong>アイコン付きトーナメント表と決勝演出</strong><p>8体の参加者アイコンを線でつなぎ、勝者の進出・対戦カードの発光・決勝のズームと集中線を追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.1</div><div><strong>敵ダメージ補正の修正・全自動AI操作</strong><p>敵の通常ダメージ86％・効果抜群1.5倍を実際の命中計算に反映。キャラ選択の先頭で全自動AI操作か自分で操作を選択できるように変更。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.0</div><div><strong>更新履歴とビルド確認</strong><p>タイトル画面から全更新履歴を閲覧。現行版の識別情報と主な機能の確認欄を追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.9</div><div><strong>敵AIの難易度調整</strong><p>敵の技クールタイム32％増。ダメージ86％・効果抜群1.5倍は当時計算式への反映漏れがあり、Ver.7.2で修正。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.8</div><div><strong>障害物を避ける初期配置</strong><p>岩・障害物の当たり判定と周辺の空きスペースを確認して出現位置を選択。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.7</div><div><strong>アダプティブBGM</strong><p>長い曲構成と強弱、HP減少時に同じ曲へ緊迫レイヤーを重ねる方式。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.6</div><div><strong>勝利演出・全場面BGM</strong><p>WIN演出、タップで次のトーナメント表へ進む仕組み、勝利用BGM。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.5</div><div><strong>敗北演出・操作範囲</strong><p>LOSE演出、タップで再挑戦へ進む仕組み、移動範囲・初期位置・空振り攻撃の調整。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.4</div><div><strong>オーケストラ風BGM</strong><p>弦・金管・ピアノ・打楽器風の音色と場面別の音楽表現。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.3</div><div><strong>中間調整版</strong><p>配布ファイルは現存。詳細な差分は個別確認が必要。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.2</div><div><strong>起動タップ画面</strong><p>初回タップでBGMを有効化し、タイトル待機画面へ移動。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.1</div><div><strong>iPhone音声開始の修正</strong><p>音量と音声開始処理を調整し、音楽再生ボタンを追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.0</div><div><strong>場面別BGMとHP表示</strong><p>タイトル・選択・トーナメント・戦闘・決着等のBGM、HP25％以下の赤ゲージ。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.9</div><div><strong>全画面バトル</strong><p>背景を大きく表示し、左下に技、右下に半透明スティックを重ねる配置。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.8</div><div><strong>横画面対応</strong><p>縦画面の回転案内、横向きレイアウト、誤拡大対策。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.7</div><div><strong>動くタイトル画面</strong><p>モンスターが動くタイトル、スタートボタン、バージョン表示。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.6</div><div><strong>配布用PWAの整備</strong><p>ホーム画面から起動できる配布形式を整備（この番号の単体HTMLは現存未確認）。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.5</div><div><strong>対戦・操作の改修</strong><p>操作性と戦闘画面を調整。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.4</div><div><strong>トーナメント関連の調整</strong><p>画面構成と操作を調整。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.3</div><div><strong>戦闘UIの調整</strong><p>操作表示や戦闘画面の配置を調整。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.2</div><div><strong>戦闘レイアウト</strong><p>バトル画面と操作エリアを上下に分割。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.1</div><div><strong>手動操作</strong><p>移動パッド、攻撃技ボタン、手動／自動移動の切り替えを追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.0</div><div><strong>基本バトルの基盤</strong><p>モンスター・技・対戦画面を備えたゲーム本体。</p></div></article>
+<h3>バージョンごとの変更内容（新しい順）</h3><article class="vh70-item"><div class="vh70-ver">Ver.7.2.16</div><div><strong>主人公専用SP技の3層演出</strong><p>ビーム・高速移動・ばくれつパンチ・3連追撃に発動前の予兆、命中時の光・衝撃リング、地面に残る跡、短いカメラ揺れを追加。成長モード限定。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.15</div><div><strong>成長段階の再設計とSP技2枠</strong><p>Lv.2でSP1、Lv.3〜5で攻撃・防御・速度が各1.2倍、Lv.6〜8で各1.4倍、Lv.9でSP再使用短縮、Lv.10でSP2を習得。成長モードは15体選択可能。ブレイズベアの3回自動追撃、属性ビームと高速移動を追加し、特殊技2つを通常技の上へ配置。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.14</div><div><strong>通常モード・成長モード分離とばくれつパンチ試作</strong><p>通常モードは従来の15体・成長なし・旧優勝記録を維持。成長モードはブレイズベア1体で育成と専用SP技を試せる。Lv.10でばくれつパンチ習得。試作体験設定時は低レベルでも利用可。敵は通常能力のまま。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.13</div><div><strong>主人公専用SP技：ビームと高速移動</strong><p>手動操作で育てた自分のモンスターのみLv.5・Lv.10で2種類の固有技を習得。専用SPボタン・ゲージ・15体別技名・障害物判定・装備保存を追加。敵は固有技を使いません。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.12</div><div><strong>自分のモンスターの成長</strong><p>手動操作時に限り、15体別に経験値・レベル・能力成長を保存。ランダム敵とAI全自動には適用しません。固有技は次回実装予定。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.11</div><div><strong>距離別ノックバック・KO後の勝者カメラ・右手進行ボタン</strong><p>近接命中は被弾側の当たり判定直径1体分、非近接は半分だけ、障害物と場外境界を守りノックバック。KOの9コマ/秒・3秒演出とゴングは保持し、その後0.5秒で勝者へカメラをスイング。勝者は可動パーツを振って喜び、通常WIN画面にもモンスターを表示。トーナメント「次へ」は右下の親指エリアに配置し、従来の内蔵音源・進出SEだけ音量アップ。MP3音量は維持。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.10</div><div><strong>場外まで吹き飛ばすKO演出・飾り文字の透明化・全技名短縮</strong><p>KO中は戦闘を停止し、3秒間の9コマ/秒表示で全画面をコマ送り風に演出。敗者は等速で画面外へ飛び、目の加工は行わない。決着0.5秒後から各0.5秒間隔・約0.48秒長のゴング3打を強調し、BGM音量だけを一時調整。WINとバトル開始演出の背景を透明に変更。77件の技名を7文字以内・漢字なしに統一。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.9</div><div><strong>15体トーナメント・4回戦化・決着スローモーション</strong><p>15種類すべてが参加する16枠の勝ち抜き戦（不戦勝はNPCのみ）。1回戦→準々決勝→準決勝→決勝でプレイヤーは4試合。最後の一撃に3秒間のカメラズーム、閉眼の被弾表現、画面の約4分の1の吹き飛びと3回のゴングSEを追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.8</div><div><strong>戦闘前の演出・優勝BGM継続・背景拡大</strong><p>1回戦・準決勝に「バトルスタート」、決勝に5秒の対戦カード演出と「ファイナルバトルスタート」を追加。開始演出が終わるまで戦闘を進めず、優勝BGMをVICTORY画面でも途切れさせず再生。半透明モンスターを画面高に合わせて大きく表示。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.7</div><div><strong>軽快な勝利ファンファーレ・優勝演出の順番変更</strong><p>通常WINはwin_loop.mp3、優勝トーナメント表はchampion_loop.mp3を再生。決勝勝利後にトーナメント表→右端への勝者移動→暗転→VICTORYへ移り、最後の画面から次の大会へ進む。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.6</div><div><strong>iPhoneホーム画面アプリ化</strong><p>PWAマニフェストの読み込み、iOS独立起動設定、ホーム画面アイコン、Service Workerの登録処理を追加。ゲーム本体と4曲のBGMは7.2.5から変更なし。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.5</div><div><strong>4曲のMP3 BGM対応</strong><p>タイトル・モンスター選択・通常戦闘・決勝戦のBGMを外部MP3に対応。既存の効果音と優勝演出を維持。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.4</div><div><strong>A/Sコース・コース別優勝記録</strong><p>従来のかんたんをAコース ふつう、従来のふつうをSコース むずかしいに改名。難易度の実際の補正は変更せず、各モンスターの優勝回数をコース別に保存・表示。旧記録はコース不明として保持。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.3</div><div><strong>優勝記録・優勝演出・祝福サウンド</strong><p>モンスター別優勝回数を端末内に保存しタイトルから確認。優勝時の背景に半透明の大型モンスター、専用ファンファーレを追加。Ver.7.3は停止中。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.3</div><div><strong>優勝VICTORY画面の表示不具合修正</strong><p>決勝WIN後に優勝画面がバトル画面の背面に隠れていたz-indexの設定を修正。大会ルールと難易度設定は7.2.1を維持。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.3</div><div><strong>勝敗ネタバレ防止・優勝演出・難易度選択</strong><p>未実施の試合結果を伏せ、ラウンド進行時に他の試合を抽選。決勝勝利後にVICTORYと優勝モンスターが降りてくる専用画面を追加。かんたんは従来の敵ダメージ軽減、ふつうは敵ダメージ軽減なし（攻撃間隔の既存調整は維持）。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.3（停止中）</div><div><strong>敗者復活バトルロイヤル案</strong><p>試作した6体AIバトルロイヤルは今回の配布版には含めない。Ver.7.2から継続開発。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2</div><div><strong>アイコン付きトーナメント表と決勝演出</strong><p>8体の参加者アイコンを線でつなぎ、勝者の進出・対戦カードの発光・決勝のズームと集中線を追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.1</div><div><strong>敵ダメージ補正の修正・全自動AI操作</strong><p>敵の通常ダメージ86％・効果抜群1.5倍を実際の命中計算に反映。キャラ選択の先頭で全自動AI操作か自分で操作を選択できるように変更。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.0</div><div><strong>更新履歴とビルド確認</strong><p>タイトル画面から全更新履歴を閲覧。現行版の識別情報と主な機能の確認欄を追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.9</div><div><strong>敵AIの難易度調整</strong><p>敵の技クールタイム32％増。ダメージ86％・効果抜群1.5倍は当時計算式への反映漏れがあり、Ver.7.2で修正。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.8</div><div><strong>障害物を避ける初期配置</strong><p>岩・障害物の当たり判定と周辺の空きスペースを確認して出現位置を選択。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.7</div><div><strong>アダプティブBGM</strong><p>長い曲構成と強弱、HP減少時に同じ曲へ緊迫レイヤーを重ねる方式。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.6</div><div><strong>勝利演出・全場面BGM</strong><p>WIN演出、タップで次のトーナメント表へ進む仕組み、勝利用BGM。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.5</div><div><strong>敗北演出・操作範囲</strong><p>LOSE演出、タップで再挑戦へ進む仕組み、移動範囲・初期位置・空振り攻撃の調整。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.4</div><div><strong>オーケストラ風BGM</strong><p>弦・金管・ピアノ・打楽器風の音色と場面別の音楽表現。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.3</div><div><strong>中間調整版</strong><p>配布ファイルは現存。詳細な差分は個別確認が必要。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.2</div><div><strong>起動タップ画面</strong><p>初回タップでBGMを有効化し、タイトル待機画面へ移動。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.1</div><div><strong>iPhone音声開始の修正</strong><p>音量と音声開始処理を調整し、音楽再生ボタンを追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.0</div><div><strong>場面別BGMとHP表示</strong><p>タイトル・選択・トーナメント・戦闘・決着等のBGM、HP25％以下の赤ゲージ。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.9</div><div><strong>全画面バトル</strong><p>背景を大きく表示し、左下に技、右下に半透明スティックを重ねる配置。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.8</div><div><strong>横画面対応</strong><p>縦画面の回転案内、横向きレイアウト、誤拡大対策。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.7</div><div><strong>動くタイトル画面</strong><p>モンスターが動くタイトル、スタートボタン、バージョン表示。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.6</div><div><strong>配布用PWAの整備</strong><p>ホーム画面から起動できる配布形式を整備（この番号の単体HTMLは現存未確認）。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.5</div><div><strong>対戦・操作の改修</strong><p>操作性と戦闘画面を調整。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.4</div><div><strong>トーナメント関連の調整</strong><p>画面構成と操作を調整。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.3</div><div><strong>戦闘UIの調整</strong><p>操作表示や戦闘画面の配置を調整。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.2</div><div><strong>戦闘レイアウト</strong><p>バトル画面と操作エリアを上下に分割。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.1</div><div><strong>手動操作</strong><p>移動パッド、攻撃技ボタン、手動／自動移動の切り替えを追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.0</div><div><strong>基本バトルの基盤</strong><p>モンスター・技・対戦画面を備えたゲーム本体。</p></div></article>
 <p id="vh70Note">※ 5.0〜6.4の一部は開発時の説明を基にした要約です。詳細不明の箇所はその旨を記載しています。履歴はこの配布ファイルに含まれる実装の説明であり、GitHub Pagesで現在配信されている版を自動照合するものではありません。</p>
 </div></section></div>
 <script id="version-history-70-js">(()=>{
