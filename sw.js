@@ -1,7 +1,7 @@
-// MONSTER ARENA 7.2.17 - PWA offline shell cache.
-const CACHE = 'monster-arena-7.2.17-v1';
+// MONSTER ARENA 7.2.18 - PWA offline shell cache.
+const CACHE = 'monster-arena-7.2.18-v1';
 const PREFIX = 'monster-arena-';
-const ASSETS = ['./', './index.html', './manifest.webmanifest', './icons/icon-180.png', './icons/icon-192.png', './icons/icon-512.png'];
+const ASSETS = ['./', './index.html', './manifest.webmanifest', './icons/icon-180.png', './icons/icon-192.png', './icons/icon-512.png', './effects/c_course/poison_fx.png', './effects/c_course/ground_fx.png', './effects/c_course/flying_fx.png', './effects/c_course/bug_fx.png', './effects/c_course/rock_fx.png'];
 self.addEventListener('install', event => {
   event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)).then(() => self.skipWaiting()));
 });
