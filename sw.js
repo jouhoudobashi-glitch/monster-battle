@@ -1,5 +1,5 @@
-// MONSTER ARENA 7.2.27 - PWA offline shell cache.
-const CACHE = 'monster-arena-7.2.27-v1';
+// MONSTER ARENA 7.2.29 - PWA offline shell cache.
+const CACHE = 'monster-arena-7.2.29-v1';
 const PREFIX = 'monster-arena-';
 const ASSETS = ["./", "./index.html", "./manifest.webmanifest", "./icons/icon-180.png", "./icons/icon-192.png", "./icons/icon-512.png", "./effects/c_course/stage5r/bug_fx.png", "./effects/c_course/stage5r/dragon_fx.png", "./effects/c_course/stage5r/electric_fx.png", "./effects/c_course/stage5r/fighting_fx.png", "./effects/c_course/stage5r/fire_fx.png", "./effects/c_course/stage5r/flying_fx.png", "./effects/c_course/stage5r/ghost_fx.png", "./effects/c_course/stage5r/grass_fx.png", "./effects/c_course/stage5r/ground_fx.png", "./effects/c_course/stage5r/ice_fx.png", "./effects/c_course/stage5r/normal_fx.png", "./effects/c_course/stage5r/particles_atlas.png", "./effects/c_course/stage5r/poison_fx.png", "./effects/c_course/stage5r/psychic_fx.png", "./effects/c_course/stage5r/rock_fx.png", "./effects/c_course/stage5r/water_fx.png"];
 self.addEventListener('install', event => {
