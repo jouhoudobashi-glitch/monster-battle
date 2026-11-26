@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ja"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" name="viewport"/><title>モンスターアリーナ | MONSTER ARENA 7.2.20</title><meta name="theme-color" content="#101827"/>
+<html lang="ja"><head><meta charset="utf-8"/><meta content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" name="viewport"/><title>モンスターアリーナ | MONSTER ARENA 7.2.21</title><meta name="theme-color" content="#101827"/>
 <link rel="manifest" href="./manifest.webmanifest"/>
 <link rel="apple-touch-icon" sizes="180x180" href="./icons/icon-180.png"/>
 <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png"/>
@@ -477,7 +477,7 @@ button,.skillKey,#manualPad,#home57Start,#launchScreen,#tourneyOverlay,#arenaVie
  #arenaViewport.battle-screen #skillPad{width:clamp(82px,10.5vw,110px)!important;height:min(64dvh,208px)!important}
 }
 </style>
-</head><body><div aria-label="横画面にしてください" id="rotate58" role="status"><div class="rot-card"><div aria-hidden="true" class="rot-phone">📱</div><strong>iPhoneを横向きにしてください</strong><p>モンスターアリーナは横画面専用です。<br/>画面の向きのロックを解除し、iPhoneを横向きにするとゲームが表示されます。</p></div></div><div aria-label="対戦の準備" aria-modal="true" id="launchScreen" role="dialog"><div id="launchInner"><h2>MONSTER ARENA <span style="color:#9bdcf7">7.2.20</span></h2><p>自分のモンスターとフィールドを選択。ライバルはランダムで登場します。</p><section id="mode714" role="group" aria-label="ゲームモードの選択">
+</head><body><div aria-label="横画面にしてください" id="rotate58" role="status"><div class="rot-card"><div aria-hidden="true" class="rot-phone">📱</div><strong>iPhoneを横向きにしてください</strong><p>モンスターアリーナは横画面専用です。<br/>画面の向きのロックを解除し、iPhoneを横向きにするとゲームが表示されます。</p></div></div><div aria-label="対戦の準備" aria-modal="true" id="launchScreen" role="dialog"><div id="launchInner"><h2>MONSTER ARENA <span style="color:#9bdcf7">7.2.21</span></h2><p>自分のモンスターとフィールドを選択。ライバルはランダムで登場します。</p><section id="mode714" role="group" aria-label="ゲームモードの選択">
   <div class="mode714-title">① ゲームモードを選ぶ</div>
   <div class="mode714-options">
     <label class="mode714-card"><input name="gameMode714" type="radio" value="normal" checked><span><strong>通常モード</strong><small>これまでどおり。15体から選択・育成補正なし・従来の優勝記録</small></span></label>
@@ -1302,7 +1302,7 @@ function tick(dt){
   if(f.side===0&&!manualInput.fullAI)manualMove(f,e,dt);else if(f.actionLock<=0)moveAI(f,e,dt);
   f.think-=dt;
   if((f.side!==0||manualInput.fullAI)&&f.think<=0){f.think=.16+random()*.12;f.choice=choose(f,e)}
-  if((f.side!==0||manualInput.fullAI)&&f.actionLock<=0&&f.choice&&f.choice.inRange&&!f.choice.blocked){
+  if((f.side!==0||manualInput.fullAI)&&f.actionLock<=0&&f.choice&&f.choice.inRange&&!f.choice.blocked&&!window.__arenaCourseC?.waitingToDepart?.(f,game)){
    const ch=f.choice;
    // Support actions cannot monopolize the decision cycle.
    if(!ch.s.support||supportScore(f,e,ch.s)>0)attack(f,e,ch.k);
@@ -1529,9 +1529,11 @@ function drawExtraMonster(f){
 function drawFighter(f){
  const visual718=window.__arenaCourseC?.visualState?.(f,game);
  if(visual718&&visual718.alpha<=0.01)return;
- ctx.save();if(visual718){ctx.globalAlpha*=visual718.alpha;ctx.translate(f.x,f.y);ctx.translate(0,visual718.dy);ctx.scale(1,visual718.scaleY);ctx.translate(-f.x,-f.y);}
+ ctx.save();
+ // Shadow stays on the ground while the actual articulated monster rises.
+ ctx.save();ctx.globalAlpha=.22*(visual718?.shadow??1);ctx.fillStyle='#243c2b';ctx.beginPath();ctx.ellipse(f.x,f.y+24,42*(visual718?.shadowScale??1),13,0,0,Math.PI*2);ctx.fill();ctx.restore();
+ if(visual718){ctx.globalAlpha*=visual718.alpha;ctx.translate(f.x,f.y+visual718.dy);ctx.rotate(visual718.tilt||0);ctx.scale(visual718.scaleX||1,visual718.scaleY);ctx.translate(-f.x,-f.y);}
  // The base sprite, directional facing and attack-specific deformation are independent.
- ctx.save();ctx.globalAlpha=.22;ctx.fillStyle='#243c2b';ctx.beginPath();ctx.ellipse(f.x,f.y+24,42,13,0,0,Math.PI*2);ctx.fill();ctx.restore();
  let buff=activeSupport(f);if(buff){ctx.save();ctx.strokeStyle=buff==='giant'?'#ff9c52':buff==='armor'?'#75b9ff':buff==='haste'?'#d6ff54':buff==='shrink'?'#bd8cff':'#fff';ctx.globalAlpha=.65;ctx.lineWidth=3;ctx.beginPath();ctx.ellipse(f.x,f.y+21,hitRadius(f)*1.5,9,0,0,Math.PI*2);ctx.stroke();ctx.fillStyle='#fff';ctx.strokeStyle='#243345';ctx.lineWidth=3;ctx.font='bold 15px system-ui';ctx.textAlign='center';let label={giant:'巨大化',armor:'硬化',haste:'加速',shrink:'縮小',dash:'離脱'}[buff];ctx.strokeText(label,f.x,f.y-112);ctx.fillText(label,f.x,f.y-112);ctx.restore()}if(f.dashTrail){ctx.save();ctx.globalAlpha=f.dashTrail.time/.38*.45;ctx.strokeStyle='#e6faff';ctx.lineWidth=8;ctx.beginPath();ctx.moveTo(f.dashTrail.x,f.dashTrail.y-40);ctx.lineTo(f.x,f.y-40);ctx.stroke();ctx.restore()}
  let phase=f.stateTime, attack=f.state==='attack';
  let index=attack?3:f.state==='hurt'?4:f.state==='down'?4:f.state==='walk'?(Math.floor(phase*9)%2?1:2):0;
@@ -2894,7 +2896,7 @@ requestAnimationFrame(sync);
 <canvas aria-hidden="true" id="home57Canvas"></canvas>
 <div id="home57Top"><h1>モンスターアリーナ</h1><p>15体のモンスターが集う、夢のバトルフィールド</p></div>
 <div id="home57Scene">花咲く草原</div>
-<div id="home57Bottom"><button id="home57Start" type="button">▶ スタート</button><div id="home57Version">MONSTER ARENA · Ver.7.2.20</div><button id="vh70Open" type="button">更新履歴・現在の機能を確認</button></div>
+<div id="home57Bottom"><button id="home57Start" type="button">▶ スタート</button><div id="home57Version">MONSTER ARENA · Ver.7.2.21</div><button id="vh70Open" type="button">更新履歴・現在の機能を確認</button></div>
 </div>
 <script id="home57-script">(()=>{
 'use strict';
@@ -3139,9 +3141,9 @@ updateToggle();setPhase('home');checkHp();
 </style>
 <div aria-label="更新履歴" aria-modal="true" hidden="" id="vh70" role="dialog">
 <section id="vh70Panel"><header id="vh70Header"><h2>更新履歴｜MONSTER ARENA</h2><button id="vh70Close" type="button">閉じる ×</button></header>
-<div id="vh70Body"><div id="vh70Latest"><strong>Ver.7.2.20</strong><p>成長モードにLv.10解放のCコースを追加。5秒ごとに敵が安全な場所へ属性別の移動エフェクト付きで移動します。全15タイプに4段階×4層の画像素材を対応。画像読み込み失敗時のみCanvasの代替演出に切り替わります。通常技4ボタンの横幅を約半分に縮め、技名と威力の数値だけを表示。通常モードおよびA/Sコースのルールを維持します。</p><p>成長モードの主人公専用SP技を2倍威力に調整。ビーム164、高速移動154、ばくれつパンチ130、ばくれつれんだは1打70（3打）。SP消費・使用回数・演出は維持。15体のステータス・通常モードには変更なし。</p><p>成長モードのSP技4系統を3層エフェクト化。発動予兆、着弾衝撃、属性別の地面反応、残像、ヒットストップを追加。通常モード・能力値・SP消費・既存BGMを維持。</p><p>成長モードを15体に拡大。Lv.2でSP1、Lv.10でSP2を習得し、4つの通常技の上に2つの特殊技を横並びに配置。Lv.3〜8の能力強化、Lv.9のSP再使用短縮、ブレイズベアの3連追撃を追加。通常モードは従来の仕様を維持します。</p><div id="vh70Build">ビルド識別子：MA-7.2.20-c-vfx-all-15</div></div>
+<div id="vh70Body"><div id="vh70Latest"><strong>Ver.7.2.21</strong><p>敵の実体を連続移動させ、タイプ別の姿勢・高さ・軌跡を同期。発動待機時は次の敵攻撃を予約せず、既存技の終了を待ちます。 成長モードにLv.10解放のCコースを追加。5秒ごとに敵が安全な場所へ属性別の移動エフェクト付きで移動します。全15タイプに4段階×4層の画像素材を対応。画像読み込み失敗時のみCanvasの代替演出に切り替わります。通常技4ボタンの横幅を約半分に縮め、技名と威力の数値だけを表示。通常モードおよびA/Sコースのルールを維持します。</p><p>成長モードの主人公専用SP技を2倍威力に調整。ビーム164、高速移動154、ばくれつパンチ130、ばくれつれんだは1打70（3打）。SP消費・使用回数・演出は維持。15体のステータス・通常モードには変更なし。</p><p>成長モードのSP技4系統を3層エフェクト化。発動予兆、着弾衝撃、属性別の地面反応、残像、ヒットストップを追加。通常モード・能力値・SP消費・既存BGMを維持。</p><p>成長モードを15体に拡大。Lv.2でSP1、Lv.10でSP2を習得し、4つの通常技の上に2つの特殊技を横並びに配置。Lv.3〜8の能力強化、Lv.9のSP再使用短縮、ブレイズベアの3連追撃を追加。通常モードは従来の仕様を維持します。</p><div id="vh70Build">ビルド識別子：MA-7.2.21-c-continuous-travel</div></div>
 <h3>この版に含まれる主な機能</h3><div id="vh70Features"><div><span>✓ 全画面バトル／透明スティック</span><small>Ver.5.9〜</small></div><div><span>✓ HP25％以下の赤ゲージ</span><small>Ver.6.0〜</small></div><div><span>✓ 初回タップでBGM開始</span><small>Ver.6.2〜</small></div><div><span>✓ LOSE演出</span><small>Ver.6.5〜</small></div><div><span>✓ WIN演出</span><small>Ver.6.6〜</small></div><div><span>✓ 長尺・変化型BGM</span><small>Ver.6.7〜</small></div><div><span>✓ 障害物を避ける初期配置</span><small>Ver.6.8〜</small></div><div><span>✓ 敵AI難易度調整</span><small>Ver.6.9〜（7.1で補正修正）</small></div><div><span>✓ AI全自動／手動操作の選択</span><small>Ver.7.1〜</small></div></div>
-<h3>バージョンごとの変更内容（新しい順）</h3><article class="vh70-item"><div class="vh70-ver">Ver.7.2.20</div><div><strong>Cコース・全15タイプの移動エフェクト画像化</strong><p>ノーマル・ほのお・みず・くさ・でんきの4段階×4層素材を追加。移動時間、無敵時間、既存の攻撃ボタン、通常モードとA/Sの戦闘ルールは維持。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.19</div><div><strong>通常技ボタンの横幅50％化・Cコース画像10タイプ</strong><p>攻撃ボタンの横幅を約半分にし、技名と威力を上下2段で表示。かくとう・こおり・エスパー・ゴースト・ドラゴンの4段階×4層のエフェクト画像を追加。通常モードとA/Sコースの戦闘計算は維持。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.18</div><div><strong>Cコース（試作）と攻撃ボタンの簡素化</strong><p>Lv.10解放のCコース。5秒ごとの敵移動、岩回避、短時間の被弾無効とタイプ別4層移動演出。どく・じめん・ひこう・むし・いわは描き起こした画像素材、残り10タイプは暫定Canvas演出。A・Sと通常モードは維持。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.17</div><div><strong>SP技の威力を2倍に調整</strong><p>成長モードの4系統の威力のみ変更。通常モードと15体の基本ステータスは維持し、能力と技構成のバランス分析を実施。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.16</div><div><strong>主人公専用SP技の3層演出</strong><p>ビーム・高速移動・ばくれつパンチ・3連追撃に発動前の予兆、命中時の光・衝撃リング、地面に残る跡、短いカメラ揺れを追加。成長モード限定。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.15</div><div><strong>成長段階の再設計とSP技2枠</strong><p>Lv.2でSP1、Lv.3〜5で攻撃・防御・速度が各1.2倍、Lv.6〜8で各1.4倍、Lv.9でSP再使用短縮、Lv.10でSP2を習得。成長モードは15体選択可能。ブレイズベアの3回自動追撃、属性ビームと高速移動を追加し、特殊技2つを通常技の上へ配置。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.14</div><div><strong>通常モード・成長モード分離とばくれつパンチ試作</strong><p>通常モードは従来の15体・成長なし・旧優勝記録を維持。成長モードはブレイズベア1体で育成と専用SP技を試せる。Lv.10でばくれつパンチ習得。試作体験設定時は低レベルでも利用可。敵は通常能力のまま。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.13</div><div><strong>主人公専用SP技：ビームと高速移動</strong><p>手動操作で育てた自分のモンスターのみLv.5・Lv.10で2種類の固有技を習得。専用SPボタン・ゲージ・15体別技名・障害物判定・装備保存を追加。敵は固有技を使いません。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.12</div><div><strong>自分のモンスターの成長</strong><p>手動操作時に限り、15体別に経験値・レベル・能力成長を保存。ランダム敵とAI全自動には適用しません。固有技は次回実装予定。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.11</div><div><strong>距離別ノックバック・KO後の勝者カメラ・右手進行ボタン</strong><p>近接命中は被弾側の当たり判定直径1体分、非近接は半分だけ、障害物と場外境界を守りノックバック。KOの9コマ/秒・3秒演出とゴングは保持し、その後0.5秒で勝者へカメラをスイング。勝者は可動パーツを振って喜び、通常WIN画面にもモンスターを表示。トーナメント「次へ」は右下の親指エリアに配置し、従来の内蔵音源・進出SEだけ音量アップ。MP3音量は維持。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.10</div><div><strong>場外まで吹き飛ばすKO演出・飾り文字の透明化・全技名短縮</strong><p>KO中は戦闘を停止し、3秒間の9コマ/秒表示で全画面をコマ送り風に演出。敗者は等速で画面外へ飛び、目の加工は行わない。決着0.5秒後から各0.5秒間隔・約0.48秒長のゴング3打を強調し、BGM音量だけを一時調整。WINとバトル開始演出の背景を透明に変更。77件の技名を7文字以内・漢字なしに統一。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.9</div><div><strong>15体トーナメント・4回戦化・決着スローモーション</strong><p>15種類すべてが参加する16枠の勝ち抜き戦（不戦勝はNPCのみ）。1回戦→準々決勝→準決勝→決勝でプレイヤーは4試合。最後の一撃に3秒間のカメラズーム、閉眼の被弾表現、画面の約4分の1の吹き飛びと3回のゴングSEを追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.8</div><div><strong>戦闘前の演出・優勝BGM継続・背景拡大</strong><p>1回戦・準決勝に「バトルスタート」、決勝に5秒の対戦カード演出と「ファイナルバトルスタート」を追加。開始演出が終わるまで戦闘を進めず、優勝BGMをVICTORY画面でも途切れさせず再生。半透明モンスターを画面高に合わせて大きく表示。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.7</div><div><strong>軽快な勝利ファンファーレ・優勝演出の順番変更</strong><p>通常WINはwin_loop.mp3、優勝トーナメント表はchampion_loop.mp3を再生。決勝勝利後にトーナメント表→右端への勝者移動→暗転→VICTORYへ移り、最後の画面から次の大会へ進む。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.6</div><div><strong>iPhoneホーム画面アプリ化</strong><p>PWAマニフェストの読み込み、iOS独立起動設定、ホーム画面アイコン、Service Workerの登録処理を追加。ゲーム本体と4曲のBGMは7.2.5から変更なし。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.5</div><div><strong>4曲のMP3 BGM対応</strong><p>タイトル・モンスター選択・通常戦闘・決勝戦のBGMを外部MP3に対応。既存の効果音と優勝演出を維持。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.4</div><div><strong>A/Sコース・コース別優勝記録</strong><p>従来のかんたんをAコース ふつう、従来のふつうをSコース むずかしいに改名。難易度の実際の補正は変更せず、各モンスターの優勝回数をコース別に保存・表示。旧記録はコース不明として保持。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.3</div><div><strong>優勝記録・優勝演出・祝福サウンド</strong><p>モンスター別優勝回数を端末内に保存しタイトルから確認。優勝時の背景に半透明の大型モンスター、専用ファンファーレを追加。Ver.7.3は停止中。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.3</div><div><strong>優勝VICTORY画面の表示不具合修正</strong><p>決勝WIN後に優勝画面がバトル画面の背面に隠れていたz-indexの設定を修正。大会ルールと難易度設定は7.2.1を維持。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.3</div><div><strong>勝敗ネタバレ防止・優勝演出・難易度選択</strong><p>未実施の試合結果を伏せ、ラウンド進行時に他の試合を抽選。決勝勝利後にVICTORYと優勝モンスターが降りてくる専用画面を追加。かんたんは従来の敵ダメージ軽減、ふつうは敵ダメージ軽減なし（攻撃間隔の既存調整は維持）。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.3（停止中）</div><div><strong>敗者復活バトルロイヤル案</strong><p>試作した6体AIバトルロイヤルは今回の配布版には含めない。Ver.7.2から継続開発。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2</div><div><strong>アイコン付きトーナメント表と決勝演出</strong><p>8体の参加者アイコンを線でつなぎ、勝者の進出・対戦カードの発光・決勝のズームと集中線を追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.1</div><div><strong>敵ダメージ補正の修正・全自動AI操作</strong><p>敵の通常ダメージ86％・効果抜群1.5倍を実際の命中計算に反映。キャラ選択の先頭で全自動AI操作か自分で操作を選択できるように変更。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.0</div><div><strong>更新履歴とビルド確認</strong><p>タイトル画面から全更新履歴を閲覧。現行版の識別情報と主な機能の確認欄を追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.9</div><div><strong>敵AIの難易度調整</strong><p>敵の技クールタイム32％増。ダメージ86％・効果抜群1.5倍は当時計算式への反映漏れがあり、Ver.7.2で修正。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.8</div><div><strong>障害物を避ける初期配置</strong><p>岩・障害物の当たり判定と周辺の空きスペースを確認して出現位置を選択。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.7</div><div><strong>アダプティブBGM</strong><p>長い曲構成と強弱、HP減少時に同じ曲へ緊迫レイヤーを重ねる方式。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.6</div><div><strong>勝利演出・全場面BGM</strong><p>WIN演出、タップで次のトーナメント表へ進む仕組み、勝利用BGM。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.5</div><div><strong>敗北演出・操作範囲</strong><p>LOSE演出、タップで再挑戦へ進む仕組み、移動範囲・初期位置・空振り攻撃の調整。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.4</div><div><strong>オーケストラ風BGM</strong><p>弦・金管・ピアノ・打楽器風の音色と場面別の音楽表現。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.3</div><div><strong>中間調整版</strong><p>配布ファイルは現存。詳細な差分は個別確認が必要。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.2</div><div><strong>起動タップ画面</strong><p>初回タップでBGMを有効化し、タイトル待機画面へ移動。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.1</div><div><strong>iPhone音声開始の修正</strong><p>音量と音声開始処理を調整し、音楽再生ボタンを追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.0</div><div><strong>場面別BGMとHP表示</strong><p>タイトル・選択・トーナメント・戦闘・決着等のBGM、HP25％以下の赤ゲージ。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.9</div><div><strong>全画面バトル</strong><p>背景を大きく表示し、左下に技、右下に半透明スティックを重ねる配置。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.8</div><div><strong>横画面対応</strong><p>縦画面の回転案内、横向きレイアウト、誤拡大対策。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.7</div><div><strong>動くタイトル画面</strong><p>モンスターが動くタイトル、スタートボタン、バージョン表示。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.6</div><div><strong>配布用PWAの整備</strong><p>ホーム画面から起動できる配布形式を整備（この番号の単体HTMLは現存未確認）。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.5</div><div><strong>対戦・操作の改修</strong><p>操作性と戦闘画面を調整。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.4</div><div><strong>トーナメント関連の調整</strong><p>画面構成と操作を調整。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.3</div><div><strong>戦闘UIの調整</strong><p>操作表示や戦闘画面の配置を調整。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.2</div><div><strong>戦闘レイアウト</strong><p>バトル画面と操作エリアを上下に分割。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.1</div><div><strong>手動操作</strong><p>移動パッド、攻撃技ボタン、手動／自動移動の切り替えを追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.0</div><div><strong>基本バトルの基盤</strong><p>モンスター・技・対戦画面を備えたゲーム本体。</p></div></article>
+<h3>バージョンごとの変更内容（新しい順）</h3><article class="vh70-item"><div class="vh70-ver">Ver.7.2.21</div><div><strong>Cコースの特殊移動の連続化</strong><p>本体を消さず、15タイプの連続座標・姿勢・軌跡を同期。既存の画像、無敵時間、A/Sと通常モードは維持。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.20</div><div><strong>Cコース・全15タイプの移動エフェクト画像化</strong><p>ノーマル・ほのお・みず・くさ・でんきの4段階×4層素材を追加。移動時間、無敵時間、既存の攻撃ボタン、通常モードとA/Sの戦闘ルールは維持。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.19</div><div><strong>通常技ボタンの横幅50％化・Cコース画像10タイプ</strong><p>攻撃ボタンの横幅を約半分にし、技名と威力を上下2段で表示。かくとう・こおり・エスパー・ゴースト・ドラゴンの4段階×4層のエフェクト画像を追加。通常モードとA/Sコースの戦闘計算は維持。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.18</div><div><strong>Cコース（試作）と攻撃ボタンの簡素化</strong><p>Lv.10解放のCコース。5秒ごとの敵移動、岩回避、短時間の被弾無効とタイプ別4層移動演出。どく・じめん・ひこう・むし・いわは描き起こした画像素材、残り10タイプは暫定Canvas演出。A・Sと通常モードは維持。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.17</div><div><strong>SP技の威力を2倍に調整</strong><p>成長モードの4系統の威力のみ変更。通常モードと15体の基本ステータスは維持し、能力と技構成のバランス分析を実施。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.16</div><div><strong>主人公専用SP技の3層演出</strong><p>ビーム・高速移動・ばくれつパンチ・3連追撃に発動前の予兆、命中時の光・衝撃リング、地面に残る跡、短いカメラ揺れを追加。成長モード限定。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.15</div><div><strong>成長段階の再設計とSP技2枠</strong><p>Lv.2でSP1、Lv.3〜5で攻撃・防御・速度が各1.2倍、Lv.6〜8で各1.4倍、Lv.9でSP再使用短縮、Lv.10でSP2を習得。成長モードは15体選択可能。ブレイズベアの3回自動追撃、属性ビームと高速移動を追加し、特殊技2つを通常技の上へ配置。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.14</div><div><strong>通常モード・成長モード分離とばくれつパンチ試作</strong><p>通常モードは従来の15体・成長なし・旧優勝記録を維持。成長モードはブレイズベア1体で育成と専用SP技を試せる。Lv.10でばくれつパンチ習得。試作体験設定時は低レベルでも利用可。敵は通常能力のまま。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.13</div><div><strong>主人公専用SP技：ビームと高速移動</strong><p>手動操作で育てた自分のモンスターのみLv.5・Lv.10で2種類の固有技を習得。専用SPボタン・ゲージ・15体別技名・障害物判定・装備保存を追加。敵は固有技を使いません。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.12</div><div><strong>自分のモンスターの成長</strong><p>手動操作時に限り、15体別に経験値・レベル・能力成長を保存。ランダム敵とAI全自動には適用しません。固有技は次回実装予定。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.11</div><div><strong>距離別ノックバック・KO後の勝者カメラ・右手進行ボタン</strong><p>近接命中は被弾側の当たり判定直径1体分、非近接は半分だけ、障害物と場外境界を守りノックバック。KOの9コマ/秒・3秒演出とゴングは保持し、その後0.5秒で勝者へカメラをスイング。勝者は可動パーツを振って喜び、通常WIN画面にもモンスターを表示。トーナメント「次へ」は右下の親指エリアに配置し、従来の内蔵音源・進出SEだけ音量アップ。MP3音量は維持。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.10</div><div><strong>場外まで吹き飛ばすKO演出・飾り文字の透明化・全技名短縮</strong><p>KO中は戦闘を停止し、3秒間の9コマ/秒表示で全画面をコマ送り風に演出。敗者は等速で画面外へ飛び、目の加工は行わない。決着0.5秒後から各0.5秒間隔・約0.48秒長のゴング3打を強調し、BGM音量だけを一時調整。WINとバトル開始演出の背景を透明に変更。77件の技名を7文字以内・漢字なしに統一。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.9</div><div><strong>15体トーナメント・4回戦化・決着スローモーション</strong><p>15種類すべてが参加する16枠の勝ち抜き戦（不戦勝はNPCのみ）。1回戦→準々決勝→準決勝→決勝でプレイヤーは4試合。最後の一撃に3秒間のカメラズーム、閉眼の被弾表現、画面の約4分の1の吹き飛びと3回のゴングSEを追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.8</div><div><strong>戦闘前の演出・優勝BGM継続・背景拡大</strong><p>1回戦・準決勝に「バトルスタート」、決勝に5秒の対戦カード演出と「ファイナルバトルスタート」を追加。開始演出が終わるまで戦闘を進めず、優勝BGMをVICTORY画面でも途切れさせず再生。半透明モンスターを画面高に合わせて大きく表示。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.7</div><div><strong>軽快な勝利ファンファーレ・優勝演出の順番変更</strong><p>通常WINはwin_loop.mp3、優勝トーナメント表はchampion_loop.mp3を再生。決勝勝利後にトーナメント表→右端への勝者移動→暗転→VICTORYへ移り、最後の画面から次の大会へ進む。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.6</div><div><strong>iPhoneホーム画面アプリ化</strong><p>PWAマニフェストの読み込み、iOS独立起動設定、ホーム画面アイコン、Service Workerの登録処理を追加。ゲーム本体と4曲のBGMは7.2.5から変更なし。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.5</div><div><strong>4曲のMP3 BGM対応</strong><p>タイトル・モンスター選択・通常戦闘・決勝戦のBGMを外部MP3に対応。既存の効果音と優勝演出を維持。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.4</div><div><strong>A/Sコース・コース別優勝記録</strong><p>従来のかんたんをAコース ふつう、従来のふつうをSコース むずかしいに改名。難易度の実際の補正は変更せず、各モンスターの優勝回数をコース別に保存・表示。旧記録はコース不明として保持。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.3</div><div><strong>優勝記録・優勝演出・祝福サウンド</strong><p>モンスター別優勝回数を端末内に保存しタイトルから確認。優勝時の背景に半透明の大型モンスター、専用ファンファーレを追加。Ver.7.3は停止中。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.3</div><div><strong>優勝VICTORY画面の表示不具合修正</strong><p>決勝WIN後に優勝画面がバトル画面の背面に隠れていたz-indexの設定を修正。大会ルールと難易度設定は7.2.1を維持。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2.3</div><div><strong>勝敗ネタバレ防止・優勝演出・難易度選択</strong><p>未実施の試合結果を伏せ、ラウンド進行時に他の試合を抽選。決勝勝利後にVICTORYと優勝モンスターが降りてくる専用画面を追加。かんたんは従来の敵ダメージ軽減、ふつうは敵ダメージ軽減なし（攻撃間隔の既存調整は維持）。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.3（停止中）</div><div><strong>敗者復活バトルロイヤル案</strong><p>試作した6体AIバトルロイヤルは今回の配布版には含めない。Ver.7.2から継続開発。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.2</div><div><strong>アイコン付きトーナメント表と決勝演出</strong><p>8体の参加者アイコンを線でつなぎ、勝者の進出・対戦カードの発光・決勝のズームと集中線を追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.1</div><div><strong>敵ダメージ補正の修正・全自動AI操作</strong><p>敵の通常ダメージ86％・効果抜群1.5倍を実際の命中計算に反映。キャラ選択の先頭で全自動AI操作か自分で操作を選択できるように変更。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.7.0</div><div><strong>更新履歴とビルド確認</strong><p>タイトル画面から全更新履歴を閲覧。現行版の識別情報と主な機能の確認欄を追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.9</div><div><strong>敵AIの難易度調整</strong><p>敵の技クールタイム32％増。ダメージ86％・効果抜群1.5倍は当時計算式への反映漏れがあり、Ver.7.2で修正。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.8</div><div><strong>障害物を避ける初期配置</strong><p>岩・障害物の当たり判定と周辺の空きスペースを確認して出現位置を選択。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.7</div><div><strong>アダプティブBGM</strong><p>長い曲構成と強弱、HP減少時に同じ曲へ緊迫レイヤーを重ねる方式。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.6</div><div><strong>勝利演出・全場面BGM</strong><p>WIN演出、タップで次のトーナメント表へ進む仕組み、勝利用BGM。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.5</div><div><strong>敗北演出・操作範囲</strong><p>LOSE演出、タップで再挑戦へ進む仕組み、移動範囲・初期位置・空振り攻撃の調整。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.4</div><div><strong>オーケストラ風BGM</strong><p>弦・金管・ピアノ・打楽器風の音色と場面別の音楽表現。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.3</div><div><strong>中間調整版</strong><p>配布ファイルは現存。詳細な差分は個別確認が必要。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.2</div><div><strong>起動タップ画面</strong><p>初回タップでBGMを有効化し、タイトル待機画面へ移動。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.1</div><div><strong>iPhone音声開始の修正</strong><p>音量と音声開始処理を調整し、音楽再生ボタンを追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.6.0</div><div><strong>場面別BGMとHP表示</strong><p>タイトル・選択・トーナメント・戦闘・決着等のBGM、HP25％以下の赤ゲージ。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.9</div><div><strong>全画面バトル</strong><p>背景を大きく表示し、左下に技、右下に半透明スティックを重ねる配置。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.8</div><div><strong>横画面対応</strong><p>縦画面の回転案内、横向きレイアウト、誤拡大対策。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.7</div><div><strong>動くタイトル画面</strong><p>モンスターが動くタイトル、スタートボタン、バージョン表示。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.6</div><div><strong>配布用PWAの整備</strong><p>ホーム画面から起動できる配布形式を整備（この番号の単体HTMLは現存未確認）。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.5</div><div><strong>対戦・操作の改修</strong><p>操作性と戦闘画面を調整。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.4</div><div><strong>トーナメント関連の調整</strong><p>画面構成と操作を調整。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.3</div><div><strong>戦闘UIの調整</strong><p>操作表示や戦闘画面の配置を調整。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.2</div><div><strong>戦闘レイアウト</strong><p>バトル画面と操作エリアを上下に分割。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.1</div><div><strong>手動操作</strong><p>移動パッド、攻撃技ボタン、手動／自動移動の切り替えを追加。</p></div></article><article class="vh70-item"><div class="vh70-ver">Ver.5.0</div><div><strong>基本バトルの基盤</strong><p>モンスター・技・対戦画面を備えたゲーム本体。</p></div></article>
 <p id="vh70Note">※ 5.0〜6.4の一部は開発時の説明を基にした要約です。詳細不明の箇所はその旨を記載しています。履歴はこの配布ファイルに含まれる実装の説明であり、GitHub Pagesで現在配信されている版を自動照合するものではありません。</p>
 </div></section></div>
 <script id="version-history-70-js">(()=>{
@@ -3289,13 +3291,13 @@ body.win711Active #arenaViewport .fullscreen-hud,body.win711Active #arenaViewpor
 @media(prefers-reduced-motion:reduce){#win66 .win711Hero{animation:none}}
 </style>
 <script id="course-c-718">
-/* MONSTER ARENA Ver.7.2.18 - Growth-only Course C / image-based four-layer travel VFX.
+/* MONSTER ARENA Ver.7.2.21 - Growth-only Course C / continuous articulated travel.
    A/S and normal mode do not enter this module's battle effects. */
 (()=>{'use strict';
-const CONFIG=Object.freeze({unlock:10,interval:5,duration:.90,invulnFrom:.18,invulnUntil:.60,moveAt:.44,pendingLimit:1,maxAttempts:48});
+const CONFIG=Object.freeze({unlock:10,interval:5,duration:.90,invulnFrom:.18,invulnUntil:.60,travelFrom:.18,travelUntil:.60,pendingLimit:1,maxAttempts:48});
 const atlasNames={0:'normal',1:'fire',2:'water',3:'grass',4:'electric',5:'ice',6:'fighting',7:'poison',8:'ground',9:'flying',10:'psychic',11:'bug',12:'rock',13:'ghost',14:'dragon'};
 const atlasImages={};
-const bodyImages={};
+
 const launch=document.getElementById('launchScreen');
 const difficulty=document.getElementById('difficulty721');
 const radios=difficulty?.querySelector('.mode71-options');
@@ -3328,18 +3330,11 @@ function loadAtlas(type){
  }
  return atlasImages[name];
 }
-function ensureBody(f){
- const id=f.id;if(!bodyImages[id]){
-  const src=id<3?SPRITES[id]?.[0]:EXTRA_MONSTER_ART[id-3];
-  if(src){const im=new Image();im.decoding='async';im.src=src;bodyImages[id]=im;}
- }
- return bodyImages[id];
-}
 function reset(battle){
  if(!battle)return;
  const enabled=window.MONSTER_ARENA_DIFFICULTY==='c'&&window.__arenaModes?.growth;
  battle.courseC=enabled?{nextAt:5,active:null,count:0,history:[],marks:[],skipped:0}:null;
- if(enabled){loadAtlas(battle.fighters?.[1]?.m?.type);ensureBody(battle.fighters?.[1]);}
+ if(enabled)loadAtlas(battle.fighters?.[1]?.m?.type);
 }
 function safeDestination(enemy,player){
  const clearance=Math.max(46,hitRadius(enemy)+18),minPlayer=hitRadius(player)+hitRadius(enemy)+65;
@@ -3357,41 +3352,84 @@ function safeDestination(enemy,player){
  }
  return options.length?options[Math.floor(random()*options.length)]:null;
 }
-function canDepart(enemy){return !!enemy&&enemy.hp>0&&!enemy.cast&&!enemy.punch714&&!enemy.special713?.action&&enemy.actionLock<=0;}
+// Height is measured in field pixels. Each species keeps its actual rig and facing.
+const motionProfiles=[
+ {lift:18,alpha:1,stretch:.13,tilt:.12}, // normal: sprint
+ {lift:55,alpha:.82,stretch:.18,tilt:.16}, // fire: flame dash
+ {lift:15,alpha:.82,stretch:.22,tilt:.07}, // water: low surf
+ {lift:37,alpha:.86,stretch:.12,tilt:.10}, // grass: leafy leap
+ {lift:12,alpha:.88,stretch:.26,tilt:.18}, // electric: fast low dash
+ {lift:12,alpha:.90,stretch:.18,tilt:.06}, // ice: slide
+ {lift:64,alpha:1,stretch:.09,tilt:.14}, // fighting: powerful leap
+ {lift:22,alpha:.76,stretch:.10,tilt:.07}, // poison: mist dash
+ {lift:-12,alpha:.74,stretch:.05,tilt:.04}, // ground: lowered burrow
+ {lift:92,alpha:1,stretch:.10,tilt:.15}, // flying: glide
+ {lift:49,alpha:.78,stretch:.03,tilt:.04}, // psychic: levitate
+ {lift:69,alpha:1,stretch:.13,tilt:.12}, // bug: winged leap
+ {lift:49,alpha:1,stretch:.05,tilt:.08}, // rock: heavy hop
+ {lift:44,alpha:.76,stretch:.07,tilt:.06}, // ghost: drift
+ {lift:92,alpha:1,stretch:.13,tilt:.15} // dragon: flight
+];
+const clamp01=v=>Math.max(0,Math.min(1,v));
+const smooth=v=>{v=clamp01(v);return v*v*(3-2*v);};
+function travelProgress(t){return clamp01((t-CONFIG.travelFrom)/(CONFIG.travelUntil-CONFIG.travelFrom));}
+function pathPoint(a,t){const p=smooth(travelProgress(t));return {x:a.from.x+(a.dest.x-a.from.x)*p,y:a.from.y+(a.dest.y-a.from.y)*p};}
+function contactInFlight(enemy){return typeof effects!=='undefined'&&effects.some(fx=>fx.source===enemy&&!fx.resolved&&fx.kind==='close'&&fx.skill?.contact);}
+function canDepart(enemy){return !!enemy&&enemy.hp>0&&!enemy.cast&&!enemy.punch714&&!enemy.special713?.action&&enemy.actionLock<=0&&!contactInFlight(enemy);}
+function waitingToDepart(f,battle){const s=battle?.courseC;return !!(s&&f?.side===1&&!s.active&&battle.elapsed>=s.nextAt&&battle.elapsed-s.nextAt<=CONFIG.pendingLimit&&!battle.finishing);}
+function settlePosition(enemy){enemy.previousX=enemy.x;enemy.previousY=enemy.y;enemy.vx=0;enemy.vy=0;enemy.moveGoal=null;enemy.goal=null;enemy.modeTimer=0;enemy.stuck=0;enemy.think=0;enemy.choice=null;}
+function landingSafe(point,enemy,player){return free(point.x,point.y)&&!rocks.some(r=>Math.hypot(point.x-r.x,point.y-r.y)<r.r+Math.max(46,hitRadius(enemy)+18)+14)&&Math.hypot(point.x-player.x,point.y-player.y)>hitRadius(player)+hitRadius(enemy)+24;}
 function update(dt,battle){
  const s=battle?.courseC;if(!s||!battle.active||battle.paused||battle.ended||battle.finishing)return;
  const player=battle.fighters?.[0],enemy=battle.fighters?.[1];if(!player||!enemy)return;
  for(const mark of s.marks)mark.life=Math.max(0,mark.life-dt);
  s.marks=s.marks.filter(m=>m.life>0);
  if(s.active){
-  const a=s.active;a.t=Math.min(CONFIG.duration,a.t+dt);
-  if(!a.applied&&a.t>=CONFIG.moveAt){
-   enemy.x=a.dest.x;enemy.y=a.dest.y;
-   enemy.previousX=enemy.x;enemy.previousY=enemy.y;
-   enemy.vx=0;enemy.vy=0;
-   enemy.moveGoal=null;enemy.goal=null;enemy.modeTimer=0;enemy.stuck=0;
-   enemy.think=0;enemy.choice=null;enemy.tacticUntil=battle.elapsed;
-   a.applied=true;
+  const a=s.active,oldT=a.t;a.t=Math.min(CONFIG.duration,a.t+dt);
+  if(enemy.hp<=0||enemy.punch714||enemy.special713?.action){s.active=null;s.skipped++;return;}
+  // Hits are valid during anticipation. Start from the actual post-knockback position.
+  if(oldT<CONFIG.travelFrom){a.from={x:enemy.x,y:enemy.y};}
+  if(!a.applied&&a.t>=CONFIG.travelFrom){
+   // Revalidate before travel; a player may have entered the selected landing point.
+   if(oldT<CONFIG.travelFrom&&!landingSafe(a.dest,enemy,player)){
+    const alternate=safeDestination(enemy,player);if(!alternate){s.active=null;s.skipped++;return;}a.dest=alternate;
+   }
+   const prev={x:enemy.x,y:enemy.y};
+   // Continuous coordinate updates, including the real collision target and rig.
+   // Special travel can pass over/below obstacles; the destination must be safe.
+   const point=pathPoint(a,a.t);enemy.x=point.x;enemy.y=point.y;
+   enemy.previousX=prev.x;enemy.previousY=prev.y;
+   enemy.vx=(enemy.x-prev.x)/Math.max(dt,.0001);enemy.vy=(enemy.y-prev.y)/Math.max(dt,.0001);
+   if(Math.abs(a.dest.x-a.from.x)>1)enemy.dir=a.dest.x>a.from.x?1:-1;
+   enemy.state=[0,2,3,4,5,6,8,9,11,12,14].includes(a.type)?'walk':'idle';
+   if(a.t>=CONFIG.travelUntil){
+    enemy.state='idle';enemy.stateTime=0;
+    // The player can move during the flight. Choose a nearby clear landing offset if needed.
+    if(!landingSafe(a.dest,enemy,player)){
+     let best=null;
+     for(const radius of [45,80,115,150,200]){for(let i=0;i<16;i++){const angle=i*Math.PI/8;const p={x:a.dest.x+radius*Math.cos(angle),y:a.dest.y+radius*Math.sin(angle)};if(landingSafe(p,enemy,player)){best=p;break;}}if(best)break;}
+     if(best){a.dest=best;enemy.x=best.x;enemy.y=best.y;}
+     else{const alt=safeDestination(enemy,player);if(alt){a.dest=alt;enemy.x=alt.x;enemy.y=alt.y;}else{enemy.x=a.from.x;enemy.y=a.from.y;a.dest={...a.from};s.active=null;s.skipped++;settlePosition(enemy);return;}}
+    }
+    settlePosition(enemy);enemy.dir=player.x>=enemy.x?1:-1;enemy.tacticUntil=battle.elapsed;a.applied=true;
+   }
   }
+  // Never overwrite a valid hit/knockback after the immunity window.
   if(a.t>=CONFIG.duration){
-   enemy.state='idle';enemy.stateTime=0;
+   if(enemy.state!=='hurt'){enemy.state='idle';enemy.stateTime=0;}
    s.marks.push({x:a.dest.x,y:a.dest.y,type:a.type,life:.55,maxLife:.55});
    s.history.push({at:a.at,type:a.type,from:a.from,to:a.dest});
-   if(s.history.length>30)s.history.shift();
-   s.active=null;s.count++;
+   if(s.history.length>30)s.history.shift();s.active=null;s.count++;
   }
   return;
  }
  if(battle.elapsed+.000001<s.nextAt)return;
  if(battle.elapsed-s.nextAt>CONFIG.pendingLimit){s.nextAt+=CONFIG.interval;s.skipped++;return;}
  if(!canDepart(enemy))return;
- const destination=safeDestination(enemy,player);
- s.nextAt+=CONFIG.interval;
+ const destination=safeDestination(enemy,player);s.nextAt+=CONFIG.interval;
  if(!destination){s.skipped++;return;}
  s.active={at:battle.elapsed,t:0,from:{x:enemy.x,y:enemy.y},dest:destination,applied:false,type:enemy.m.type,id:enemy.id};
- enemy.choice=null;enemy.think=0;enemy.cast=null;
- enemy.state='idle';enemy.stateTime=0;
- loadAtlas(enemy.m.type);ensureBody(enemy);
+ enemy.choice=null;enemy.think=0;enemy.cast=null;enemy.state='idle';enemy.stateTime=0;loadAtlas(enemy.m.type);
  window.dispatchEvent(new CustomEvent('arena-course-c-warp',{detail:{type:enemy.m.type,from:s.active.from,to:destination,at:battle.elapsed}}));
 }
 function blocksEnemyAI(f,battle){return !!(f?.side===1&&battle?.courseC?.active&&!battle.ended&&!battle.finishing);}
@@ -3400,14 +3438,15 @@ function invulnerable(f,battle){
  return !!(a&&f?.side===1&&!battle.finishing&&a.t>=CONFIG.invulnFrom&&a.t<CONFIG.invulnUntil);
 }
 function visualState(f,battle){
- const a=battle?.courseC?.active;
- if(!a||f?.side!==1||battle.finishing)return null;
- const t=a.t;
- if(t<.18){return {alpha:1,scaleY:1-(t/.18)*.17,dy:5*(t/.18)};}
- if(t<.33){let p=(t-.18)/.15;return {alpha:Math.max(0,1-p),scaleY:1-p*.6,dy:-p*52};}
- if(t<.53){return {alpha:0,scaleY:.2,dy:-60};}
- if(t<.72){let p=(t-.53)/.19;return {alpha:Math.max(0.02,Math.min(1,p)),scaleY:.55+.45*p,dy:-35*(1-p)};}
- return {alpha:1,scaleY:1,dy:0};
+ const a=battle?.courseC?.active;if(!a||f?.side!==1||battle.finishing)return null;
+ const t=a.t,m=motionProfiles[a.type]||motionProfiles[0];
+ if(t<CONFIG.travelFrom){const p=smooth(t/CONFIG.travelFrom);return {alpha:1,scaleX:1+.08*p,scaleY:1-.17*p,dy:5*p,tilt:0,shadow:1,shadowScale:1};}
+ if(t<CONFIG.travelUntil){
+  const p=travelProgress(t),arc=Math.sin(Math.PI*p),dir=a.dest.x>=a.from.x?1:-1;
+  return {alpha:1-(1-m.alpha)*arc,scaleX:1+m.stretch*arc,scaleY:1-.17*(1-p)-m.stretch*.22*arc,dy:5*(1-p)-m.lift*arc,tilt:dir*m.tilt*arc,shadow:1-.54*arc,shadowScale:1-.20*arc};
+ }
+ if(t<.76){const p=clamp01((t-CONFIG.travelUntil)/.16),squash=.14*Math.sin(Math.PI*p);return {alpha:1,scaleX:1+squash*.5,scaleY:1-squash,dy:3*Math.sin(Math.PI*p),tilt:0,shadow:1,shadowScale:1};}
+ return {alpha:1,scaleX:1,scaleY:1,dy:0,tilt:0,shadow:1,shadowScale:1};
 }
 function groundRing(c,x,y,color,power=1){
  c.save();c.globalAlpha=.46*power;c.strokeStyle=color;c.lineWidth=3;c.beginPath();c.ellipse(x,y+16,40+20*(1-power),10+4*(1-power),0,0,Math.PI*2);c.stroke();c.restore();
@@ -3415,43 +3454,46 @@ function groundRing(c,x,y,color,power=1){
 function drawUnder(c,battle){
  const s=battle?.courseC;if(!s||battle.finishing)return;
  for(const m of s.marks)groundRing(c,m.x,m.y,types[m.type]?.color||'#eee',m.life/m.maxLife);
- const a=s.active;if(!a)return;
- const p=a.t/CONFIG.duration;
- groundRing(c,a.from.x,a.from.y,types[a.type].color,p<.5?1-p*.8:Math.max(0,1-p));
- if(p>.45)groundRing(c,a.dest.x,a.dest.y,types[a.type].color,Math.min(1,(p-.45)*2));
+ const a=s.active;if(!a)return;const t=a.t,p=travelProgress(t),color=types[a.type]?.color||'#eee';
+ if(t<.40)groundRing(c,a.from.x,a.from.y,color,Math.max(0,1-t/.40));
+ if(t>.40)groundRing(c,a.dest.x,a.dest.y,color,Math.min(1,(t-.40)/.20)*Math.max(0,Math.min(1,(.95-t)/.18)));
+ // Persist visible motion behind the actual monster, not a second stationary copy.
+ if(t>=CONFIG.travelFrom&&t<.76){
+  const m=motionProfiles[a.type]||motionProfiles[0],end=Math.min(t,CONFIG.travelUntil),start=Math.max(CONFIG.travelFrom,end-.17),fade=t>CONFIG.travelUntil?1-(t-CONFIG.travelUntil)/.16:1;
+  if(end>start){c.save();c.lineCap='round';c.lineJoin='round';
+   for(const width of [23,7,2.5]){c.globalAlpha=(width===23?.10:width===7?.32:.65)*fade;c.strokeStyle=width===2.5?'#fff':color;c.lineWidth=width;c.beginPath();
+    for(let i=0;i<=8;i++){const tt=start+(end-start)*i/8,q=pathPoint(a,tt),lift=m.lift*Math.sin(Math.PI*travelProgress(tt));if(i)c.lineTo(q.x,q.y-46-lift);else c.moveTo(q.x,q.y-46-lift);}c.stroke();}
+   c.restore();}
+ }
+ drawAtlas(c,a,'under');
 }
 const ellipse=(c,x,y,rx,ry,color)=>{c.beginPath();c.ellipse(x,y,Math.max(1,rx),Math.max(1,ry),0,0,Math.PI*2);c.fillStyle=color;c.fill();};
 function line(c,coords,color,width=3){c.beginPath();coords.forEach(([x,y],i)=>i?c.lineTo(x,y):c.moveTo(x,y));c.strokeStyle=color;c.lineWidth=width;c.stroke();}
-function effectXY(a){
- const t=a.t;
- if(t<.33)return a.from;
- if(t>.53)return a.dest;
- const p=(t-.33)/.2;return {x:a.from.x+(a.dest.x-a.from.x)*p,y:a.from.y+(a.dest.y-a.from.y)*p};
-}
-function drawAtlas(c,a){
+function effectXY(a){return pathPoint(a,a.t);}
+function drawAtlas(c,a,pass='over'){
  const name=atlasNames[a.type];if(!name)return false;
  const im=atlasImages[name];if(!im?.complete||!im.naturalWidth)return false;
- const t=a.t;let frame=t<.18?0:t<.33?1:t<.53?2:3;
- const at=effectXY(a);
+ const t=a.t,frame=t<.18?0:t<.33?1:t<.60?2:3,at=effectXY(a);
+ const m=motionProfiles[a.type]||motionProfiles[0],lift=m.lift*Math.sin(Math.PI*travelProgress(t));
  const fade=t<.18?Math.min(1,.5+t*4):t>.73?Math.max(0,(CONFIG.duration-t)/.17):.95;
  const lifts=[93,72,46,16],sizes=[74,62,54,38],widths=[180,195,175,160];
+ const layers=pass==='under'?[3,2]:[1,0];
  c.save();c.globalAlpha=Math.max(0,fade);
- for(let layer=3;layer>=0;layer--){
-  c.save();c.globalAlpha*=layer===3?.7:layer===2?.8:1;
-  const x=at.x-widths[layer]/2,y=at.y-lifts[layer];
-  if(a.type>=0&&a.type<=4&&layer===2&&a.dest.x<a.from.x){
-   c.translate(at.x,0);c.scale(-1,1);c.translate(-at.x,0);
-  }
-  c.drawImage(im,frame*256,layer*128,256,128,x,y,widths[layer],sizes[layer]);
+ for(const layer of layers){
+  c.save();c.globalAlpha*=layer===3?.65:layer===2?.78:layer===1?.64:.38;
+  const ground=layer===3,px=ground&&t<.33?a.from.x:ground&&t>=.60?a.dest.x:at.x,py=ground&&t<.33?a.from.y:ground&&t>=.60?a.dest.y:at.y;
+  const x=px-widths[layer]/2,y=py-lifts[layer]-(ground?0:lift);
+  if(layer===2&&t>=CONFIG.travelFrom&&t<CONFIG.travelUntil){
+   const angle=Math.atan2(a.dest.y-a.from.y,a.dest.x-a.from.x);c.translate(px,py-lifts[layer]+sizes[layer]/2-lift);c.rotate(angle);c.drawImage(im,frame*256,layer*128,256,128,-widths[layer]/2,-sizes[layer]/2,widths[layer],sizes[layer]);
+  }else c.drawImage(im,frame*256,layer*128,256,128,x,y,widths[layer],sizes[layer]);
   c.restore();
  }
- c.restore();
- return true;
+ c.restore();return true;
 }
 function drawProcedural(c,a){
- const t=a.t,phase=t<.18?0:t<.33?1:t<.53?2:3;
+ const t=a.t,phase=t<.18?0:t<.33?1:t<.60?2:3;
  const q=Math.min(1,t/CONFIG.duration),at=effectXY(a),color=types[a.type]?.color||'#fff';
- const x=at.x,y=at.y-47;
+ const x=at.x,y=at.y-47-(motionProfiles[a.type]||motionProfiles[0]).lift*Math.sin(Math.PI*travelProgress(t));
  const alpha=Math.min(1,t/.12,(CONFIG.duration-t)/.15);
  if(alpha<=0)return;
  c.save();c.globalAlpha=.82*alpha;c.lineCap='round';c.lineJoin='round';
@@ -3491,30 +3533,11 @@ function drawProcedural(c,a){
  if(phase===3){for(let i=0;i<7;i++){let xx=x+Math.sin(i*2.4)*57,yy=y+32+Math.cos(i*3)*14;ellipse(c,xx,yy,3,3,color);}}
  c.restore();
 }
-function drawBodyTravel(c,a){
- if(a.t<.18||a.t>.53)return;
- const f=game?.fighters?.[1];if(!f||a.id!==f.id)return;
- const im=bodyImages[f.id];if(!im?.complete||!im.naturalWidth)return;
- const physical=[0,6,9,11,12,14].includes(a.type);
- if(!physical)return;
- const p=Math.min(1,Math.max(0,(a.t-.18)/.35));
- const x=a.from.x+(a.dest.x-a.from.x)*p,y=a.from.y+(a.dest.y-a.from.y)*p;
- const jump=100*Math.sin(Math.PI*p);
- c.save();
- for(let i=2;i>=0;i--){
-  const back=Math.max(0,p-i*.065),xx=a.from.x+(a.dest.x-a.from.x)*back,yy=a.from.y+(a.dest.y-a.from.y)*back;
-  c.globalAlpha=(i===0?.72:.19-i*.035)*Math.sin(Math.PI*Math.min(.98,Math.max(.02,p)));
-  c.drawImage(im,xx-60,yy-120-jump,120,121);
- }
- c.restore();
-}
 function drawOver(c,battle){
  const a=battle?.courseC?.active;if(!a||battle.finishing)return;
- // All 15 types use four-layer image atlases; procedural VFX remain a loading/error fallback.
- if(!drawAtlas(c,a))drawProcedural(c,a);
- drawBodyTravel(c,a);
+ if(!drawAtlas(c,a,'over'))drawProcedural(c,a);
 }
-window.__arenaCourseC={config:CONFIG,eligible,syncSelection,beforeStart,reset,update,blocksEnemyAI,invulnerable,visualState,drawUnder,drawOver,
+window.__arenaCourseC={config:CONFIG,eligible,syncSelection,beforeStart,reset,update,blocksEnemyAI,waitingToDepart,invulnerable,visualState,drawUnder,drawOver,
  get snapshot(){const state=typeof game!=='undefined'?game?.courseC:null;return state?{nextAt:state.nextAt,count:state.count,skipped:state.skipped,active:state.active&&{...state.active},history:[...state.history]}:null;},
  get atlases(){return Object.fromEntries(Object.entries(atlasImages).map(([k,im])=>[k,!!im.complete&&!!im.naturalWidth]));}
 };
